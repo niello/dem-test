@@ -1,0 +1,21 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{42B325C6-0AEB-4F22-B72D-A486015F19E5}") = "Content", "..\..\Content\Content.demcl", "{B0D77A57-F889-4966-A222-1253EEE045CE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|AnyPlatform = Debug|AnyPlatform
+		Release|AnyPlatform = Release|AnyPlatform
+		Description = 
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B0D77A57-F889-4966-A222-1253EEE045CE}.Debug|AnyPlatform.ActiveCfg = Debug|AnyPlatform
+		{B0D77A57-F889-4966-A222-1253EEE045CE}.Debug|AnyPlatform.Build.0 = Debug|AnyPlatform
+		{B0D77A57-F889-4966-A222-1253EEE045CE}.Release|AnyPlatform.ActiveCfg = Release|AnyPlatform
+		{B0D77A57-F889-4966-A222-1253EEE045CE}.Release|AnyPlatform.Build.0 = Release|AnyPlatform
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

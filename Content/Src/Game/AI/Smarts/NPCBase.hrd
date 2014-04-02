@@ -1,0 +1,17 @@
+Movable = true
+
+Actions
+{
+	Talk = 'Talk'
+
+//	ActivationValidator
+//			Type = "CanTalk"
+/* 	return
+		pActor &&
+		pActor->GetEntity() != pSO->GetEntity() &&
+		pSO->GetEntity()->GetProperty<CPropTalking>() &&
+		!DlgMgr->IsDialogueActive();
+ */
+
+	Attack = 'Attack'
+}

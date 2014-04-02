@@ -1,0 +1,5 @@
+SmartObjActions
+{
+	Talk = "Говорить"
+	Attack = "Напасть"
+}

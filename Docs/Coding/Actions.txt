@@ -1,0 +1,111 @@
+scripted IsAtDest / GetDestParams modifiers and checkers
+resource and timeout now in scripts, not much actions really use it
+actor fsm driver can be emulated as dynamic duration = anim length
+GetTransitionProgress must detect opened 40% = closed 60%, if reverse action is available
+SO.FSM auto only! manual freezes. Dur auto and manual
+//!!!need to send dynamic duration to the actor animation to adjust speed!only non-loop, loop is played with a normal speed
+actor animation cursor should be saved-loaded or restorable from an action data
+---------------------------------------------------------------------
+func ValidateOnStart()
+// SO
+
+	if !_ENABLED or !_SLOT fail
+	if _TARGET_STATE and SO.FSM.IsInTransition() and SO.FSM.GetTransitionActionID() != _ACTION_ID
+		fail
+	return ?(_VALIDATE, _VALIDATE(), Actor.IsValid())
+---------------------------------------------------------------------
+func Start()
+
+	if !ValidateOnStart() fail
+	Acquire _SLOT
+	if _PROGRESS_DRV = SO.FSM
+		SO.FSM.SetState(_TARGET_STATE, _ACTION_ID, Auto)
+		_DURATION = 1
+		_PROGRESS = SO.FSM.GetTransitionProgress()
+	else if _PROGRESS_DRV = Dur
+		if _TARGET_STATE
+			SO.FSM.SetState(_TARGET_STATE, _ACTION_ID, _SO_TIMING_MODE)
+		_DURATION = _GET_DURATION()
+		_PROGRESS = ?(_RESET_ON_ABORT, 0, (Actor.LoadAttr(Progress_ThisAction) or 0))
+	else
+		//???if _TARGET_STATE
+		//???	SO.FSM.SetState(_TARGET_STATE, _ACTION_ID, Auto)
+		_DURATION = -1
+	Actor.FSM.SetState("UsingSO", _ACTION_ID, Auto)
+	if _SYNC_ACTOR_ANIM
+		Actor.FSM.SetDuration(_DURATION)
+	send "START"
+	if _DURATION = 0 SetDone()
+---------------------------------------------------------------------
+func ValidatePerUpdate()
+// AI
+
+!!!test entities etc!
+---------------------------------------------------------------------
+func Update()
+
+	Res = _UPDATE() or running
+	if Res = failure or error, Stop()
+	if _DONE return running
+	if Res = success, SetDone()
+	else if _PROGRESS_DRV <> No // (branch for Res = running)
+		_PROGRESS_OLD = _PROGRESS
+		if _PROGRESS_DRV = Dur
+			_PROGRESS += GetFrameTime()
+			if _TARGET_STATE and _SO_TIMING_MODE = Manual
+				SO.FSM.SetTransitionProgress(_PROGRESS / _DURATION)
+		else if _PROGRESS_DRV = SO.FSM
+			_PROGRESS = SO.FSM.GetTransitionProgress()
+		if _PROGRESS >= _DURATION
+			SetDone()
+		else if _PROGRESS <> _PROGRESS_OLD
+			send "PROGRESS" (optional)
+			
+???manual control for an actor / progress-based control?
+---------------------------------------------------------------------
+func SetDone()
+
+	_DONE = true
+	send "DONE"
+	if _END_ON_DONE, Stop()
+---------------------------------------------------------------------
+func Stop()
+
+	if _DONE
+		send "END"
+		if _PROGRESS_DRV = Dur and !_RESET_ON_ABORT
+			Actor.ClearAttr(Progress_ThisAction)
+	else
+		send "ABORT"
+		if _PROGRESS_DRV = Dur and !_RESET_ON_ABORT
+			Actor.SetAttr(Progress_ThisAction)
+		if _TARGET_STATE
+			if _RESET_ON_ABORT [? and drv is so fsm or (_SO_TIMING_MODE = Manual and _FREE_SLOTS = _MAX_SLOTS - 1)?]
+				SO.FSM.AbortTransition([?time/speed, not to switch anim immediately but to perform reverse transition?])
+			else if _PROGRESS_DRV = SO.FSM //???Dur, Auto, no ROA?
+				SO.FSM.StopTransition()
+	if Actor.FSM.State = "UsingSO" // Abort might be caused by an actor state change, so don't affect that change
+		Actor.FSM.SetState("Idle", _ACTION_ID, Auto)
+	Unacquire _SLOT
+---------------------------------------------------------------------
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+

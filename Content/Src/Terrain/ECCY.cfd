@@ -1,0 +1,23 @@
+// ContentForge description of resource
+
+Terrain
+{
+	Tool = 'CFTerrain'
+	In = "ECCY/ECCY_HF.bt"
+	PatchSize = 8
+	LODCount = 6
+}
+
+SplatMap
+{
+	Tool = 'CFCopy'
+	In = "ECCY/ECCY_Alpha.tga"
+	Out = "Textures:Terrain/ECCY_SM.tga"
+}
+
+NormalMap
+{
+	Tool = 'CFCopy'
+	In = "ECCY/ECCY_TN.png"
+	Out = "Textures:Terrain/ECCY_NM.png"
+}

@@ -1,0 +1,7 @@
+UIName = "Фонтан"
+
+SmartObjActions
+{
+	Drink = "Пить"
+	FillVessel = "Набрать воды"
+}

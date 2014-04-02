@@ -1,0 +1,5 @@
+Radius = 0.3
+Height = 1.75
+Hover = 0.2
+Mass = 40.0
+MaxAcceleration = 0.0

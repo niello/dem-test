@@ -1,0 +1,11 @@
+//Parent = ... (HRD merging)
+
+TypeID = 'Container'
+
+Actions
+{
+	OpenContainer = 'OpenContainer'
+	//Break = 'Attack'
+}
+
+DefaultState = 'Closed'

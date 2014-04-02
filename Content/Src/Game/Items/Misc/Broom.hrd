@@ -1,0 +1,27 @@
+Type = "Weapon"				// item common param
+Weight = 2.4				// item common param
+Volume = 13.0				// item common param
+UIName = "Метла"
+//no effects, but can have
+//Effects =					// item common param
+//[ { effect_desc }, ... ]
+//!!!can create section "Weapon = { ... }" if will want to mix item types in one item (but it needs C++ support)
+WpnClass = "Staff"			// weapon param
+//default: Ranged = false				// weapon param //???is wpnclass prop?
+//???so or Ammo = "Ammo/Arrow" and if exist needs? NeedAmmo = false			// weapon param
+RangeMin = 0.7				// weapon param
+RangeMax = 1.9				// weapon param
+ROF = 3.0					// weapon param
+TwoHanded = true			// weapon param //???is wpnclass prop? per-item is more flexible
+Dmg = 						// weapon param //???need array? or other dmgs are effects?
+//[
+	{
+		Type = 2 //physical - crush
+		Rule = 1 //xdy+z (or by name like "x" "x..y" "xdy+z" "rel" etc) Each rule can have defaults!
+		//!!!can script rule calculators and create them dynamically! LUA CalcXdYPlusZ(x,y,z), defaults in rule desc
+		//calculator args will be array here like RuleArgs = [ 1, 8 ] //all insufficient args will be defaults
+		X = 1
+		Y = 8
+		//Z = 0 // default 0 will be substituted if commented
+	}
+//]

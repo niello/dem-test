@@ -1,0 +1,13 @@
+//_Base_ = "IAOBase"
+
+UIDesc = "Это персонаж"
+
+Selectable = true
+
+//!!!remove from here and get from base!
+Explorable = true
+UIActionNames
+{
+	Explore = "Описание" //"Посмотреть" / "Что это?"
+	Select = "Выбрать"
+}

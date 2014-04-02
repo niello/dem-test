@@ -1,0 +1,13 @@
+Attrs
+[
+	{
+		Class = "Light"
+		LightType = 2			// Spot
+		Color = (1.0, 0.0, 1.0)
+		Intensity = 0.7
+		Range = 20.0
+		ConeInner = 45.0
+		ConeOuter = 60.0
+		CastShadows = false
+	}
+]

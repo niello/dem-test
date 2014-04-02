@@ -1,0 +1,48 @@
+Power of 2 Hash Table Size
+
+Programmer uses hash table size that is power of 2 because address calculation can be performed
+very quickly. The integer hash function can be used to post condition the output of a marginal
+quality hash function before the final address calculation is done. 
+
+addr = inthash(marginal_hash_value) & (tablesize - 1);
+
+Using the inlined version of the integer hash function is faster than doing a remaindering operation
+with a prime number! An integer remainder operation may take up to 18 cycles or longer to complete,
+depending on machine architecture.
+
+public int hash32shift(int key)
+{
+  key = ~key + (key << 15); // key = (key << 15) - key - 1;
+  key = key ^ (key >>> 12);
+  key = key + (key << 2);
+  key = key ^ (key >>> 4);
+  key = key * 2057; // key = (key + (key << 3)) + (key << 11);
+  key = key ^ (key >>> 16);
+  return key;
+}
+
+int ds::MemHash(const void * mem, int length)
+{
+   const BYTE * ptr = reinterpret_cast<const BYTE *> (mem);
+   DWORD hash = 0;
+   for (int i=0; i<length; ++i) {
+      hash += (DWORD)ptr[i] << (i % 24);
+   }
+
+   return abs((int)hash);
+}
+
+X$1:
+  movzx     eax,word ptr [ebx]
+  add       ecx,eax
+  movzx     eax,word ptr 0x2[ebx]
+  shl       eax,0x0000000b
+  xor       eax,ecx
+  shl       ecx,0x00000010
+  xor       ecx,eax
+  add       ebx,0x00000004
+  mov       eax,ecx
+  shr       eax,0x0000000b
+  add       ecx,eax
+  dec       edx
+  jns       X$1

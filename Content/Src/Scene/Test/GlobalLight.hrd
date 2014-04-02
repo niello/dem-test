@@ -1,0 +1,11 @@
+Rotation = (0.0, 0.0, 0.0, 1.0)
+Attrs
+[
+	{
+		Class = "Light"
+		LightType = 0			// Dir
+		Color = (1.0, 1.0, 1.0)
+		Intensity = 0.75
+		CastShadows = true
+	}
+]

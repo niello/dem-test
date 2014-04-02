@@ -1,0 +1,87 @@
+StartNode = 'Start'
+Script = "Dlg/Arei" // In Scripts: folder
+
+// Type:
+// 0 - Switch
+// 1 - Random
+// 2 - Select
+
+Nodes
+{
+	Start
+	{
+		Type = 0
+		Links
+		[
+			{ To = 'Arei_Start' Condition = "IsFirstTalk" },
+			{ To = 'Arei_Blame' Condition = "IsBlaming" Action = "ClearBlameFlag" },
+			{ To = 'Arei_DoWork' Condition = "IsQuestOpen" }
+		]
+	}
+	Arei_Start
+	{
+		Type = 2
+		Speaker = '$DlgOwner'
+		Phrase = "Что ты слоняешься без дела? Все братья уже трудятся в поте лица."
+		Links [ { To = 'GG_Eleventh' } ]
+	}
+	GG_Eleventh =
+	{
+		Type = 0
+		Speaker = '$PlrSpeaker'
+		Phrase = "Но вы направили десятерых на поле и десятерых на уборку. Я вышел одиннадцатым и там, и там..."
+		Links [ { To = 'Arei_Lamb' } ]
+	}
+	Arei_Lamb =
+	{
+		Type = 0
+		Speaker = '$DlgOwner'
+		Phrase = "Если бы я сомневался столько же, сколько и ты, я бы ничего в жизни не добился. "
+				 "Ибо, если часть стада пошла на тучные луга, а часть на водопой, а маленький глупый "
+				 "ягнёнок всё не может решить, что ему милее, он умрет от голода и жажды."
+		Links [ { To = 'Arei_GetBroom' Action = "OpenSweepQuest" } ]
+	}
+	Arei_GetBroom =
+	{
+		Type = 2
+		Speaker = '$DlgOwner'
+		Phrase = "Пойди возьми метлу и вымети вон там. Я смотрю за тобой."
+		Links [ { To = 'GG_Okay' } ]
+	}
+	GG_Okay =
+	{
+		Type = 0
+		Speaker = '$PlrSpeaker'
+		Phrase = "Спасибо. Я сделаю это."
+	}
+	Arei_Blame =
+	{
+		Type = 2
+		Speaker = '$DlgOwner'
+		Phrase = "Хватит полировать эту плитку, здесь уже чисто! Иди подмети вон там. Ты, кажется, всю пыль туда собрал!"
+	}
+	Arei_DoWork =
+	{
+		Type = 2
+		Speaker = '$DlgOwner'
+		Phrase = "Займись делом! Сейчас не время разговаривать."
+		Links [ { To = 'GG_IHaveDone' Condition = "CanCloseSweepQuest" Action = "CloseSweepQuest" } ]
+	}
+	GG_IHaveDone =
+	{
+		Type = 0
+		Speaker = '$PlrSpeaker'
+		Phrase = "Я закончил мести, там уже всё блестит"
+		Links [ { To = 'Arei_Finish' } ]
+	}
+	Arei_Finish =
+	{
+		Type = 0
+		Speaker = '$DlgOwner'
+		Phrase = "Что ж, иногда ты бываешь не таким безнадёжным бездельником, каким кажешься. "
+				 "Чтобы закрепить за тобой рвение к труду, вот тебе ещё задание. Отец-Исповедник "
+				 "просил прислать кого-нибудь в помощь, у него есть дело. Иди и помоги ему, "
+				 "и не забудь сказать, кто тебя послал.\n\
+А теперь оставь меня."
+	}
+}

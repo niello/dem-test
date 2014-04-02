@@ -1,0 +1,26 @@
+Animation map for FSM (SO or Actor, is there so much difference?)
+
+Solve problem with using SO placed on the invalid nav location. The most of static SO's will be of that category
+
+SO (de)initialization in script when attach/remove property on the fly
+SaveLoad SO state (attr?), actions, action progress, restore action-driven and action-driving animations through anim map
+???always restore animation by factor computation, or read tfm of subnodes, like for a ragdoll?
+
+???C++ FSM class or scripted FSM class to reduce per-SO-class Lua coding
+
+What to do with an animation for ResetOnAbort = true? reset to 0 immediately is simple but not always good-looking.
+
+============================================================
+1. Action can animate SO only if Action.Resource = 1. When multiple clients use the same SO
+   with the same action, there can't be SO animation due to an evident conflict.
+2. Animated action doesn't necessarily change SO state or stop other actions from being executed.
+3. Animated action should disable all other animated actions that animate the same part of the object. State-changing
+   action should disable all other state-changing actions to avoid more than one transition at a time.
+4. Animated action either drives an animation by a progress factor or has its progress factor being driven
+   by an animation cursor. Intervals can be mapped relatively (normalized) or absolutely. So,
+   mapping is 'whole action' <-> 'whole animation' or '1 sec of action' <-> '1 sec of animation' with loop or clamp anim.
+5. Action can change state only when it's done. Source state is current during all the action execution process.
+   In most cases state-changing action becomes disabled in a target state, so it will kill itself by switching the state.
+6. Full state of an SO is: state (restore anim frame), actions' enabled, progress (each action restores anim?),
+   state-changing action in progress.
+============================================================

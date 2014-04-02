@@ -1,0 +1,35 @@
+Idle
+{
+	Cost = 0
+	Precedence = 1
+}
+
+Wander
+{
+	Cost = 3
+	Precedence = 2
+}
+
+GotoSmartObj
+{
+	Cost = 1
+	Precedence = 1
+}
+
+UseSmartObj
+{
+	Cost = 3
+	Precedence = 2
+}
+
+EquipItem
+{
+	Cost = 1
+	Precedence = 1
+}
+
+PickItemWorld
+{
+	Cost = 2
+	Precedence = 1
+}

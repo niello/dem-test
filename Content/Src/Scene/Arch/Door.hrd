@@ -1,0 +1,26 @@
+Attrs
+[
+	{
+		Class = "Model"
+		Material = 'Arch/Door'
+		Mesh = 'Arch/Door'
+		BatchType = 'Solid'
+	}
+]
+
+Children
+{
+	DoorBody
+	{
+		Attrs
+		[
+			{
+				Class = "Model"				
+				Material = 'Arch/Door'
+				Mesh = 'Arch/Door'
+				MeshGroupIndex = 1
+				BatchType = 'Solid'
+			}
+		]
+	}
+}

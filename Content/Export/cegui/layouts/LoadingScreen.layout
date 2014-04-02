@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout >
+    <Window Type="DefaultWindow" Name="LoadingScreen" >
+        <Property Name="UnifiedAreaRect" Value="{{0,0},{0,0},{1,0},{1,0}}" />
+        <Window Type="TaharezLook/StaticImage" Name="LoadingScreen/BG" >
+            <Property Name="Font" Value="DejaVuSans-14" />
+            <Property Name="Text" Value="LOADING..." />
+            <Property Name="UnifiedAreaRect" Value="{{0.0226563,0},{0.0319885,0},{0.979688,0},{0.954899,0}}" />
+        </Window>
+        <Window Type="TaharezLook/StaticText" Name="LoadingScreen/Text" >
+            <Property Name="Font" Value="DejaVuSans-14" />
+            <Property Name="Text" Value="LOADING..." />
+            <Property Name="HorzExtent" Value="105" />
+            <Property Name="VertExtent" Value="19.6254" />
+            <Property Name="HorzFormatting" Value="HorzCentred" />
+            <Property Name="UnifiedAreaRect" Value="{{0.382031,0},{0.356196,0},{0.632031,0},{0.606196,0}}" />
+        </Window>
+    </Window>
+</GUILayout>

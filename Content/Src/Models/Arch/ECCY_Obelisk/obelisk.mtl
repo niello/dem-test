@@ -1,0 +1,16 @@
+# Blender MTL File: 'obelisk-verycool.blend'
+# Material Count: 1
+newmtl Material
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.731357 0.467789
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Ns obelisk-verycool.blend\\obelisk-spec.jpg
+map_Ks obelisk-verycool.blend\\obelisk-spec.jpg
+map_Bump obelisk-verycool.blend\\obelisk-normals.jpg
+map_Kd obelisk-verycool.blend\\obelisk-diffuse.jpg
+
+

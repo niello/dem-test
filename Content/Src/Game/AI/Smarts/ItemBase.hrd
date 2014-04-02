@@ -1,0 +1,6 @@
+TypeID = 'Item'
+
+Actions
+{
+	PickItem = 'PickItem'
+}

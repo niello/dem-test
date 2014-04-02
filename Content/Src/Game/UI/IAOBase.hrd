@@ -1,0 +1,10 @@
+// Root desc for all IAO
+
+Explorable = true
+Selectable = false
+
+UIActionNames
+{
+	Explore = "Описание" //"Посмотреть" / "Что это?"
+	Select = "Выбрать"
+}

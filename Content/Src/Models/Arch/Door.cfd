@@ -1,0 +1,6 @@
+// ContentForge description of resource
+
+Category = 'Models'
+ID = 'Arch/Door'
+Tool = "CFModel"
+In = "Door/InteriorDoor.FBX"

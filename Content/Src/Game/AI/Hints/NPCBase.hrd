@@ -1,0 +1,7 @@
+VisibleMain
+{
+	Type = "Visible"
+	Size = "Attr"
+	Enabled = true
+	Intensity = 1.0
+}

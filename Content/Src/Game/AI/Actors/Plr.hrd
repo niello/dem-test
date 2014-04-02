@@ -1,0 +1,11 @@
+_Base_ = "NPCBase"
+
+EnableDecisionMaking = false
+
+Sensors
+{
+	Vision
+	{
+		Perceptors = [ "Obstacle", "Enemy" ]
+	}
+}

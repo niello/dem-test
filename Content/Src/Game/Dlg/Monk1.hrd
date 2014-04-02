@@ -1,0 +1,138 @@
+﻿StartNode = 'Start'
+
+Nodes = 
+{ 
+	Start = 
+	{ 
+		Type = 0
+		Speaker = '$DlgOwner'
+		Phrase = "Чего тебе?"
+		Links [ { To = 'N1' } ]
+	}
+	N1 = 
+	{ 
+		Type = 2
+		Speaker = '$DlgOwner'
+		Phrase = "Ну и денек! Мало того, что солнце печет невыносимо, так еще и этот сын блудливой кошки, Викус, не дает продыху!"
+		Links [ { To = 'N2' }, { To = 'N3' }, { To = 'N4' }, { To = 'N5' } ]
+	}
+	N2 = 
+	{ 
+		Type = 0
+		Speaker = '$PlrSpeaker'
+		Phrase = "Тише, дурень, он может услышать!"
+		Links [ { To = 'N8' } ]
+	}
+	N3 = 
+	{ 
+		Type = 0
+		Speaker = '$PlrSpeaker'
+		Phrase = "Ничего, если будешь усердно трудиться, когда-нибудь и ты будешь стоять тут, ни черта полезного не делать и раздавать команды!"
+	}
+	N4 = 
+	{ 
+		Type = 0
+		Speaker = '$PlrSpeaker'
+		Phrase = "Да, денек не лучший..."
+	}
+	N5 = 
+	{ 
+		Type = 0
+		Speaker = '$PlrSpeaker'
+		Phrase = "Трехликий в мудрости своей даровал нам несколько простых заповедей, одна из которых гласит: \"Счастие в труде, мой юный послушник!\"."
+	}
+	N8 = 
+	{ 
+		Type = 2
+		Speaker = '$DlgOwner'
+		Phrase = "Я бы не был так уверен, наш Викус хоть и зол как пес, но глух, как менестрель Оуэн из трактира!\
+"
+		Links [ { To = 'N9' }, { To = 'N10' }, { To = 'N11' } ]
+	}
+	N9 = 
+	{ 
+		Type = 0
+		Speaker = '$PlrSpeaker'
+		Phrase = "И откуда это благочестивому послушнику Собора Вящей Славы Трехликого знать, каков слух у менестреля из трактира?"
+		Links [ { To = 'N12' } ]
+	}
+	N10 = 
+	{ 
+		Type = 0
+		Speaker = '$PlrSpeaker'
+		Phrase = "Нехорошо так говорить о брате нашем Викусе!"
+		Links [ { To = 'N17' } ]
+	}
+	N11 = 
+	{ 
+		Type = 0
+		Speaker = '$PlrSpeaker'
+		Phrase = "Твоя правда, брат! Ко всему прочему Викус еще и урод, каких поискать!"
+	}
+	N12 = 
+	{ 
+		Type = 2
+		Speaker = '$DlgOwner'
+		Phrase = "Кто-то из нас слишком много болтает, ты не находишь?"
+		Links [ { To = 'N13' }, { To = 'N14' } ]
+	}
+	N13 = 
+	{ 
+		Type = 0
+		Speaker = '$PlrSpeaker'
+		Phrase = "Может быть, это мой брат-послушник, что хвастается трактирными подвигами в этом святом месте?"
+		Links [ { To = 'N15' } ]
+	}
+	N14 = 
+	{ 
+		Type = 0
+		Speaker = '$PlrSpeaker'
+		Phrase = "Мне пора, вон и Викус идет."
+		Links [ { To = 'N16' } ]
+	}
+	N15 = 
+	{ 
+		Type = 0
+		Speaker = '$DlgOwner'
+		Phrase = "Тебе пора, умник."
+	}
+	N16 = 
+	{ 
+		Type = 0
+		Speaker = '$DlgOwner'
+		Phrase = "Викус? Черт, где моя лопата?!"
+	}
+	N17 = 
+	{ 
+		Type = 2
+		Speaker = '$DlgOwner'
+		Phrase = "Это я еще ласково."
+		Links [ { To = 'N18' }, { To = 'N19' } ]
+	}
+	N18 = 
+	{ 
+		Type = 0
+		Speaker = '$PlrSpeaker'
+		Phrase = "А с тобой в детстве, наверное, мало играли, да?"
+		Links [ { To = 'N20' } ]
+	}
+	N19 = 
+	{ 
+		Type = 0
+		Speaker = '$PlrSpeaker'
+		Phrase = "Думается мне, подобные фразы весьма греховны."
+		Links [ { To = 'N21' } ]
+	}
+	N20 = 
+	{ 
+		Type = 0
+		Speaker = '$DlgOwner'
+		Phrase = "Тебе пора, сопляк!"
+	}
+	N21 = 
+	{ 
+		Type = 0
+		Speaker = '$DlgOwner'
+		Phrase = "Тебе пора, святоша!"
+	}
+}

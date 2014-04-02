@@ -1,0 +1,34 @@
+Shader precompilation
+Terrain lighting correctness
+Optimize mesh (verts, faces)
+Cursor handling
+
+// Clip planes, scissor rect, gamma, brightness, contrast, Dialog box mode
+
+Occlusion
+    Runs a sequence of occlusion queries. Will render bounding boxes
+    and check how many pixels pass the z test. If none
+    of the pixels pass the test, the rectangle is occluded. Try to issue
+    as many queries as possible before getting the query results, this
+    maximizes GPU/CPU parallelization.
+	IDirect3DQuery9
+	d3d9Dev->CreateQuery(D3DQUERYTYPE_OCCLUSION, &d3dQuery); //D3DERR_NOTAVAILABLE if no caps, check caps!
+	d3dQuery->Issue(D3DISSUE_BEGIN);
+	d3d9Server->DrawShapeNS(type, modelMatrix);
+	d3dQuery->Issue(D3DISSUE_END);
+    do hr = d3dQuery->GetData(&numVisiblePixels, sizeof(DWORD), D3DGETDATA_FLUSH);
+    while (hr == S_FALSE);
+Can also filter objects by a screen size in pixels
+
+CalcGlobalAABB + GetGlobalAABB
+Optional flags for depth tech
+
+If successive passes/batches use the same shader, do not reapply
+
+Depth prepass doesn't depend on materials, only on alpha blending type
+So can use special shader for depth rendering and force ignoring of material flags and params
+
+Sort objects by distance once, if any batch requires it
+Check is this better than sorting only subsets collected by renderers, but many times
+
+Can I use LightTS instead of LightMS in per-pixel lighting? Spotlight falloff requires MS, but does attenuation too?
