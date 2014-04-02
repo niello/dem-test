@@ -51,6 +51,7 @@ Talk
 	ProgressDriver = "None"
 	Face = true
 	MaxUserCount = 1
+	Script = "SOActions/Talk"
 }
 
 Drink

@@ -35,7 +35,6 @@ Sometimes camera rotation mode isn't being disabled when MMB is released
 { [ { } ] } problem in data schemes
 Window resize breaks mouse and viewport
 Changing Gfx adapter crashes in one of directions
-Arei talks only after F5-F8
 First click on Broom leads to no action, second is correct
 Double click on item moving closes container window
 
@@ -61,9 +60,10 @@ CF user control plugin for CIDE2 - edit CFD files (replace current CF GUI applic
 
 II. Game engine code
 ---------------------
+* AI task queues
 * Interaction system refactoring
  - * actor animation mapping
- - * impl Talk action
+ - * impl Talk action pre-facing
 * SaveLoad system refactoring
  - * save nav. regions enabled flag and other state
  - savegame packing (continue data is unpacked, save is the same data packed)
@@ -71,7 +71,6 @@ II. Game engine code
  - save scene graph
 Group selection (using pick shapes and mouse-dragged rectangle converted to a frustum, CCamera::GetFrustum(RelRect))
 Formations, group AI through AISquad or smth
-AI task queues
 Redesign AI NavRegions
  - take into account Get/Set lock status
  - save/load their state
@@ -104,6 +103,7 @@ Ambient dialogues
 Ambient goals and actions for NPCs
 Reaction to agression
 Day & night
+Shadows
 Particle systems
 Skybox
 Weather effects
@@ -141,17 +141,11 @@ Movement:
 
 Dialogues:
 - Dialogue mode
-- Force actor to reach dialogue target, not precalculated point in space
 - Check CanSpeak ability
-- Random node
-- Abort dlg
-- Dialogue target must react on [trying] to start dlg with it
 
 AnimSystem for brain (AI animation controller - movement, targeting, action reflection etc)
 Body FSM (for each part like bottom(moving) & top (action)), body resources & locking
 ???sort memory facts, forex Obstacle by (distance - sum of radii), or all by confidence
-
-Actor-to-actor facing when talk (OnStart talk action push bhv Look to the DlgOwner)
 
 [Starting cutscene/video + Arei starts talking at level start]
 
@@ -166,23 +160,13 @@ Array flag Sorted to signal that array is sorted now and optimized algorithms ca
 Dbg plugin windows: menu, sysinfo
 
 static priorities for UI actions (actions listed in obj's popup) in UI desc (just like UINames now)
+  or give up priorities and use explicitly set orders and default actions
 
-validator UIWndVisible / UIWndStatus
-gets string as param, splitting by '.' get window: GetScreen(tok0)->GetChild(tok1)->GetChild(tok2)->...
-second param can be check ID, like 'Visible' etc
-and move it to L2
-
-validator PlrOnly (IsPlr) will be in L3
-
-//!!!need validator with script, but not object's func! (or just call script FROM object's func)
-so all small validators could be implemented through script
-
-Quest.OnStart to dynamically determine starting task, for example
+Scripted Quest.OnStart to dynamically determine starting task, for example
 Lua state wrapper with some util functions
 Script parent constructors cascade!
 	Lua: obj.class, class.parent (or .proto for both, or simply getmetatable?)
 CFlags<T> or CFlags<int NumBits>
-
 Clear CurrEvent once per frame in Lua or when event was processed! (pooled event address)
   event mgr doesn't know anything about Lua, it's a problem
 

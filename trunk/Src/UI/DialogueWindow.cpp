@@ -12,7 +12,6 @@
 
 namespace UI
 {
-using namespace Events;
 
 CDialogueWindow::~CDialogueWindow()
 {
@@ -69,9 +68,13 @@ bool CDialogueWindow::OnAnswerClicked(const CEGUI::EventArgs& e)
 	{
 		Story::CDlgContext* pCtx = DlgMgr->GetDialogue(DlgID);
 		n_assert(pCtx);
-		int ValidLinkCount = pCtx->ValidLinkIndices.GetCount();
-		int Idx = (int)pTextArea->getItemIndex(pItem) - (int)pTextArea->getItemCount() + ValidLinkCount;
-		if (Idx >= 0 && Idx < ValidLinkCount) SelectAnswer(*pCtx, Idx);
+		//!!!subscribe CEGUI event only on answer (select) nodes instead!
+		if (pCtx->pCurrNode->LinkMode == Story::CDlgNode::Link_Select)
+		{
+			int ValidLinkCount = pCtx->ValidLinkIndices.GetCount();
+			int Idx = (int)pTextArea->getItemIndex(pItem) - (int)pTextArea->getItemCount() + ValidLinkCount;
+			if (Idx >= 0 && Idx < ValidLinkCount) SelectAnswer(*pCtx, Idx);
+		}
 	}
 	OK;
 }
@@ -138,7 +141,7 @@ void CDialogueWindow::SelectAnswer(Story::CDlgContext& Ctx, int Idx)
 }
 //---------------------------------------------------------------------
 
-bool CDialogueWindow::OnDlgStart(const CEventBase& Event)
+bool CDialogueWindow::OnDlgStart(const Events::CEventBase& Event)
 {
 	Data::PParams P = ((const Events::CEvent&)Event).Params;
 	if (!P->Get<bool>(CStrID("IsForeground"))) FAIL;
@@ -152,7 +155,7 @@ bool CDialogueWindow::OnDlgStart(const CEventBase& Event)
 }
 //---------------------------------------------------------------------
 
-bool CDialogueWindow::OnDlgEnd(const CEventBase& Event)
+bool CDialogueWindow::OnDlgEnd(const Events::CEventBase& Event)
 {
 	Data::PParams P = ((const Events::CEvent&)Event).Params;
 	if (!P->Get<bool>(CStrID("IsForeground"))) FAIL;
@@ -166,7 +169,7 @@ bool CDialogueWindow::OnDlgEnd(const CEventBase& Event)
 }
 //---------------------------------------------------------------------
 
-bool CDialogueWindow::OnDlgNodeEnter(const CEventBase& Event)
+bool CDialogueWindow::OnDlgNodeEnter(const Events::CEventBase& Event)
 {
 	n_assert_dbg(DlgID.IsValid());
 
