@@ -1,0 +1,10 @@
+Travel:
+START - if NOT all required entities are in zone, warn user (catch event in property)
+_UPDATE() - if all required entities are in zone, done (can re-warn periodically)
+DONE - perform transition (catch event in property)
+
+------------------------
+Lua:
+You can use load (or loadfile) to load a chunk with a different environment. (In C, you have to load the chunk and then change the value of its first upvalue.)
+When you use xpcall or lua_pcall, you may give a message handler to be called in case of errors. This function is called with the original error message and returns a new error message. It is called before the error unwinds the stack, so that it can gather more information about the error, for instance by inspecting the stack and creating a stack traceback.
+Lua handles a chunk as the body of an anonymous function with a variable number of arguments (see §3.4.10). As such, chunks can define local variables, receive arguments, and return values. Moreover, such anonymous function is compiled as in the scope of an external local variable called _ENV (see §2.2). The resulting function always has _ENV as its only upvalue, even if it does not use that variable.

@@ -1,0 +1,17 @@
+//_Base_ = "IAOBase"
+
+UIName = "Дверь"
+UIDesc = "Дверь как дверь, ничего особенного, даже не заперта"
+
+SmartObjActions
+{
+	Open = "Открыть"
+	Close = "Закрыть"
+}
+
+//!!!remove from here and get from base!
+Explorable = true
+UIActionNames
+{
+	Explore = "Описание" //"Посмотреть" / "Что это?"
+}

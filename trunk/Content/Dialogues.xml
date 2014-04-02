@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<additionalData>
+  <configuration>
+    <rootDirectory>Src\Game\Dlg</rootDirectory>
+  </configuration>
+  <characters>
+    <character name="$DlgOwner">
+      <propertyValue id="1" />
+      <propertyValue id="2">$DlgOwner</propertyValue>
+      <propertyValue id="3">1</propertyValue>
+    </character>
+    <character name="$PlrSpeaker">
+      <propertyValue id="1" />
+      <propertyValue id="2">$PlrSpeaker</propertyValue>
+      <propertyValue id="3">2</propertyValue>
+    </character>
+  </characters>
+  <dialogs>
+    <dialog />
+  </dialogs>
+</additionalData>

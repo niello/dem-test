@@ -1,0 +1,6 @@
+// ContentForge description of resource
+
+Category = 'Models'
+ID = 'Arch/ECCY_Obelisk'
+Tool = "CFModel"
+In = "ECCY_Obelisk/obelisk.obj"

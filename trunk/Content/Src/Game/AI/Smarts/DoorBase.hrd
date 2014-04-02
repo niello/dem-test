@@ -1,0 +1,42 @@
+Actions
+{
+	Open = 'OpenDoor'
+	Close = 'CloseDoor'
+}
+
+DefaultState = 'Closed'
+
+//!!!array indices as refs aren't very readable, and manual editing is error-prone!
+//but array is fast and hrd must be generated/edited by tool
+Anims
+[
+	{
+		Clip = 'Open'
+	},
+	{
+		Clip = 'Open'
+		RelOffset = 1.0
+		Speed = -1.0
+	},
+	{
+		Clip = 'Open'
+		Speed = 0.0 // Means SetPose() instead of StartAnim()
+	},
+	{
+		Clip = 'Open'
+		RelOffset = 1.0
+		Speed = 0.0
+	}
+]
+
+ActionAnims
+{
+	Open = 0
+	Close = 1
+}
+
+StateAnims
+{
+	Closed = 2
+	Opened = 3
+}

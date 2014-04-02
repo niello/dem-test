@@ -1,0 +1,30 @@
+Game
+{
+	ActiveLevel = 'ECCY'
+}
+
+Managers
+{
+
+Factions
+{
+	Party
+	{
+		Members
+		{
+			GG = 1000		// Some big value to ensure that main player character is a party leader
+		}
+	}
+
+	//???here or in Arei entity desc?
+	/*
+	Monks
+	{
+		Members =
+		[
+			Arei = 5
+		]
+	}*/
+}
+
+}

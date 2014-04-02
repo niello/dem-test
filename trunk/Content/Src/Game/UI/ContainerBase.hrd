@@ -1,0 +1,15 @@
+
+UIDesc = "Простой деревянный сундук"
+
+SmartObjActions
+{
+	OpenContainer = "Открыть"
+	//Break = "Разбить"
+}
+
+//!!!remove from here and get from base!
+Explorable = true
+UIActionNames
+{
+	Explore = "Описание" //"Посмотреть" / "Что это?"
+}

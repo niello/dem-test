@@ -1,0 +1,16 @@
+Shader = 'Phong'
+FeatureFlags = "ATest"
+ShaderVars
+{
+	CullMode = 1 // None
+	SpecularExponent = 16.0
+	NMHeightScale = 0.05
+	SpecularExponent = 0.000001
+	MtlDiffuse = (1.0, 1.0, 1.0, 1.0)
+	MtlSpecular = (0.9, 0.9, 0.9, 1.0)
+}
+Textures
+{
+	NormalMap = 'System/NoBump.dds'
+	DiffMap0 = 'Vgt/Leaves.tga'
+}

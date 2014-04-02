@@ -1,0 +1,8 @@
+Objects
+[
+	{
+		Dynamic = true
+		Shape = 'Collision/UnitBox'
+		Mass = 0.8
+	}
+]

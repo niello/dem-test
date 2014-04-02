@@ -1,0 +1,15 @@
+Shader = 'Phong'
+FeatureFlags = "Solid"
+ShaderVars
+{
+	CullMode = 2
+	//NMHeightScale = 0.3
+	SpecularExponent = 10.0
+	MtlDiffuse = (0.558, 0.558, 0.558, 1.0)
+	MtlSpecular = (0.0, 0.0, 0.0, 1.0)
+}
+Textures
+{
+	NormalMap = 'Arch/Door_0_b.tga'
+	DiffMap0 = 'Arch/Door_0_a.jpg'
+}

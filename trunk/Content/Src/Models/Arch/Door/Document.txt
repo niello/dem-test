@@ -1,0 +1,15 @@
+this model fantastic for game design and interior design
+include normalmap.jpg specularmap.jpg diffucemap.jpg 2349X4246 pixel
+low poly and next gen
+
+Instruction :
+1- extract the file
+2- copy the (Interior Door ...) folder in the scene directory
+3- merge with scene each file you want (fbx,collada,max,obj)
+One or more textures on this 3D model have been created with images from CGTextures.com. These images may not be redistributed by default, please visit www.cgtextures.com for more information
+
+
+created by AlirezaSadeghi www.a-sad.mihanblog.com
+
+to see all the production plz visit
+http://www.turbosquid.com/Search/Artists/AlirezaSadeghi?referral=AlirezaSadeghi

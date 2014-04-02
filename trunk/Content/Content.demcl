@@ -1,0 +1,233 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <ProjectGuid>{b0d77a57-f889-4966-a222-1253eee045ce}</ProjectGuid>
+    <OutputPath>bin\</OutputPath>
+    <HomePath>..\Bin\data\</HomePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Src">
+      <Scope>src</Scope>
+    </Folder>
+    <Folder Include="Src\Concepts\" />
+    <Folder Include="Src\Game">
+    </Folder>
+    <Folder Include="Src\Game\Levels">
+      <Scope>level</Scope>
+      <DefaultBuildAction>Content</DefaultBuildAction>
+    </Folder>
+    <Folder Include="Src\Game\AI" />
+    <Folder Include="Src\Game\AI\Actors" />
+    <Folder Include="Src\Game\AI\Hints" />
+    <Folder Include="Src\Game\AI\Smarts" />
+    <Folder Include="Src\Game\Anim" />
+    <Folder Include="Src\Game\Anim\Test" />
+    <Folder Include="Src\Game\Dlg" />
+    <Folder Include="Src\Game\Items" />
+    <Folder Include="Src\Game\Items\Food" />
+    <Folder Include="Src\Game\Items\Misc" />
+    <Folder Include="Src\Game\Quests" />
+    <Folder Include="Src\Game\Quests\Ch0" />
+    <Folder Include="Src\Game\Quests\Ch0\Parcel" />
+    <Folder Include="Src\Game\Quests\Ch0\Sweep" />
+    <Folder Include="Src\Game\Quests\Ch0\Water" />
+    <Folder Include="Src\Game\ScriptClasses" />
+    <Folder Include="Src\Game\Scripts" />
+    <Folder Include="Src\Game\UI" />
+    <Folder Include="Src\GfxLib" />
+    <Folder Include="Src\GfxLib\arch" />
+    <Folder Include="Src\GfxLib\examples" />
+    <Folder Include="Src\GfxLib\terrain" />
+    <Folder Include="Src\GfxLib\vgt" />
+    <Folder Include="Src\GfxLib\vgt" />
+    <Folder Include="Src\Models" />
+    <Folder Include="Src\Models\arch" />
+    <Folder Include="Src\Models\arch\ECCY_Obelisk" />
+    <Folder Include="Src\Models\examples" />
+    <Folder Include="Src\Models\vgt" />
+    <Folder Include="Src\Models\vgt\apple" />
+    <Folder Include="Export">
+      <Scope>export</Scope>
+    </Folder>
+    <Folder Include="Export\DB" />
+    <Folder Include="Project">
+      <Scope>data</Scope>
+    </Folder>
+    <Folder Include="Project\Input" />
+    <Folder Include="Project\Tables" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Export\DB\game.db3">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Project\Input\Layouts.hrd">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Project\Tables\AIActionTpls.hrd">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Project\Tables\AISOActionTpls.hrd">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Project\Tables\anims.xml">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Project\Tables\effects.xml">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Project\Tables\EntityCats.hrd">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Project\Tables\globals.xml">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Project\Tables\locale.xml">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Project\Tables\materials.xml">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Project\Tables\sound.xml">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\Concepts\Sobor - Dvor.jpg">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\Concepts\Sobor - Dvor.vsd">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\Concepts\Sobor - Vid.jpg">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\Concepts\Sobor - Vid.vsd">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\Concepts\_Readme_Folder.txt">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\Concepts\Собор - Двор.jpg">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\Concepts\Собор - Двор.vsd">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\Game\AI\Actors\ECCY_Monk.hrd" />
+    <Content Include="Src\Game\AI\Actors\NPCBase.hrd" />
+    <Content Include="Src\Game\AI\Actors\Plr.hrd" />
+    <Content Include="Src\Game\AI\AIActionTpls.hrd" />
+    <Content Include="Src\Game\AI\AISOActionTpls.hrd" />
+    <Content Include="Src\Game\AI\Hints\NPCBase.hrd" />
+    <Content Include="Src\Game\AI\Hints\ObjectBase.hrd" />
+    <Content Include="Src\Game\AI\Smarts\ContainerBase.hrd" />
+    <Content Include="Src\Game\AI\Smarts\DoorBase.hrd" />
+    <Content Include="Src\Game\AI\Smarts\Fountain.hrd" />
+    <Content Include="Src\Game\AI\Smarts\ItemBase.hrd" />
+    <Content Include="Src\Game\AI\Smarts\NPCBase.hrd" />
+    <Content Include="Src\Game\AI\Smarts\Plr.hrd" />
+    <Content Include="Src\Game\AI\Smarts\SweepZone.hrd" />
+    <Content Include="Src\Game\AI\Smarts\TransitionZone.hrd" />
+    <Content Include="Src\Game\Anim\Test\Door.hrd" />
+    <Content Include="Src\Game\Anim\Test\Kila.hrd" />
+    <Content Include="Src\Game\Dlg\Arei.dlg">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\Game\Dlg\Arei.lua">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\Game\Dlg\FtrConfessor.dlg">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\Game\Dlg\FtrConfessor.lua">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\Game\Dlg\monk1.dlg">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\Game\Dlg\Vicus.dlg">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\Game\Dlg\Vicus.lua">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\Game\Items\Food\Apple.hrd" />
+    <Content Include="Src\Game\Items\Misc\Broom.hrd" />
+    <Content Include="Src\Game\Items\Misc\Flask.hrd" />
+    <Content Include="Src\Game\Items\Misc\FlaskFountainWater.hrd" />
+    <Content Include="Src\Game\Items\Misc\ParcelFromConfessor.hrd" />
+    <Content Include="Src\Game\Levels\ECCY.lvl">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\Game\Quests\Ch0\Parcel\_Quest.hrd" />
+    <Content Include="Src\Game\Quests\Ch0\Sweep\GetBroom.lua">
+      <SubType>LuaCode</SubType>
+    </Content>
+    <Content Include="Src\Game\Quests\Ch0\Sweep\Sweep.lua">
+      <SubType>LuaCode</SubType>
+    </Content>
+    <Content Include="Src\Game\Quests\Ch0\Sweep\_Quest.hrd" />
+    <Content Include="Src\Game\Quests\Ch0\Water\FillFlask.lua">
+      <SubType>LuaCode</SubType>
+    </Content>
+    <Content Include="Src\Game\Quests\Ch0\Water\_Quest.hrd" />
+    <Content Include="Src\Game\ScriptClasses\DoorBase.lua">
+      <SubType>LuaCode</SubType>
+    </Content>
+    <Content Include="Src\Game\ScriptClasses\Fountain.lua">
+      <SubType>LuaCode</SubType>
+    </Content>
+    <Content Include="Src\Game\ScriptClasses\SweepZone.lua">
+      <SubType>LuaCode</SubType>
+    </Content>
+    <Content Include="Src\Game\Scripts\ECCY_To_ECF1.lua">
+      <SubType>LuaCode</SubType>
+    </Content>
+    <Content Include="Src\Game\Scripts\TrgConfessorCutscene.lua">
+      <SubType>LuaCode</SubType>
+    </Content>
+    <Content Include="Src\Game\UI\ContainerBase.hrd" />
+    <Content Include="Src\Game\UI\DoorBase.hrd" />
+    <Content Include="Src\Game\UI\Fountain.hrd" />
+    <Content Include="Src\Game\UI\IAOBase.hrd" />
+    <Content Include="Src\Game\UI\ItemBase.hrd" />
+    <Content Include="Src\Game\UI\NPCBase.hrd" />
+    <Content Include="Src\Game\UI\Plr.hrd" />
+    <Content Include="Src\Game\UI\SweepZone.hrd" />
+    <Content Include="Src\Game\UI\TransitionZone.hrd" />
+    <Content Include="Src\GfxLib\arch\ECCY_Obelisk.hrd">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\GfxLib\examples\box.hrd">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\GfxLib\examples\kila.hrd">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\GfxLib\examples\X_Dawn.hrd">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\GfxLib\terrain\ECCY.hrd">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\GfxLib\terrain\test.hrd">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\GfxLib\vgt\apple.hrd">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\GfxLib\vgt\bush_01.hrd">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\Game\Levels\ECCY.hrd">
+    </Content>
+    <Content Include="Src\Game\Levels\ECCY.lua">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\Game\Levels\ECF1.hrd">
+    </Content>
+  </ItemGroup>
+</Project>

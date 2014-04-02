@@ -1,0 +1,195 @@
+
+Lines (total/code):
+19.04.12 - 228543/144048
+17.05.13 -  72994/49978
+16.07.13 -  61679/42998
+30.07.13 -  62057/43398
+19.09.13 -  62274/43596
+09.01.14 -  63118/44285
+
+Release EXE metrics:
+30.04.13 - Compile 0:53, Build 1:27, Size 4354 KB // SSD
+17.06.13 - Compile 0:48, Build 1:12, Size 3619 KB // SSD
+30.07.13 - Compile 0:49, Build 1:14, Size 3683 KB // SSD
+19.09.13 - Compile 0:49, Build 1:14, Size 3688 KB // SSD
+09.01.14 - Compile 0:48, Build 1:12, Size 3724 KB // SSD
+
+=========================================================
+<NEVER FORGET>
+=========================================================
+1. JPEG textures are loaded for too long.
+2. If character goes to the world origin, check ray-world intersection, when it is broken, mouse 3D pos can be Zero.
+3. Always initialize third-party objects. Remember character controller debugging.
+4. Printing 'T' in a console teleports character, because debug 'T' mapping and UI textbox react on different events.
+
+=========================================================
+<Tasks to complete demo>
+* - need to implement ASAP
+=========================================================
+
+0. BUGS
+-------
+Close UI connected to entities when that entities are deleted (deactivated) or their props are invalidated
+ - Reference entities in UI only by UID
+Sometimes camera rotation mode isn't being disabled when MMB is released
+{ [ { } ] } problem in data schemes
+Window resize breaks mouse and viewport
+Changing Gfx adapter crashes in one of directions
+Arei talks only after F5-F8
+First click on Broom leads to no action, second is correct
+Double click on item moving closes container window
+
+I.a. Low-level code
+-------------------
+Fix performance of ray-heightfield test
+Ragdoll
+Cutscene system
+String::Reserve
+Standartize collections interface
+Solve P->Get(CStrID, CStrID) by renaming to GetSafe or TryGet or smth, key prm is FIRST
+
+I.b. Tools
+----------
+CFTexture conversion tool for the CF (to DDS and other appropriate formats)
+CFModel OBJ & FBX exporter tool to a new mesh format
+Remove old unused CF code
+Game editor tool (CIDE2)
+BBuilder command line interface for CIDE2
+BBuilder data-driven export links scheme
+Cutscene tool or CIDE2 plugin
+CF user control plugin for CIDE2 - edit CFD files (replace current CF GUI application)
+
+II. Game engine code
+---------------------
+* Interaction system refactoring
+ - * actor animation mapping
+ - * impl Talk action
+* SaveLoad system refactoring
+ - * save nav. regions enabled flag and other state
+ - savegame packing (continue data is unpacked, save is the same data packed)
+ - save animation tasks (mb not all), separate handling of AI-driven and static animation
+ - save scene graph
+Group selection (using pick shapes and mouse-dragged rectangle converted to a frustum, CCamera::GetFrustum(RelRect))
+Formations, group AI through AISquad or smth
+AI task queues
+Redesign AI NavRegions
+ - take into account Get/Set lock status
+ - save/load their state
+ - cross-navdata consistency (now regions are per-navmesh, dependent on radius and non-iterable)
+ - autocreate nav. regions under doors
+ - nav controllers per-poly or only per-region? Per-region sounds sane.
+Entity templates
+
+III. RPG code
+-------------
+RPS (RolePlaying System)
+Character class
+PlayerCharacter class
+PropCharSheet
+Equipment system redesign + save/load
+Trading and money
+Combat
+Subdual damage
+Character states (incl. uncontrolled)
+Character animation system
+World time
+Character list UI
+Trading & money UI
+Ingame UI
+Main menu UI
+
+IV. Optional features
+---------------------
+Ambient dialogues
+Ambient goals and actions for NPCs
+Reaction to agression
+Day & night
+Particle systems
+Skybox
+Weather effects
+Shader params animation
+
+=========================================================
+<AI, implement parts on demand>
+=========================================================
+
+General:
+- Actor is a blackboard, all other are subsystems, sensors etc
+- AI LOD (like pActor->LOD and check this value at various sensors and subsystems).
+  Can also declare some LOD values as enum members (like AILOD_Highest = 100, AILOD_Half = 50, AILOD_Freeze = 0)
+
+Bhv & Planning:
+- In IsPlanValid during the planning avoid redundant calculations (one plan build is always sync & not time-sliced)
+
+Navigation:
+- implement at least 2 different link types (say, basic and door)
+- implement humanlike NPC traversal action for each link type
+- area under the feet (ground info)
+- physics navmesh constraint in ActorPhysics
+- Edge type to action map reading
+- Query filter params reading
+- In GetPathEdges detect poly-line intersection point
+- Fix random locations (clamp findRandomPointAroundCircle to radius)
+
+Movement:
+- fix post-obstacle overshooting (bug with going left from start, near apples)
+- fix some obstacle collisions by braking
+- handle stuck
+- handle dynamic obstacles with prediction
+- Obstacle avoidance params reading
+- Make Detour OA work
+
+Dialogues:
+- Dialogue mode
+- Force actor to reach dialogue target, not precalculated point in space
+- Check CanSpeak ability
+- Random node
+- Abort dlg
+- Dialogue target must react on [trying] to start dlg with it
+
+AnimSystem for brain (AI animation controller - movement, targeting, action reflection etc)
+Body FSM (for each part like bottom(moving) & top (action)), body resources & locking
+???sort memory facts, forex Obstacle by (distance - sum of radii), or all by confidence
+
+Actor-to-actor facing when talk (OnStart talk action push bhv Look to the DlgOwner)
+
+[Starting cutscene/video + Arei starts talking at level start]
+
+===============
+
+<Misc>
+
+Init functions with dependency check (InitScripting() { if !EventSrv->HasInstance() msg "you must init events first!" }
+
+Array flag Sorted to signal that array is sorted now and optimized algorithms can be used (forex Array1.ContainsAll(Array2))
+
+Dbg plugin windows: menu, sysinfo
+
+static priorities for UI actions (actions listed in obj's popup) in UI desc (just like UINames now)
+
+validator UIWndVisible / UIWndStatus
+gets string as param, splitting by '.' get window: GetScreen(tok0)->GetChild(tok1)->GetChild(tok2)->...
+second param can be check ID, like 'Visible' etc
+and move it to L2
+
+validator PlrOnly (IsPlr) will be in L3
+
+//!!!need validator with script, but not object's func! (or just call script FROM object's func)
+so all small validators could be implemented through script
+
+Quest.OnStart to dynamically determine starting task, for example
+Lua state wrapper with some util functions
+Script parent constructors cascade!
+	Lua: obj.class, class.parent (or .proto for both, or simply getmetatable?)
+CFlags<T> or CFlags<int NumBits>
+
+Clear CurrEvent once per frame in Lua or when event was processed! (pooled event address)
+  event mgr doesn't know anything about Lua, it's a problem
+
+Error processing for LUA calls (see nlua stack dumping)
+
+Fix CEGUI connections bug & write right (dis)connections
+Clear all CEGUI windows when they aren't needed (CWindow::Init() opposite)
+Event pools, ???CParams/CDataArray/CData pools?
+Use pool allocation for properties to reuse them efficiently
+Predefined StrIDs

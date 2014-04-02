@@ -1,0 +1,40 @@
+Attrs
+[
+	{
+		Class = "Model"
+
+		Material = 'Test/Material'
+		Vars
+		{
+			SpecularExponent = 64.0
+			MtlDiffuse = (0.588, 0.588, 0.588, 1.0)
+			MtlSpecular = (0.3922, 0.3937, 0.3106, 1.0)
+		}
+		Textures
+		{
+			NormalMap = 'System/NoBump.dds'
+			DiffMap0 = 'Vgt/Apple_0_a.jpg'
+		}
+		Mesh = 'Vgt/Apple'
+		BatchType = 'Solid'
+	},
+	{
+		Class = "Model"
+
+		Material = 'Test/Material'
+		Vars
+		{
+			SpecularExponent = 10.0
+			MtlDiffuse = (0.2118, 0.1882, 0.1255, 1.0)
+			MtlSpecular = (0.0, 0.0, 0.0, 1.0)
+		}
+		Textures
+		{
+			NormalMap = 'System/NoBump.dds'
+			DiffMap0 = 'System/White.dds'
+		}
+		Mesh = 'Vgt/Apple'
+		MeshGroupIndex = 1
+		BatchType = 'Solid'
+	}
+]

@@ -1,0 +1,20 @@
+Sensors
+{
+	Vision
+	{
+		FOV = 60
+		Radius = 40.0
+		Perceptors = [ "Obstacle" ]
+	}
+}
+
+Perceptors
+{
+	Obstacle
+	{}
+}
+
+Movement
+{
+	MaxSpeedWalk = 2.7
+}

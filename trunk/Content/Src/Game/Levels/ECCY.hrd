@@ -1,0 +1,356 @@
+Name = "Eger: Cathedral Courtyard"
+SelectedEntities = [ 'GG' ]
+Scene
+{
+	Center = (0.0, 0.0, 0.0)
+	Extents = (1000.0, 200.0, 1000.0)
+	QuadTreeDepth = 5
+	Camera
+	{
+		ThirdPerson = true
+		Distance = 10.0
+		MinDistance = 1.5
+		MaxDistance = 150.0
+		HAngle = 0.0
+		VAngle = 20.0
+		MinVAngle = 5.0
+		MaxVAngle = 89.0
+		COI = (220.0, 0.05, 200.0)
+	}
+}
+Physics
+{
+	Center = (0.0, 0.0, 0.0)
+	Extents = (1000.0, 200.0, 1000.0)
+}
+AI
+{
+	Center = (0.0, 0.0, 0.0)
+	Extents = (1000.0, 200.0, 1000.0)
+	QuadTreeDepth = 5
+}
+Entities
+{
+	ECCY_Sunlight
+	{
+		LoadingGroup = 'Static'
+		Attrs
+		{
+			//???Tfm or separate SRT?
+			Transform = (0.9330128, 0.06698731, 0.3535534, 0.0,
+						0.06698731, 0.9330128, -0.3535534, 0.0,
+						-0.3535534, 0.3535534, 0.8660254, 0.0,
+						120.0, 30.0, 120.0, 1.0)
+			ScenePath = "Sunlight"
+			SceneFile = "Test/GlobalLight"
+		}
+		Props [ "Prop::CPropSceneNode" ]
+	}
+	ECCY_SweepZone_1
+	{
+		Attrs
+		{
+			Transform = (0.9330128, 0.06698731, 0.3535534, 0.0,
+						0.06698731, 0.9330128, -0.3535534, 0.0,
+						-0.3535534, 0.3535534, 0.8660254, 0.0,
+						233.8403, 1.149719, 189.2937, 1.0)
+			SceneFile = "Test/Box"
+			PickShape = 'Collision/UnitBox' //???or whole collision object with offset? or offset as attr?
+			Name = "Пыльное место"
+			SODesc = "SweepZone"
+			SOActionsEnabled
+			{
+				Sweep = true
+			}
+			UIDesc = "SweepZone"
+			AIHintsDesc = "ObjectBase"
+			ScriptClass = "SweepZone"
+		}
+		Props
+		[
+			"Prop::CPropSmartObject",
+			"Prop::CPropUIControl",
+			"Prop::CPropSceneNode",
+			"Prop::CPropScriptable",
+			"Prop::CPropAIHints"
+		]
+	}
+	ECCY_Terrain
+	{
+		LoadingGroup = 'Static'
+		Attrs
+		{
+			Transform = (1.0, 0.0, 0.0, 0.0,
+						 0.0, 1.0, 0.0, 0.0,
+						 0.0, 0.0, 1.0, 0.0,
+						 0.0, 0.0, 0.0, 1.0)
+			SceneFile = "Terrain/ECCY"
+			Physics = "ECCY_Terrain"
+		}
+		Props [ "Prop::CPropSceneNode", "Prop::CPropPhysics" ] //!!!no need in phys if collision only and it is a scene node attr!
+	}
+	ECCY_Obelisk
+	{
+		LoadingGroup = 'Static'
+		Attrs
+		{
+			Transform = (1.0, 0.0, 0.0, 0.0,
+						 0.0, 1.0, 0.0, 0.0,
+						 0.0, 0.0, 1.0, 0.0,
+						 247.6161, 0.6588745, 183.2509, 1.0)
+			SceneFile = "Arch/ECCY_Obelisk"
+		}
+		Props [ "Prop::CPropSceneNode" ]
+	}
+	ECCY_Bush01_1
+	{
+		LoadingGroup = 'Static'
+		Attrs
+		{
+			Transform = (5.0, 0.0, 0.0, 0.0,
+						 0.0, 5.0, 0.0, 0.0,
+						 0.0, 0.0, 5.0, 0.0,
+						 221.9684, 1.0, 191.724, 1.0)
+			SceneFile = "Vgt/Bush01"
+		}
+		Props [ "Prop::CPropSceneNode" ]
+	}
+	GG //???or some common entity without a level, that is placed to the level by the transition logic?
+	{
+		Attrs
+		{
+			Transform = (1.000000, 0.000000, 0.000000, 0.000000, 
+				0.000000, 1.000000, 0.000000, 0.000000, 
+				0.000000, 0.000000, 1.000000, 0.000000, 
+				220.000000, 0.158474, 190.000000, 1.000000)
+			SceneFile = "Test/Kila"
+			UIDesc = "Plr"
+			ActorDesc = "Plr"
+			SODesc = "Plr"
+			AIHintsDesc = "NPCBase"
+			AnimDesc = "Test/Kila"
+			Name = "Наш Славный Послушник"
+			Radius = 0.3
+			Height = 1.75
+			Physics = "TestCharacter"
+			ScriptClass = "PlrBase"
+			Inventory =
+			[
+				{ ID = 'Food/Apple' Count = 2 }
+			]
+		}
+		Props
+		[
+			"Prop::CPropSceneNode",
+			"Prop::CPropAnimation",
+			"Prop::CPropCharacterController",
+			"Prop::CPropScriptable",
+			"Prop::CPropSmartObject",
+			"Prop::CPropUIControl",
+			"Prop::CPropActorBrain",
+			"Prop::CPropAIHints",
+			"Prop::CPropTalking",
+			//"Prop::CPropDestructible",
+			//"Prop::CPropWeapon",
+			"Prop::CPropEquipment"
+		]
+	}
+	Arei
+	{
+		Attrs
+		{
+			Transform = (1.000000, 0.000000, 0.000000, 0.000000, 
+				0.000000, 1.000000, 0.000000, 0.000000, 
+				0.000000, 0.000000, 1.000000, 0.000000, 
+				237.000000, 0.458474, 190.000000, 1.000000)
+			SceneFile = "Test/Kila"
+			UIDesc = "NPCBase"
+			ActorDesc = "NPCBase"
+			SODesc = "NPCBase"
+			AIHintsDesc = "NPCBase"
+			AnimDesc = "Test/Kila"
+			Name = "Арей"
+			Radius = 0.3
+			Height = 1.75
+			Physics = "TestCharacter"
+			Dialogue = "Arei"
+		}
+		Props
+		[
+			"Prop::CPropSceneNode",
+			"Prop::CPropAnimation",
+			"Prop::CPropCharacterController",
+			"Prop::CPropScriptable",
+			"Prop::CPropSmartObject",
+			"Prop::CPropUIControl",
+			"Prop::CPropActorBrain",
+			"Prop::CPropAIHints",
+			"Prop::CPropTalking",
+			//"Prop::CPropDestructible",
+			//"Prop::CPropWeapon",
+			"Prop::CPropEquipment"
+		]
+	}
+	ECCY_Broom_1
+	{
+		Attrs
+		{
+			Transform = (0.999114, 0.042058, -0.001442, 0.000000, 
+				-0.042082, 0.998375, -0.038414, 0.000000, 
+				-0.000176, 0.038440, 0.999261, 0.000000, 
+				226.982864, 1.981168, 192.988724, 1.000000)
+			UIDesc = "ItemBase"
+			Physics = "Box"
+			ItemTplID = 'Misc/Broom'
+			ItemCount = 1
+			AIHintsDesc = "ObjectBase"
+			SODesc = "ItemBase"
+			SceneFile = "Test/Box"
+		}
+		Props
+		[
+			"Prop::CPropSceneNode",
+			"Prop::CPropPhysics",
+			"Prop::CPropItem",
+			"Prop::CPropSmartObject",
+			"Prop::CPropUIControl",
+			"Prop::CPropAIHints"
+		]
+	}
+	ECCY_DoorTest_1
+	{
+		Attrs
+		{
+			Transform = (0.999114, 0.042058, -0.001442, 0.000000, 
+				-0.042082, 0.998375, -0.038414, 0.000000, 
+				-0.000176, 0.038440, 0.999261, 0.000000, 
+				222.982864, 0.981168, 194.988724, 1.000000)
+			UIDesc = "DoorBase"
+			Physics = "Door"
+			ScriptClass = "DoorBase"
+			SODesc = "DoorBase"
+			SceneFile = "Arch/Door"
+			AnimDesc = "Test/Door"
+			NavRegion = "Door01"
+		}
+		Props
+		[
+			"Prop::CPropSmartObject",
+			"Prop::CPropUIControl",
+			"Prop::CPropSceneNode",
+			"Prop::CPropAnimation",
+			"Prop::CPropPhysics",
+			"Prop::CPropScriptable",
+			"Prop::CPropAIHints"
+		]
+	}
+	ECCY_To_ECF1
+	{
+		Attrs
+		{
+			Transform = (0.999114, 0.042058, -0.001442, 0.000000, 
+				-0.042082, 0.998375, -0.038414, 0.000000, 
+				-0.000176, 0.038440, 0.999261, 0.000000, 
+				222.982864, 0.981168, 193.588724, 1.000000)
+			Name = "В Собор"
+			UIDesc = "TransitionZone"
+			PickShape = 'Collision/UnitBox' //???or whole collision object with offset? or offset as attr?
+			DestLevelID = 'ECF1'
+			DestMarkerID = 'ECF1_To_ECCY'
+			FarTravel = true
+			SODesc = "TransitionZone"
+			ScriptClass = "TransitionZone"
+			Script = "ECCY_To_ECF1"
+		}
+		Props
+		[
+			"Prop::CPropSmartObject",
+			"Prop::CPropUIControl",
+			"Prop::CPropScriptable"
+		]
+	}
+	ECCY_Chest_1
+	{
+		Attrs
+		{
+			Transform = (0.999114, 0.042058, -0.001442, 0.000000, 
+				-0.042082, 0.998375, -0.038414, 0.000000, 
+				-0.000176, 0.038440, 0.999261, 0.000000, 
+				212.982864, 1.981168, 193.588724, 1.000000)
+			Name = "Сундук"
+			SODesc = "ContainerBase"
+			UIDesc = "ContainerBase"
+			Physics = "Box"
+			AIHintsDesc = "ObjectBase"
+			SceneFile = "Test/Box"
+			ScriptClass = "ContainerBase"
+			Inventory =
+			[
+				{
+					ID = 'Food/Apple'
+					Count = 2
+				},
+				{
+					// For tests
+					ID = 'Misc/Flask'
+					Count = 1
+				}
+			]
+		}
+		Props
+		[
+			"Prop::CPropSceneNode",
+			"Prop::CPropPhysics",
+			"Prop::CPropInventory",
+			"Prop::CPropSmartObject",
+			"Prop::CPropUIControl",
+			"Prop::CPropAIHints",
+			"Prop::CPropScriptable"
+		]
+	}
+	ECCY_Fountain
+	{
+		Attrs
+		{
+			Transform = (0.9330128, 0.06698731, 0.3535534, 0.0,
+						0.06698731, 0.9330128, -0.3535534, 0.0,
+						-0.3535534, 0.3535534, 0.8660254, 0.0,
+						226.8403, 1.209719, 191.2937, 1.0)
+			SceneFile = "Test/Box"
+			PickShape = 'Collision/UnitBox' //???or whole collision object with offset? or offset as attr?
+			Name = "Фонтан"
+			SODesc = "Fountain"
+			SOActionsEnabled
+			{
+				Drink = true
+				FillVessel = true
+			}
+			UIDesc = "Fountain"
+			ScriptClass = "Fountain"
+		}
+		Props
+		[
+			"Prop::CPropSmartObject",
+			"Prop::CPropUIControl",
+			"Prop::CPropSceneNode",
+			"Prop::CPropScriptable"
+		]
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

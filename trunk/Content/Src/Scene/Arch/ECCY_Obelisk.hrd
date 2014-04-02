@@ -1,0 +1,20 @@
+Attrs
+[
+	{
+		Class = "Model"
+		Material = 'Test/Material'
+		Vars
+		{
+			SpecularExponent = 96.078431
+			MtlDiffuse = (0.8, 0.731357, 0.467789, 1.0)
+			MtlSpecular = (0.0, 0.0, 0.0, 1.0)
+		}
+		Textures
+		{
+			NormalMap = 'Arch/ECCY_Obelisk_0_b.dds'
+			DiffMap0 = 'Arch/ECCY_Obelisk_0_d.dds'
+		}
+		Mesh = 'Arch/ECCY_Obelisk'
+		BatchType = 'Solid'
+	}
+]

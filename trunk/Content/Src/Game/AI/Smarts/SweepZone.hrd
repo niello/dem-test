@@ -1,0 +1,6 @@
+TypeID = 'SweepZone'
+
+Actions =
+{
+	Sweep = 'Sweep'
+}

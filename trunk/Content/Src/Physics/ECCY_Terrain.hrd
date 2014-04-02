@@ -1,0 +1,7 @@
+Objects
+[
+	{
+		Shape = 'Collision/ECCY_Terrain'
+		Group = "Terrain"
+	}
+]

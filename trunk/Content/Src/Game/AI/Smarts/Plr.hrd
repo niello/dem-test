@@ -1,0 +1,7 @@
+Movable = true
+
+Actions
+{
+	Talk = 'Talk'
+	Attack = 'Attack'
+}

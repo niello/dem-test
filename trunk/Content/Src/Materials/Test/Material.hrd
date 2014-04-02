@@ -1,0 +1,8 @@
+Shader = 'Phong'
+FeatureFlags = "Solid|Parallax"
+ShaderVars
+{
+	CullMode = 2
+	SpecularExponent = 16.0
+	NMHeightScale = 0.05
+}

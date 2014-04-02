@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<varlist name="Settings">
+	<varlist name="MapViewOptions">
+		<varlist name="HF">
+			<string name="IndexedPalette">Monochrome</string>
+		</varlist>
+		<varlist name="WS">
+			<string name="IndexedPalette">Thermal</string>
+		</varlist>
+		<varlist name="SH">
+			<string name="IndexedPalette">InverseBoolean</string>
+		</varlist>
+	</varlist>
+	<varlist name="HF">
+		<int name="nx">512</int>
+		<int name="ny">512</int>
+		<float name="HorizScale">1</float>
+		<bool name="MosaicFlag">false</bool>
+		<int name="MosaicSize">512</int>
+		<string name="Algorithm">InflateDM64</string>
+	</varlist>
+	<bool name="WrapFlag">false</bool>
+	<varlist name="DM">
+		<string name="Algorithm">PeakDM</string>
+		<int name="HF_in_DM">64</int>
+		<int name="nx">8</int>
+		<int name="ny">8</int>
+		<int name="SeaLand">31</int>
+		<int name="FlatSteep">3</int>
+		<int name="FeatureScale">10</int>
+		<int name="FracRough">4</int>
+		<int name="PeakRough">22</int>
+		<int name="Cliffs">0</int>
+		<int name="Erosion">0</int>
+		<int name="Lakes">0</int>
+		<string name="Climate">Temperate</string>
+	</varlist>
+	<varlist name="TX">
+		<bool name="UseLM">true</bool>
+		<bool name="UseTX">true</bool>
+		<bool name="UseStrata">true</bool>
+		<int name="TX_in_HF">1</int>
+		<bool name="MosaicFlag">false</bool>
+		<int name="MosaicSize">512</int>
+		<int name="MaxRadAA">2</int>
+	</varlist>
+	<varlist name="LM">
+		<colour name="Sun">255, 244, 222</colour>
+		<colour name="Amb">98, 192, 255</colour>
+		<colour name="Spec">255, 255, 255</colour>
+		<float name="Azim">0</float>
+		<float name="Elev">60</float>
+		<float name="Brightness">1</float>
+		<float name="SunAmbRatio">0.8</float>
+		<bool name="UseWM">false</bool>
+		<bool name="ShadowFlag">true</bool>
+		<bool name="SpecularFlag">false</bool>
+		<bool name="RecalcShadowFlag">false</bool>
+		<bool name="BumpMapping">false</bool>
+		<bool name="MosaicFlag">false</bool>
+		<int name="LM_in_HF">1</int>
+	</varlist>
+	<varlist name="Ops">
+		<bool name="GenDM">true</bool>
+		<bool name="GenHF">true</bool>
+	</varlist>
+	<varlist name="CalcTimers">
+		<varlist name="DM">
+			<float name="GenMap">0.187</float>
+		</varlist>
+		<varlist name="HF">
+			<float name="DesignInflate64">0.343</float>
+		</varlist>
+		<varlist name="AM">
+			<float name="GenMap">1.202</float>
+		</varlist>
+		<varlist name="TN">
+			<float name="GenMap">0.156</float>
+		</varlist>
+		<varlist name="LM">
+			<float name="CastShadows">0.187</float>
+			<float name="CalcLighting">0.093</float>
+		</varlist>
+		<varlist name="TX">
+			<float name="GenMap">0.983</float>
+		</varlist>
+	</varlist>
+	<varlist name="Georeferencing">
+		<varlist name="Extents">
+			<double name="left">0</double>
+			<double name="right">511</double>
+			<double name="bottom">0</double>
+			<double name="top">511</double>
+			<short name="UnitCode">1</short>
+		</varlist>
+		<short name="UTM_zone_code">1</short>
+		<short name="EPSG_datum_code">6326</short>
+		<varlist name="bt">
+			<short name="ExternProjFlag">0</short>
+		</varlist>
+	</varlist>
+	<int name="SettingsVersion">2540</int>
+</varlist>

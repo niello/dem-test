@@ -1,0 +1,6 @@
+UIName = "Пыльное место"
+
+SmartObjActions
+{
+	Sweep = "Подмести"
+}

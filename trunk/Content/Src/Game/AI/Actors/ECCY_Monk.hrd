@@ -1,0 +1,48 @@
+_Base_ = "NPCBase"
+
+EnableDecisionMaking = true
+
+Sensors
+{
+	Vision
+	{
+		Perceptors = [ "Obstacle", "Enemy", "Overseer", "SmartObj" ]
+	}
+}
+
+Perceptors
+{
+	Overseer
+	{
+		Overseers = [ "Arei" ]
+	}
+	
+	SmartObj {}
+}
+
+Goals
+{
+	Wander
+	{
+		PersonalityFactor = 1.0
+	}
+	
+	Work
+	{
+		PersonalityFactor = 0.7
+		ActionMap
+		{
+			SweepZone = "Sweep"
+			Plant = "Spud"
+		}
+	}
+}
+
+Actions
+[
+	"Wander",
+	"GotoSmartObj",
+	"UseSmartObj",
+	"EquipItem",
+	"PickItemWorld"
+]

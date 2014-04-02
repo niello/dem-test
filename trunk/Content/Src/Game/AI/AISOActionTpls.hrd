@@ -1,0 +1,86 @@
+//???!!!allow loading from all the files in some directory?!
+
+OpenDoor
+{
+	MaxDistance = 1.3
+	ResetOnAbort = false
+	TargetState = 'Opened'
+	ProgressDriver = "SO.FSM"
+	MaxUserCount = 1
+}
+
+CloseDoor
+{
+	MaxDistance = 1.3
+	ResetOnAbort = false
+	TargetState = 'Closed'
+	ProgressDriver = "SO.FSM"
+	MaxUserCount = 1
+}
+
+PickItem
+{
+	MaxDistance = 1.3
+	Face = false
+	ProgressDriver = "Dur"
+	MaxUserCount = 1
+	Script = "SOActions/PickItem"
+}
+
+OpenContainer
+{
+	MaxDistance = 1.3
+	Face = true
+	EndOnDone = false
+	TargetState = 'Opened'
+	ProgressDriver = "SO.FSM"
+	MaxUserCount = 1
+}
+
+Travel
+{
+	MaxDistance = 1.3
+	ProgressDriver = "None"
+	ActorRadiusMatters = false
+	Script = "SOActions/Travel"
+}
+
+Talk
+{
+	MaxDistance = 3
+	ProgressDriver = "None"
+	Face = true
+	MaxUserCount = 1
+}
+
+Drink
+{
+	MaxDistance = 0.9
+	Face = true
+	ProgressDriver = "Dur"
+	Duration = 3
+}
+
+FillVessel
+{
+	MaxDistance = 1.4
+	Face = true
+	ProgressDriver = "Dur"
+	Duration = 2
+	Script = "SOActions/FillVessel"
+}
+
+Sweep
+{
+	MaxDistance = 2.0
+	MaxUserCount = 1		// How many actors can use this smart with this action simultaneously, -1 means no limit
+	ResetOnAbort = false	// Is progress reset to 0 if action was not finished
+	EndOnDone = false
+	ProgressDriver = "Dur"
+	Script = "SOActions/Sweep"
+	Preconditions // Need non-script world state sources? if not, can leave only GetPreconditions optional scripted method
+	{
+		Type = "Script"
+		Func = "GetPreconditions"
+	}
+}

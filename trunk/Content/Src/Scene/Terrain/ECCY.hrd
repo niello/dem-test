@@ -1,0 +1,22 @@
+Attrs
+[
+	{
+		Class = "Terrain"
+
+		CDLODFile = "ECCY"
+
+		SplatSizeX = 5.0
+		SplatSizeZ = 5.0
+
+		Textures
+		{
+			SplatMap = 'Terrain/ECCY_SM.tga'
+			NormalMap = 'Terrain/ECCY_NM.png'
+			SplatTex0 = 'Terrain/Grass.dds'
+			SplatTex1 = 'Terrain/Cobblestone.png'
+			SplatTex2 = 'Terrain/Sand.dds'
+			SplatTex3 = 'Terrain/Rock.dds'
+			SplatTex4 = 'Terrain/Ground.dds'
+		}
+	}
+]

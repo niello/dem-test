@@ -1,0 +1,11 @@
+VisibleMain
+{
+	Type = "Visible"
+	Size = "Box"		// Uses entity box for the stimulus size
+	Enabled = true
+	Intensity = 1.0
+}
+
+// No sound
+
+// No other permanent stimuli

@@ -1,0 +1,6 @@
+// ContentForge description of resource
+
+Category = 'Models'
+ID = 'Vgt/Apple'
+Tool = "CFModel"
+In = "Apple/apple.obj"
