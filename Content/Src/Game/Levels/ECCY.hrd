@@ -167,6 +167,7 @@ Entities
 			UIDesc = "NPCBase"
 			ActorDesc = "NPCBase"
 			SODesc = "NPCBase"
+			ScriptClass = "NPCBase"
 			AIHintsDesc = "NPCBase"
 			AnimDesc = "Test/Kila"
 			Name = "Арей"
