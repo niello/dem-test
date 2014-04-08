@@ -224,6 +224,7 @@ bool CAppStateGame::IssueActorCommand(bool Run, bool ClearQueue)
 		AI::CTask Task;
 		Task.Plan = Action;
 		Task.Relevance = AI::Relevance_Absolute;
+		Task.FailOnInterruption = false;
 		Task.ClearQueueOnFailure = true;
 		pActor->EnqueueTask(Task);
 	}
