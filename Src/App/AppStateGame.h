@@ -37,7 +37,7 @@ protected:
 	PROFILER_DECLARE(profCompleteFrame);
 	PROFILER_DECLARE(profRender);
 
-	bool IssueActorCommand(bool Run);
+	bool IssueActorCommand(bool Run, bool ClearQueue);
 
 	DECLARE_EVENT_HANDLER(MouseMoveRaw, OnMouseMoveRaw);
 	DECLARE_EVENT_HANDLER(MouseWheel, OnMouseWheel);

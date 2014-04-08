@@ -14,7 +14,7 @@ Perceptors
 {
 	Overseer
 	{
-		Overseers = [ "Arei" ]
+		Overseers = [ 'Arei' ]
 	}
 	
 	SmartObj {}

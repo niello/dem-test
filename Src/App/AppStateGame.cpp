@@ -1,5 +1,8 @@
 #include "AppStateGame.h"
 
+#include <AI/AIServer.h>
+#include <AI/PropActorBrain.h>
+#include <AI/Movement/Actions/ActionGotoPosition.h>
 #include <App/AppStates.h>
 #include <Quests/QuestManager.h>
 #include <Factions/FactionManager.h>
@@ -14,9 +17,6 @@
 #include <Scene/Events/SetTransform.h>
 #include <UI/PropUIControl.h>
 #include <Audio/AudioServer.h>
-#include <AI/AIServer.h>
-#include <AI/Events/QueueTask.h>
-#include <AI/Movement/Tasks/TaskGoto.h>
 #include <Scene/SceneServer.h>
 #include <Physics/PhysicsServer.h>
 #include <Video/VideoServer.h>
@@ -194,31 +194,38 @@ CStrID CAppStateGame::OnFrame()
 }
 //---------------------------------------------------------------------
 
-bool CAppStateGame::IssueActorCommand(bool Run)
+bool CAppStateGame::IssueActorCommand(bool Run, bool ClearQueue)
 {
 	Game::CEntity* pTargetEntity = GameSrv->GetEntityUnderMouse();
 	Prop::CPropUIControl* pCtl = pTargetEntity ? pTargetEntity->GetProperty<Prop::CPropUIControl>() : NULL;
 
+	CStrID ID = FactionMgr->GetFaction(CStrID("Party"))->GetGroupLeader(GameSrv->GetActiveLevel()->GetSelection());
+	Game::CEntity* pActorEntity = EntityMgr->GetEntity(ID);
+	Prop::CPropActorBrain* pActor = pActorEntity ? pActorEntity->GetProperty<Prop::CPropActorBrain>() : NULL;
+
+	//!!!if group selected, clear queues of all members!
+	if (ClearQueue) pActor->ClearTaskQueue();
+
 	if (pCtl)
 	{
-		CStrID ID = FactionMgr->GetFaction(CStrID("Party"))->GetGroupLeader(GameSrv->GetActiveLevel()->GetSelection());
-		Game::CEntity* pActorEntity = EntityMgr->GetEntity(ID);
 
 		// NB: Pure UI actions, like Select and Explore, don't require an actor, so we allow NULL actor here
-		pCtl->ExecuteDefaultAction(pActorEntity);
+		pCtl->ExecuteDefaultAction(pActorEntity); //???get default action, check, for pure UI don't clear queue?
 	}
 	else
 	{
 		//!!!TMP! use formation to issue goto commands for all the group
-		CStrID ID = FactionMgr->GetFaction(CStrID("Party"))->GetGroupLeader(GameSrv->GetActiveLevel()->GetSelection());
-		Game::CEntity* pActorEntity = EntityMgr->GetEntity(ID);
 		if (!pActorEntity) FAIL;
 
-		//???only if clicked on navmesh?
-		AI::PTaskGoto Task = n_new(AI::CTaskGoto);
-		Task->Point = GameSrv->GetMousePos3D();
-		Task->MvmtType = Run ? AI::AIMvmt_Type_Run : AI::AIMvmt_Type_Walk;
-		pActorEntity->FireEvent(Event::QueueTask(Task));
+		AI::PActionGotoPosition Action = n_new(AI::CActionGotoPosition);
+		Action->Init(GameSrv->GetMousePos3D());
+		//!!!MvmtType = Run ? AI::AIMvmt_Type_Run : AI::AIMvmt_Type_Walk;
+
+		AI::CTask Task;
+		Task.Plan = Action;
+		Task.Relevance = AI::Relevance_Absolute;
+		Task.ClearQueueOnFailure = true;
+		pActor->EnqueueTask(Task);
 	}
 
 	OK;
@@ -286,7 +293,10 @@ bool CAppStateGame::OnMouseBtnDown(const Events::CEventBase& Event)
 			//???how to handle double-click without issuing an action twice, first walking and then running?
 			//!!!don't resend action each tick, but once at near 1/4 sec can update task if mouse is pressed,
 			//for smooth movement. Formation may support it badly!
-			return IssueActorCommand(false);
+			bool ShiftPressed =
+				InputSrv->CheckKeyState(Input::LeftShift, KEY_IS_PRESSED) ||
+				InputSrv->CheckKeyState(Input::RightShift, KEY_IS_PRESSED);
+			return IssueActorCommand(false, !ShiftPressed);
 		}
 		case Input::MBMiddle:
 		{
@@ -325,7 +335,13 @@ bool CAppStateGame::OnMouseBtnUp(const Events::CEventBase& Event)
 bool CAppStateGame::OnMouseDoubleClick(const Events::CEventBase& Event)
 {
 	Input::EMouseButton Button = ((const Event::MouseBtnDown&)Event).Button;
-	if (Button == Input::MBLeft) return IssueActorCommand(true);
+	if (Button == Input::MBLeft)
+	{
+		bool ShiftPressed =
+			InputSrv->CheckKeyState(Input::LeftShift, KEY_IS_PRESSED) ||
+			InputSrv->CheckKeyState(Input::RightShift, KEY_IS_PRESSED);
+		return IssueActorCommand(true, !ShiftPressed);
+	}
 	FAIL;
 }
 //---------------------------------------------------------------------
