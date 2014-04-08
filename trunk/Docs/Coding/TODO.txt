@@ -41,7 +41,7 @@ Double click on item moving closes container window
 I.a. Low-level code
 -------------------
 Fix performance of ray-heightfield test
-Ragdoll
+Ragdoll (???handle through the animation task?)
 Cutscene system
 String::Reserve
 Standartize collections interface
@@ -60,7 +60,6 @@ CF user control plugin for CIDE2 - edit CFD files (replace current CF GUI applic
 
 II. Game engine code
 ---------------------
-* AI task queues
 * Interaction system refactoring
  - * actor animation mapping
  - * impl Talk action pre-facing
@@ -115,8 +114,13 @@ Shader params animation
 
 General:
 - Actor is a blackboard, all other are subsystems, sensors etc
+- ???Use struct CBlackBoard BB;???
 - AI LOD (like pActor->LOD and check this value at various sensors and subsystems).
   Can also declare some LOD values as enum members (like AILOD_Highest = 100, AILOD_Half = 50, AILOD_Freeze = 0)
+
+Senses:
+- Disable some sensors or perceptors when they aren't needed (forex when we do not search for enemy or item,
+  we can ignore these perceptors)
 
 Bhv & Planning:
 - In IsPlanValid during the planning avoid redundant calculations (one plan build is always sync & not time-sliced)
