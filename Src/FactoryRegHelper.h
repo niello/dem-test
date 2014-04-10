@@ -19,6 +19,8 @@
 #include <AI/SmartObj/ActionTpls/ActionTplUseSmartObj.h>
 
 // Actions
+#include <AI/Behaviour/ActionSequence.h>
+#include <AI/Movement/Actions/ActionFaceTarget.h>
 #include <AI/Movement/Actions/ActionGoto.h>
 #include <AI/Movement/Actions/ActionSteerToPosition.h>
 #include <AI/Planning/WorldStateSourceScript.h>
@@ -54,6 +56,9 @@ void ForceFactoryRegistration()
 	AI::CActionTplUseSmartObj::ForceFactoryRegistration();
 	AI::CActionTplPickItemWorld::ForceFactoryRegistration();
 	AI::CActionTplEquipItem::ForceFactoryRegistration();
+	AI::CActionSequence::ForceFactoryRegistration();
+	AI::CActionFaceTarget::ForceFactoryRegistration();
+	AI::CActionGoto::ForceFactoryRegistration();
 	AI::CActionSteerToPosition::ForceFactoryRegistration();
 	AI::CPerceptorObstacle::ForceFactoryRegistration();
 	AI::CPerceptorOverseer::ForceFactoryRegistration();

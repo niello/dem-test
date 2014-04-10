@@ -14,9 +14,12 @@ function OnDlgRequest(e)
 		return
 	end
 
-	--!!!here we can queue actions, then listen specified end event and then accept dialogue!
+	this:ClearTaskQueue() --???or just enqueue to front, to preserve other tasks?
+	this:EnqueueTask({ Class = "FaceTarget", Target = e.Initiator })
+
+	--???react on some event or enqueue response action?
 	DlgMgr.AcceptDialogue(e.Initiator, name)
-	
+
 end
 
 "> 
