@@ -1,0 +1,23 @@
+// It is silly to link all the L2, L3 and game to BBuilder only because we need properties' FourCC codes
+// Yes, maintaining this file manually is prone of errors, but, after all, sometimes you MUST do something by yourself
+// If you are not agreed with the last statement, write tool and share it with others ;)
+
+List
+[
+	{ Name = "Prop::CPropActorBrain"			Code = "PRAB" },
+	{ Name = "Prop::CPropAIHints"				Code = "PRAH" },
+	{ Name = "Prop::CPropSmartObject"			Code = "PRSO" },
+	{ Name = "Prop::CPropAnimation"				Code = "PANM" },
+	{ Name = "Prop::CPropCharacterController"	Code = "PCCT" },
+	{ Name = "Prop::CPropPhysics"				Code = "PPHY" },
+	{ Name = "Prop::CPropTrigger"				Code = "PTRG" },
+	{ Name = "Prop::CPropSceneNode"				Code = "PSCN" },
+	{ Name = "Prop::CPropScriptable"			Code = "PSCR" },
+	{ Name = "Prop::CPropUIControl"				Code = "PUIC" },
+	{ Name = "Prop::CPropDestructible"			Code = "PDST" },
+	{ Name = "Prop::CPropWeapon"				Code = "PWPN" },
+	{ Name = "Prop::CPropTalking"				Code = "PTLK" },
+	{ Name = "Prop::CPropInventory"				Code = "PINV" },
+	{ Name = "Prop::CPropItem"					Code = "PITM" },
+	{ Name = "Prop::CPropEquipment"				Code = "PEQI" }
+]

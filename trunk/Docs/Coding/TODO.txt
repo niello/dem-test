@@ -31,12 +31,13 @@ Release EXE metrics:
 -------
 Close UI connected to entities when that entities are deleted (deactivated) or their props are invalidated
  - Reference entities in UI only by UID
+ -???global events on entity deactivation and renaming?
 Sometimes camera rotation mode isn't being disabled when MMB is released
 { [ { } ] } problem in data schemes
 Window resize breaks mouse and viewport
 Changing Gfx adapter crashes in one of directions
 First click on Broom leads to no action, second is correct
-Double click on item moving closes container window
+Double click on UI window passes through UI and adds task, which is wrong
 
 I.a. Low-level code
 -------------------
@@ -60,11 +61,8 @@ CF user control plugin for CIDE2 - edit CFD files (replace current CF GUI applic
 
 II. Game engine code
 ---------------------
-* Interaction system refactoring
- - * actor animation mapping
- - * impl Talk action pre-facing
-* SaveLoad system refactoring
- - * save nav. regions enabled flag and other state
+Actor animation mapping, including SO action animations
+SaveLoad system refactoring
  - savegame packing (continue data is unpacked, save is the same data packed)
  - save animation tasks (mb not all), separate handling of AI-driven and static animation
  - save scene graph
@@ -72,11 +70,10 @@ Group selection (using pick shapes and mouse-dragged rectangle converted to a fr
 Formations, group AI through AISquad or smth
 Redesign AI NavRegions
  - take into account Get/Set lock status
- - save/load their state
+ - save/load their state (enabled flag etc)
  - cross-navdata consistency (now regions are per-navmesh, dependent on radius and non-iterable)
  - autocreate nav. regions under doors
  - nav controllers per-poly or only per-region? Per-region sounds sane.
-Entity templates
 
 III. RPG code
 -------------
@@ -132,7 +129,6 @@ Navigation:
 - physics navmesh constraint in ActorPhysics
 - Edge type to action map reading
 - Query filter params reading
-- In GetPathEdges detect poly-line intersection point
 - Fix random locations (clamp findRandomPointAroundCircle to radius)
 
 Movement:

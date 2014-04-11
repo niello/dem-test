@@ -272,19 +272,13 @@ Entities
 	}
 	ECCY_Chest_1
 	{
+		Tpl = "Chest"
 		Attrs
 		{
 			Transform = (0.999114, 0.042058, -0.001442, 0.000000, 
 				-0.042082, 0.998375, -0.038414, 0.000000, 
 				-0.000176, 0.038440, 0.999261, 0.000000, 
 				212.982864, 1.981168, 193.588724, 1.000000)
-			Name = "Сундук"
-			SODesc = "ContainerBase"
-			UIDesc = "ContainerBase"
-			Physics = "Box"
-			AIHintsDesc = "ObjectBase"
-			SceneFile = "Test/Box"
-			ScriptClass = "ContainerBase"
 			Inventory =
 			[
 				{
@@ -292,22 +286,12 @@ Entities
 					Count = 2
 				},
 				{
-					// For tests
+					// For tests, quest item given by Vicus
 					ID = 'Misc/Flask'
 					Count = 1
 				}
 			]
 		}
-		Props
-		[
-			"Prop::CPropSceneNode",
-			"Prop::CPropPhysics",
-			"Prop::CPropInventory",
-			"Prop::CPropSmartObject",
-			"Prop::CPropUIControl",
-			"Prop::CPropAIHints",
-			"Prop::CPropScriptable"
-		]
 	}
 	ECCY_Fountain
 	{

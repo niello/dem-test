@@ -30,7 +30,7 @@ private:
 	WORD	ItemsTotalCount;
 	WORD	ItemsContainerCount;
 	bool	IgnoreSpinnerValueEvent;
-	bool	DialogueResult;
+	bool	DialogResult;
 	CStrID	ItemID;
 
 	bool OnOwnerHide(const CEGUI::EventArgs& e);

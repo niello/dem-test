@@ -1,0 +1,24 @@
+
+//???or library containing multiple tpls?
+
+Attrs
+{
+	Name = "Сундук"
+	SODesc = "ContainerBase"
+	UIDesc = "ContainerBase"
+	Physics = "Box"
+	AIHintsDesc = "ObjectBase"
+	SceneFile = "Test/Box"
+	ScriptClass = "ContainerBase"
+}
+
+Props
+[
+	"Prop::CPropSceneNode",
+	"Prop::CPropPhysics",
+	"Prop::CPropInventory",
+	"Prop::CPropSmartObject",
+	"Prop::CPropUIControl",
+	"Prop::CPropAIHints",
+	"Prop::CPropScriptable"
+]

@@ -23,15 +23,15 @@ void CMoveItemsWindow::Init(CEGUI::Window* pWindow)
 	pOwnerWnd = NULL;
 	pConnectionOnWindowParentHide = NULL;
 	IgnoreSpinnerValueEvent = false;
-	DialogueResult = false;
+	DialogResult = false;
 
 	CWindow::Init(pWindow);
 
 	CString WndName = pWindow->getName().c_str();
 
-	pContSpn = (CEGUI::Spinner*)pWnd->getChild(((CString)(WndName + "/ContainerSpinner")).CStr());
-	pInvSpn = (CEGUI::Spinner*)pWnd->getChild(((CString)(WndName + "/InventorySpinner")).CStr());
-	pBtnOk = (CEGUI::PushButton*)pWnd->getChild(((CString)(WndName + "/OkButton")).CStr());
+	pContSpn = (CEGUI::Spinner*)pWnd->getChild(CString(WndName + "/ContainerSpinner").CStr());
+	pInvSpn = (CEGUI::Spinner*)pWnd->getChild(CString(WndName + "/InventorySpinner").CStr());
+	pBtnOk = (CEGUI::PushButton*)pWnd->getChild(CString(WndName + "/OkButton").CStr());
 
 	pContSpn->setMinimumValue(0);
 	pInvSpn->setMinimumValue(0);
@@ -55,7 +55,7 @@ void CMoveItemsWindow::Init(CEGUI::Window* pWindow)
 
 bool CMoveItemsWindow::OnShow(const Events::CEventBase& Event)
 {
-	DialogueResult = false;
+	DialogResult = false;
 
 	Data::PParams P = ((const CEvent&)Event).Params;
 
@@ -116,7 +116,7 @@ bool CMoveItemsWindow::OnHide(const CEGUI::EventArgs& Event)
 	}
 
 	Data::PParams P = n_new(Data::CParams(1));
-	P->Set(CStrID("DialogueResult"), (int)DialogueResult);
+	P->Set(CStrID("DialogResult"), (int)DialogResult);
 	EventSrv->FireEvent(CStrID("MoveItemsWindowClosed"), P);
 
 	OK;
@@ -152,7 +152,7 @@ bool CMoveItemsWindow::OnButtonOkClick(const CEGUI::EventArgs& e)
 			if (pContInv->AddItem(ItemID, ContainerDelta))
 			{
 				pInv->RemoveItem(ItemID, ContainerDelta);
-				DialogueResult = true;
+				DialogResult = true;
 			}
 		}
 		else if (ContainerDelta < 0)
@@ -160,7 +160,7 @@ bool CMoveItemsWindow::OnButtonOkClick(const CEGUI::EventArgs& e)
 			if (pInv->AddItem(ItemID, -ContainerDelta))
 			{
 				pContInv->RemoveItem(ItemID, -ContainerDelta);
-				DialogueResult = true;
+				DialogResult = true;
 			}
 		}
 	}

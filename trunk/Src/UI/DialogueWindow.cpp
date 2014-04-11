@@ -24,11 +24,11 @@ void CDialogueWindow::Init(CEGUI::Window* pWindow)
 
 	CString WndName = pWindow->getName().c_str();
 
-	pContinueBtn = (CEGUI::PushButton*)pWnd->getChild(((CString)(WndName + "/MainButton")).CStr());
+	pContinueBtn = (CEGUI::PushButton*)pWnd->getChild((WndName + "/MainButton").CStr());
 	pContinueBtn->subscribeEvent(CEGUI::PushButton::EventClicked,
 		CEGUI::Event::Subscriber(&CDialogueWindow::OnContinueBtnClicked, this));
 
-	pTextArea = (CEGUI::Listbox*)pWnd->getChild(((CString)(WndName + "/TextArea")).CStr());
+	pTextArea = (CEGUI::Listbox*)pWnd->getChild((WndName + "/TextArea").CStr());
 	pTextArea->setShowVertScrollbar(true);
 	pTextArea->setMultiselectEnabled(false);
 
@@ -110,7 +110,9 @@ bool CDialogueWindow::OnKeyUp(const CEGUI::EventArgs& e)
 	Story::CDlgContext* pCtx = DlgMgr->GetDialogue(DlgID);
 	n_assert(pCtx);
 
-	if (KeyArgs.scancode >= CEGUI::Key::One && KeyArgs.scancode < (CEGUI::Key::One + pCtx->ValidLinkIndices.GetCount()))
+	if (pCtx->pCurrNode->LinkMode == Story::CDlgNode::Link_Select &&
+		KeyArgs.scancode >= CEGUI::Key::One &&
+		KeyArgs.scancode < (CEGUI::Key::One + pCtx->ValidLinkIndices.GetCount()))
 	{
 		SelectAnswer(*pCtx, KeyArgs.scancode - CEGUI::Key::One);
 		OK;
