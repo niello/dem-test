@@ -23,20 +23,20 @@ void CContainerWindow::Init(CEGUI::Window* pWindow)
 		
 	CString WndName = pWindow->getName().c_str();
 	
-	pGiveBtn = (CEGUI::PushButton*)pWnd->getChild(((CString)(WndName + "/GiveBtn")).CStr());
+	pGiveBtn = (CEGUI::PushButton*)pWnd->getChild((WndName + "/GiveBtn").CStr());
 	pGiveBtn->subscribeEvent(CEGUI::PushButton::EventClicked,
 		CEGUI::Event::Subscriber(&CContainerWindow::OnGiveBtnClick, this));
 
-	pTakeBtn = (CEGUI::PushButton*)pWnd->getChild(((CString)(WndName + "/TakeBtn")).CStr());
+	pTakeBtn = (CEGUI::PushButton*)pWnd->getChild((WndName + "/TakeBtn").CStr());
 	pTakeBtn->subscribeEvent(CEGUI::PushButton::EventClicked,
 		CEGUI::Event::Subscriber(&CContainerWindow::OnTakeBtnClick, this));
 
-	pInvList = (CEGUI::Listbox*)pWnd->getChild(((CString)(WndName + "/InvList")).CStr());
+	pInvList = (CEGUI::Listbox*)pWnd->getChild((WndName + "/InvList").CStr());
 
-	pContList = (CEGUI::Listbox*)pWnd->getChild(((CString)(WndName + "/ContList")).CStr());
+	pContList = (CEGUI::Listbox*)pWnd->getChild((WndName + "/ContList").CStr());
 
-	pInvWVInfo = pWnd->getChild(((CString)(WndName + "/InvWVInfo")).CStr());
-	pContWVInfo = pWnd->getChild(((CString)(WndName + "/ContWVInfo")).CStr());
+	pInvWVInfo = pWnd->getChild((WndName + "/InvWVInfo").CStr());
+	pContWVInfo = pWnd->getChild((WndName + "/ContWVInfo").CStr());
 
 	pWnd->subscribeEvent(CEGUI::FrameWindow::EventCloseClicked,
 		CEGUI::Event::Subscriber(&CContainerWindow::OnCloseClick, this));
@@ -197,7 +197,7 @@ bool CContainerWindow::OnMoveItemsWindowClosed(const Events::CEventBase& Event)
 	UNSUBSCRIBE_EVENT(MoveItemsWindowClosed);
 
 	Data::PParams P = ((const Events::CEvent&)Event).Params;
-	if (P->Get<int>(CStrID("DialogueResult"))) ReloadLists();
+	if (P->Get<int>(CStrID("DialogResult"))) ReloadLists();
 
 	OK;
 }

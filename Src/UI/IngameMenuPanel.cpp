@@ -21,7 +21,7 @@ void CIngameMenuPanel::Init(CEGUI::Window* pWindow)
 
 	CString WndName = pWindow->getName().c_str();
 
-	pInventoryBtn = (CEGUI::PushButton*)pWnd->getChild(((CString)(WndName + "/InvBtn")).CStr());
+	pInventoryBtn = (CEGUI::PushButton*)pWnd->getChild((WndName + "/InvBtn").CStr());
 	pInventoryBtn->subscribeEvent(CEGUI::PushButton::EventClicked,
 		CEGUI::Event::Subscriber(&CIngameMenuPanel::OnInventoryBtnClick, this));
 }

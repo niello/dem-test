@@ -27,12 +27,12 @@ void CMainMenu::Init(CEGUI::Window* pWindow)
 
 	CString WndName = pWindow->getName().c_str();
 
-	pNewGameBtn = (CEGUI::PushButton*)pWnd->getChild(((CString)(WndName + "/BtnNewGame")).CStr());
+	pNewGameBtn = (CEGUI::PushButton*)pWnd->getChild((WndName + "/BtnNewGame").CStr());
 	//ConnOnNewGameBtnClick = 
 	pNewGameBtn->subscribeEvent(CEGUI::PushButton::EventClicked,
 		CEGUI::Event::Subscriber(&CMainMenu::OnNewGameBtnClick, this));
 
-	CEGUI::PushButton* pBtn = (CEGUI::PushButton*)pWnd->getChild(((CString)(WndName + "/BtnQuit")).CStr());
+	CEGUI::PushButton* pBtn = (CEGUI::PushButton*)pWnd->getChild((WndName + "/BtnQuit").CStr());
 	pBtn->subscribeEvent(CEGUI::PushButton::EventClicked,
 		CEGUI::Event::Subscriber(&CMainMenu::OnQuitBtnClick, this));
 }

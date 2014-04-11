@@ -37,23 +37,23 @@ void CInventory::Init(CEGUI::Window* pWindow)
 
 	CString WndName = pWindow->getName().c_str();
 
-	pInvList = (CEGUI::Listbox*)pWnd->getChild(((CString)(WndName + "/InvList")).CStr());
+	pInvList = (CEGUI::Listbox*)pWnd->getChild((WndName + "/InvList").CStr());
 	pInvList->setShowVertScrollbar(true);
 	pInvList->setMultiselectEnabled(false);
 
-	pEquipList = (CEGUI::Listbox*)pWnd->getChild(((CString)(WndName + "/EquipList")).CStr());
+	pEquipList = (CEGUI::Listbox*)pWnd->getChild((WndName + "/EquipList").CStr());
 	pEquipList->setShowVertScrollbar(true);
 	pEquipList->setMultiselectEnabled(false);
 
-	pEquipBtn = (CEGUI::PushButton*)pWnd->getChild(((CString)(WndName + "/EquipBtn")).CStr());
+	pEquipBtn = (CEGUI::PushButton*)pWnd->getChild((WndName + "/EquipBtn").CStr());
 	pEquipBtn->subscribeEvent(CEGUI::PushButton::EventClicked,
 		CEGUI::Event::Subscriber(&CInventory::OnEquipBtnClick, this));
 
-	pUnequipBtn = (CEGUI::PushButton*)pWnd->getChild(((CString)(WndName + "/UnequipBtn")).CStr());
+	pUnequipBtn = (CEGUI::PushButton*)pWnd->getChild((WndName + "/UnequipBtn").CStr());
 	pUnequipBtn->subscribeEvent(CEGUI::PushButton::EventClicked,
 		CEGUI::Event::Subscriber(&CInventory::OnUnequipBtnClick, this));
 
-	pWVInfo = pWnd->getChild(((CString)(WndName + "/WVInfo")).CStr());
+	pWVInfo = pWnd->getChild((WndName + "/WVInfo").CStr());
 
 	//!!!not here - bug below!
 	//ConnKeyUp = pWnd->subscribeEvent(CEGUI::Window::EventKeyUp,

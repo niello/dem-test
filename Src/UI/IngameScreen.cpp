@@ -38,38 +38,38 @@ void CIngameScreen::Init(CEGUI::Window* pWindow)
 	CString WndName = pWindow->getName().c_str();
 
 	CEGUI::Window* pAPWnd =
-		CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/PopupMenu", CString(WndName + "/ActionListPopup").CStr());
+		CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/PopupMenu", (WndName + "/ActionListPopup").CStr());
 	pWnd->addChildWindow(pAPWnd);
 	ActionPopup = n_new(CActionListPopup);
 	ActionPopup->Init(pAPWnd);
 	ActionPopup->Hide();
 
 	IngameMenuPanel = n_new(CIngameMenuPanel);
-	IngameMenuPanel->Init(pWnd->getChild(CString(WndName + "/IngameMenuPanel").CStr()));
+	IngameMenuPanel->Init(pWnd->getChild((WndName + "/IngameMenuPanel").CStr()));
 
 	Inventory = n_new(CInventory);
-	Inventory->Init(pWnd->getChild(CString(WndName + "/Inventory").CStr()));
+	Inventory->Init(pWnd->getChild((WndName + "/Inventory").CStr()));
 
 	ContainerWindow = n_new(CContainerWindow);
-	ContainerWindow->Init(pWnd->getChild(CString(WndName + "/ContainerWindow").CStr()));
+	ContainerWindow->Init(pWnd->getChild((WndName + "/ContainerWindow").CStr()));
 	ContainerWindow->Hide();
 
 	MoveItemsWindow = n_new(CMoveItemsWindow);
-	MoveItemsWindow->Init(pWnd->getChild(CString(WndName + "/MovingItemsWindow").CStr())); //!!!rename!
+	MoveItemsWindow->Init(pWnd->getChild((WndName + "/MovingItemsWindow").CStr())); //!!!rename!
 	MoveItemsWindow->Hide();
 
 	DlgWindow = n_new(CDialogueWindow);
-	DlgWindow->Init(pWnd->getChild(CString(WndName + "/DialogueWindow").CStr()));
+	DlgWindow->Init(pWnd->getChild((WndName + "/DialogueWindow").CStr()));
 	DlgWindow->Hide(); //???here or inside Init()?
 	
 	IAOTip = CreateTipWindow(1);
 
 	//!!!tmp!
-	CEGUI::Window* pConsoleWnd = pWnd->getChild(CString(WndName + "/Console").CStr());
-	Console = (CEGUI::Listbox*)pConsoleWnd->getChild(CString(WndName + "/Console/TextArea").CStr());
+	CEGUI::Window* pConsoleWnd = pWnd->getChild((WndName + "/Console").CStr());
+	Console = (CEGUI::Listbox*)pConsoleWnd->getChild((WndName + "/Console/TextArea").CStr());
 	n_assert(Console);
 
-	CEGUI::PushButton* pBtn = (CEGUI::PushButton*)pWnd->getChild(((CString)(WndName + "/BtnDbgExit")).CStr());
+	CEGUI::PushButton* pBtn = (CEGUI::PushButton*)pWnd->getChild((WndName + "/BtnDbgExit").CStr());
 	pBtn->subscribeEvent(CEGUI::PushButton::EventClicked,
 		CEGUI::Event::Subscriber(&CIngameScreen::OnDbgExitBtnClick, this));
 
