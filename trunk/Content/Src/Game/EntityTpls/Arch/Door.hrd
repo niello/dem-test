@@ -1,0 +1,21 @@
+
+Attrs
+{
+	UIDesc = "DoorBase"
+	Physics = "Door"
+	ScriptClass = "DoorBase"
+	SODesc = "DoorBase"
+	SceneFile = "Arch/Door"
+	AnimDesc = "Test/Door"
+}
+
+Props
+[
+	"Prop::CPropSmartObject",
+	"Prop::CPropUIControl",
+	"Prop::CPropSceneNode",
+	"Prop::CPropAnimation",
+	"Prop::CPropPhysics",
+	"Prop::CPropScriptable",
+	"Prop::CPropAIHints"
+]

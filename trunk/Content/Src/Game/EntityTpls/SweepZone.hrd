@@ -1,0 +1,24 @@
+
+Attrs
+{
+	SceneFile = "Test/Box"
+	PickShape = 'Collision/UnitBox' //???or whole collision object with offset? or offset as attr?
+	Name = "Пыльное место"
+	SODesc = "SweepZone"
+	SOActionsEnabled
+	{
+		Sweep = true
+	}
+	UIDesc = "SweepZone"
+	AIHintsDesc = "ObjectBase"
+	ScriptClass = "SweepZone"
+}
+
+Props
+[
+	"Prop::CPropSmartObject",
+	"Prop::CPropUIControl",
+	"Prop::CPropSceneNode",
+	"Prop::CPropScriptable",
+	"Prop::CPropAIHints"
+]
