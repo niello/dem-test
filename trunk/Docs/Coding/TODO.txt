@@ -56,25 +56,30 @@ CFModel OBJ & FBX exporter tool to a new mesh format
 Remove old unused CF code
 Game editor tool (CIDE2)
 BBuilder command line interface for CIDE2
-BBuilder data-driven export links scheme
+BBuilder data-driven export links scheme or scripted import rules
 Cutscene tool or CIDE2 plugin
 CF user control plugin for CIDE2 - edit CFD files (replace current CF GUI application)
 
 II. Game engine code
 ---------------------
-Actor animation mapping, including SO action animations
+Actor animation system
+ - activity/state animations (idle, walk, run etc)
+ - SO action animations
+ - fall and death animation through ragdoll, recovery from ragdoll (stand up after falling)
 SaveLoad system refactoring
  - savegame packing (continue data is unpacked, save is the same data packed)
  - save animation tasks (mb not all), separate handling of AI-driven and static animation
  - save scene graph
-Group selection (using pick shapes and mouse-dragged rectangle converted to a frustum, CCamera::GetFrustum(RelRect))
-Formations, group AI through AISquad or smth
+Group AI
+ - AISquad or smth
+ - Group selection (using pick shapes and mouse-dragged rectangle converted to a frustum, CCamera::GetFrustum(RelRect))
+ - Formations
 Redesign AI NavRegions
  - take into account Get/Set lock status
  - save/load their state (enabled flag etc)
  - cross-navdata consistency (now regions are per-navmesh, dependent on radius and non-iterable)
  - autocreate nav. regions under doors
- - nav controllers per-poly or only per-region? Per-region sounds sane.
+ - nav controllers per-poly or only per-region? Per-region sounds sane. Polys can change every rebuild, regions are stable.
 
 III. RPG code
 -------------
@@ -87,7 +92,6 @@ Trading and money
 Combat
 Subdual damage
 Character states (incl. uncontrolled)
-Character animation system
 World time
 Character list UI
 Trading & money UI
