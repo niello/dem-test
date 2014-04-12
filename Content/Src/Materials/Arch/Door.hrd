@@ -10,6 +10,6 @@ ShaderVars
 }
 Textures
 {
+	DiffMap0 = 'Arch/Door_0_a.dds'
 	NormalMap = 'Arch/Door_0_b.tga'
-	DiffMap0 = 'Arch/Door_0_a.jpg'
 }
