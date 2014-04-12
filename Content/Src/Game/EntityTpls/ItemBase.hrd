@@ -1,0 +1,17 @@
+
+Attrs
+{
+	UIDesc = "ItemBase"
+	AIHintsDesc = "ObjectBase"
+	SODesc = "ItemBase"
+}
+
+Props
+[
+	"Prop::CPropSceneNode",
+	"Prop::CPropPhysics",
+	"Prop::CPropItem",
+	"Prop::CPropSmartObject",
+	"Prop::CPropUIControl",
+	"Prop::CPropAIHints"
+]

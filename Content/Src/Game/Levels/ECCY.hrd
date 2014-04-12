@@ -48,32 +48,36 @@ Entities
 	}
 	ECCY_SweepZone_1
 	{
+		Tpl = "SweepZone"
 		Attrs
 		{
 			Transform = (0.9330128, 0.06698731, 0.3535534, 0.0,
 						0.06698731, 0.9330128, -0.3535534, 0.0,
 						-0.3535534, 0.3535534, 0.8660254, 0.0,
 						233.8403, 1.149719, 189.2937, 1.0)
-			SceneFile = "Test/Box"
-			PickShape = 'Collision/UnitBox' //???or whole collision object with offset? or offset as attr?
-			Name = "Пыльное место"
-			SODesc = "SweepZone"
-			SOActionsEnabled
-			{
-				Sweep = true
-			}
-			UIDesc = "SweepZone"
-			AIHintsDesc = "ObjectBase"
-			ScriptClass = "SweepZone"
 		}
-		Props
-		[
-			"Prop::CPropSmartObject",
-			"Prop::CPropUIControl",
-			"Prop::CPropSceneNode",
-			"Prop::CPropScriptable",
-			"Prop::CPropAIHints"
-		]
+	}
+	ECCY_SweepZone_2
+	{
+		Tpl = "SweepZone"
+		Attrs
+		{
+			Transform = (0.9330128, 0.06698731, 0.3535534, 0.0,
+						0.06698731, 0.9330128, -0.3535534, 0.0,
+						-0.3535534, 0.3535534, 0.8660254, 0.0,
+						233.8403, 1.149719, 191.2937, 1.0)
+		}
+	}
+	ECCY_SweepZone_3
+	{
+		Tpl = "SweepZone"
+		Attrs
+		{
+			Transform = (0.9330128, 0.06698731, 0.3535534, 0.0,
+						0.06698731, 0.9330128, -0.3535534, 0.0,
+						-0.3535534, 0.3535534, 0.8660254, 0.0,
+						233.8403, 1.149719, 193.2937, 1.0)
+		}
 	}
 	ECCY_Terrain
 	{
@@ -194,56 +198,30 @@ Entities
 	}
 	ECCY_Broom_1
 	{
+		Tpl = "ItemBase"
 		Attrs
 		{
 			Transform = (0.999114, 0.042058, -0.001442, 0.000000, 
 				-0.042082, 0.998375, -0.038414, 0.000000, 
 				-0.000176, 0.038440, 0.999261, 0.000000, 
 				226.982864, 1.981168, 192.988724, 1.000000)
-			UIDesc = "ItemBase"
+			SceneFile = "Test/Box"
 			Physics = "Box"
 			ItemTplID = 'Misc/Broom'
 			ItemCount = 1
-			AIHintsDesc = "ObjectBase"
-			SODesc = "ItemBase"
-			SceneFile = "Test/Box"
 		}
-		Props
-		[
-			"Prop::CPropSceneNode",
-			"Prop::CPropPhysics",
-			"Prop::CPropItem",
-			"Prop::CPropSmartObject",
-			"Prop::CPropUIControl",
-			"Prop::CPropAIHints"
-		]
 	}
 	ECCY_DoorTest_1
 	{
+		Tpl = "Arch/Door"
 		Attrs
 		{
 			Transform = (0.999114, 0.042058, -0.001442, 0.000000, 
 				-0.042082, 0.998375, -0.038414, 0.000000, 
 				-0.000176, 0.038440, 0.999261, 0.000000, 
 				222.982864, 0.981168, 194.988724, 1.000000)
-			UIDesc = "DoorBase"
-			Physics = "Door"
-			ScriptClass = "DoorBase"
-			SODesc = "DoorBase"
-			SceneFile = "Arch/Door"
-			AnimDesc = "Test/Door"
 			NavRegion = "Door01"
 		}
-		Props
-		[
-			"Prop::CPropSmartObject",
-			"Prop::CPropUIControl",
-			"Prop::CPropSceneNode",
-			"Prop::CPropAnimation",
-			"Prop::CPropPhysics",
-			"Prop::CPropScriptable",
-			"Prop::CPropAIHints"
-		]
 	}
 	ECCY_To_ECF1
 	{
