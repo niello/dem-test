@@ -6,6 +6,7 @@ Lines (total/code):
 30.07.13 -  62057/43398
 19.09.13 -  62274/43596
 09.01.14 -  63118/44285
+13.04.14 -  63775/44799
 
 Release EXE metrics:
 30.04.13 - Compile 0:53, Build 1:27, Size 4354 KB // SSD
@@ -18,9 +19,9 @@ Release EXE metrics:
 =========================================================
 <NEVER FORGET>
 =========================================================
-1. JPEG textures are loaded for too long.
+1. JPEG textures are loaded for too long. Especially 2000x4000 door diffuse textures -_-
 2. If character goes to the world origin, check ray-world intersection, when it is broken, mouse 3D pos can be Zero.
-3. Always initialize third-party objects. Remember character controller debugging.
+3. Always initialize third-party objects. Remember character controller debugging with btQuaternion full of trash.
 4. Printing 'T' in a console teleports character, because debug 'T' mapping and UI textbox react on different events.
 
 =========================================================
@@ -35,9 +36,12 @@ Close UI connected to entities when that entities are deleted (deactivated) or t
  -???global events on entity deactivation and renaming?
 Sometimes camera rotation mode isn't being disabled when MMB is released
 { [ { } ] } problem in data schemes
-Window resize breaks mouse and viewport
 Changing Gfx adapter crashes in one of directions
-First click on Broom leads to no action, second is correct
+Click on Broom sometimes leads to no action
+ - navmesh in that place is really weird, with AcceptNearestValidDest it is not always work, because in area
+   covered by one poly (as we expect) some other polys can overlay, and seems that polys aren't convex
+Arei can't start talking if GG moves from initial position
+ - if GG moves from Arei, sometimes Arei detects that he can never reach GG (interception time < 0)
 Double click on UI window passes through UI and adds task, which is wrong
 
 I.a. Low-level code
@@ -52,7 +56,7 @@ Solve P->Get(CStrID, CStrID) by renaming to GetSafe or TryGet or smth, key prm i
 I.b. Tools
 ----------
 CFTexture conversion tool for the CF (to DDS and other appropriate formats)
-CFModel OBJ & FBX exporter tool to a new mesh format
+CFModel OBJ & FBX exporter tool to a new mesh format, export anims etc too
 Remove old unused CF code
 Game editor tool (CIDE2)
 BBuilder command line interface for CIDE2
@@ -67,19 +71,20 @@ Actor animation system
  - SO action animations
  - fall and death animation through ragdoll, recovery from ragdoll (stand up after falling)
 SaveLoad system refactoring
- - savegame packing (continue data is unpacked, save is the same data packed)
  - save animation tasks (mb not all), separate handling of AI-driven and static animation
  - save scene graph
+ - save navigation regions state (after rewriting them)
+ - savegame packing (continue data is unpacked, save is the same data packed)
 Group AI
  - AISquad or smth
  - Group selection (using pick shapes and mouse-dragged rectangle converted to a frustum, CCamera::GetFrustum(RelRect))
  - Formations
 Redesign AI NavRegions
  - take into account Get/Set lock status
- - save/load their state (enabled flag etc)
  - cross-navdata consistency (now regions are per-navmesh, dependent on radius and non-iterable)
  - autocreate nav. regions under doors
  - nav controllers per-poly or only per-region? Per-region sounds sane. Polys can change every rebuild, regions are stable.
+ - check is-in-region not only by poly area, but also by region bounds and actor position
 
 III. RPG code
 -------------
@@ -158,6 +163,7 @@ Body FSM (for each part like bottom(moving) & top (action)), body resources & lo
 
 <Misc>
 
+Display.RequestDisplayMode() must work not only before RenderSrv->Open()
 Init functions with dependency check (InitScripting() { if !EventSrv->HasInstance() msg "you must init events first!" }
 
 Array flag Sorted to signal that array is sorted now and optimized algorithms can be used (forex Array1.ContainsAll(Array2))
@@ -172,8 +178,6 @@ Lua state wrapper with some util functions
 Script parent constructors cascade!
 	Lua: obj.class, class.parent (or .proto for both, or simply getmetatable?)
 CFlags<T> or CFlags<int NumBits>
-Clear CurrEvent once per frame in Lua or when event was processed! (pooled event address)
-  event mgr doesn't know anything about Lua, it's a problem
 
 Error processing for LUA calls (see nlua stack dumping)
 

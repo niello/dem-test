@@ -188,6 +188,8 @@ CStrID CAppStateGame::OnFrame()
 		FPSTimeAccum = 0.f;
 	}
 
+	CoreSrv->SetGlobal<int>("Events_FiredTotal", (int)EventSrv->GetFiredEventsCount());
+
 	PROFILER_STOP(profCompleteFrame);
 
 	return GetID();
