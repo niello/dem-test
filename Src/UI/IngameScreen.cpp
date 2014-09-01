@@ -216,7 +216,7 @@ bool CIngameScreen::OnQuestStatusChanged(const CEventBase& Event)
 			}
 		case Story::CQuest::Done: Text += "\" is done."; break;
 		case Story::CQuest::Failed: Text += "\" failed."; break;
-		default: Core::Error("CIngameScreen console: Wrong task status in OnQuestStatusChanged event!");
+		default: Sys::Error("CIngameScreen console: Wrong task status in OnQuestStatusChanged event!");
 	}
 
 	CEGUI::FormattedListboxTextItem* NewItem =

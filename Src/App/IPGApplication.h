@@ -6,7 +6,7 @@
 #include <Items/ItemManager.h>
 #include <Factions/FactionManager.h>
 
-#include <Core/Singleton.h>
+#include <Data/Singleton.h>
 
 namespace App
 {

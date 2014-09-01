@@ -89,20 +89,20 @@ bool CIPGApplication::Open()
 		FAIL;
 	}
 	
-	n_printf("AppEnv->InitEngine() - OK\n");
+	Sys::Log("AppEnv->InitEngine() - OK\n");
 
 	SI::RegisterGlobals();
 	SI::RegisterEventServer();
 	SI::RegisterTimeServer();
 	
-	n_printf("Engine SI registration - OK\n");
+	Sys::Log("Engine SI registration - OK\n");
 	
 	InputSrv->SetContextLayout(CStrID("Debug"), CStrID("Debug"));
 	InputSrv->SetContextLayout(CStrID("Game"), CStrID("Game"));
 
 	InputSrv->EnableContext(CStrID("Debug"));
 
-	n_printf("Setup input - OK\n");
+	Sys::Log("Setup input - OK\n");
 
 	//!!!to HRD params! data/cfg/UI.hrd
 	UISrv->LoadFont("DejaVuSans-8.font");
@@ -112,7 +112,7 @@ bool CIPGApplication::Open()
 	UISrv->LoadScheme("TaharezLook.scheme");
 	UISrv->SetDefaultMouseCursor("TaharezLook", "MouseArrow");
 
-	n_printf("AppEnv->InitGameSystem() ...\n");
+	Sys::Log("AppEnv->InitGameSystem() ...\n");
 
 	if (!AppEnv->InitGameSystem())
 	{
@@ -122,7 +122,7 @@ bool CIPGApplication::Open()
 		FAIL;
 	}
 
-	n_printf("AppEnv->InitGameSystem() - OK\n");
+	Sys::Log("AppEnv->InitGameSystem() - OK\n");
 
 	//!!!get from global settings!
 	CString UserProfileName;
@@ -133,7 +133,7 @@ bool CIPGApplication::Open()
 		GameSrv->CreateProfile(UserProfileName);
 	GameSrv->SetCurrentProfile(UserProfileName);
 
-	n_printf("Set user profile '%s' - OK\n", UserProfileName.CStr());
+	Sys::Log("Set user profile '%s' - OK\n", UserProfileName.CStr());
 
 	GameSrv->SetEntityLoader(CStrID::Empty, n_new(Game::CEntityLoaderCommon));
 	GameSrv->SetEntityLoader(CStrID("Static"), n_new(Game::CEntityLoaderStatic));
@@ -153,7 +153,7 @@ bool CIPGApplication::Open()
 	EntityMgr->RegisterProperty<Prop::CPropItem>(32);
 	EntityMgr->RegisterProperty<Prop::CPropCharacterController>(16);
 
-	n_printf("Setup entity loaders and register props - OK\n");
+	Sys::Log("Setup entity loaders and register props - OK\n");
 
 	SI::RegisterGameServer();
 	SI::RegisterEntityManager();
@@ -167,23 +167,23 @@ bool CIPGApplication::Open()
 	ItemManager = n_new(Items::CItemManager);
 	FactionManager = n_new(RPG::CFactionManager);
 
-	n_printf("Setup gameplay systems - OK\n");
+	Sys::Log("Setup gameplay systems - OK\n");
 
 	SI::RegisterQuestSystem();
 	SI::RegisterDlgSystem();
 	SI::RegisterClassCFaction();
 	
-	n_printf("Setup L3 SI - OK\n");
+	Sys::Log("Setup L3 SI - OK\n");
 
 	FSM.AddStateHandler(n_new(CAppStateMenu(CStrID("Menu"))));
 	FSM.AddStateHandler(n_new(CAppStateLoading(CStrID("Loading"))));
 	FSM.AddStateHandler(n_new(CAppStateGame(CStrID("Game"))));
 	
-	n_printf("Seting state: Menu...\n");
+	Sys::Log("Seting state: Menu...\n");
 	
 	FSM.Init(CStrID("Menu"));
 	
-	n_printf("State setup - OK\n");
+	Sys::Log("State setup - OK\n");
 
 	SUBSCRIBE_PEVENT(OnDisplayClose, CIPGApplication, OnDisplayClose);
 

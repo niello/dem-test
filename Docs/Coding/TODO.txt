@@ -46,6 +46,9 @@ Double click on UI window passes through UI and adds task, which is wrong
 
 I.a. Low-level code
 -------------------
+Split L1 on parts, reduce dependencies
+Cleanup Math
+Remove math headers from CString, use utils for it
 Fix performance of ray-heightfield test
 Ragdoll (???handle through the animation task?)
 Cutscene system
@@ -124,6 +127,7 @@ General:
 - ???Use struct CBlackBoard BB;???
 - AI LOD (like pActor->LOD and check this value at various sensors and subsystems).
   Can also declare some LOD values as enum members (like AILOD_Highest = 100, AILOD_Half = 50, AILOD_Freeze = 0)
+- Research HTN planner and procedural animation topics
 
 Senses:
 - Disable some sensors or perceptors when they aren't needed (forex when we do not search for enemy or item,
@@ -186,3 +190,20 @@ Clear all CEGUI windows when they aren't needed (CWindow::Init() opposite)
 Event pools, ???CParams/CDataArray/CData pools?
 Use pool allocation for properties to reuse them efficiently
 Predefined StrIDs
+
+===============
+Anim: Rsrc, Data, Scene, Math, IO
+Audio:
++ Core: Data
++ Debug: Data, Events, UI, Time, Core
++ Events: Core, Data
++ Input: Core, Events, Data
++ IO: Core, Data
++ Physics: [Bullet + LinearMath], Math, Rsrc, Data, IO, Scene (attrs)
++ Render: [D3D], Events, Input, Core, IO, Rsrc, Math, Data, Scene (attrs, refs in renderers)
++ Rsrc: Core, Data
++ Scene: Math, Core, IO, Data, Render, Events, Anim, Rsrc
++ Script: Core, Data, Events
++ Time: Data, Events, Core
++ UI: [CEGUI], Data, Events, Core, Render, Scene?!
++ Video: Core, Data, [DirectShow], [Theora], Render? (or return bit stream for texture)
