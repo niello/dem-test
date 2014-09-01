@@ -129,11 +129,11 @@ void CAppStateLoading::OnStateEnter(CStrID PrevState, PParams Params)
 					GameSrv->SetActiveLevel(LevelID);
 				}
 			}
-			else Core::Error("Transition to %s failed!", LevelID.CStr());
+			else Sys::Error("Transition to %s failed!", LevelID.CStr());
 
 			break;
 		}
-		default: Core::Error("Unknown game setup mode: %d!", Request);
+		default: Sys::Error("Unknown game setup mode: %d!", Request);
 	}
 }
 //---------------------------------------------------------------------

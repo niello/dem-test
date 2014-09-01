@@ -2,7 +2,7 @@
 
 #include <Game/GameServer.h>
 #include <Events/EventServer.h>
-#include <mathlib/rectangle.h>
+#include <Math/Rect.h>
 
 namespace UI
 {

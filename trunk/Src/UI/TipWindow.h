@@ -6,7 +6,8 @@
 #include <Events/EventsFwd.h>
 #include <Events/Subscription.h>
 #include <Data/StringID.h>
-#include <mathlib/vector.h>
+#include <Math/Vector2.h>
+#include <Math/Vector3.h>
 
 // Represents a floating tip which is bound to an entity
 
