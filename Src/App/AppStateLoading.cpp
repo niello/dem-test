@@ -10,7 +10,7 @@
 #include <Debug/DebugServer.h>
 #include <Time/TimeServer.h>
 #include <Events/EventServer.h>
-#include <Audio/AudioServer.h>
+//#include <Audio/AudioServer.h>
 #include <Video/VideoServer.h>
 #include <Render/RenderServer.h>
 #include <Scene/SceneServer.h>
@@ -155,7 +155,7 @@ CStrID CAppStateLoading::OnFrame()
 	UISrv->Trigger((float)TimeSrv->GetFrameTime());
 
 	VideoSrv->Trigger();
-	AudioSrv->Trigger();
+//	AudioSrv->Trigger();
 
 	if (RenderSrv->BeginFrame())
 	{
