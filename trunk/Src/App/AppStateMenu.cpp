@@ -6,7 +6,6 @@
 #include <UI/MainMenu.h>
 #include <Time/TimeServer.h>
 #include <Events/EventServer.h>
-#include <Audio/AudioServer.h>
 #include <Video/VideoServer.h>
 #include <Input/InputServer.h>
 #include <Core/CoreServer.h>
@@ -43,7 +42,7 @@ CStrID CAppStateMenu::OnFrame()
 	DbgSrv->Trigger();
 	UISrv->Trigger((float)TimeSrv->GetFrameTime());
 
-	AudioSrv->Trigger();
+	//AudioSrv->Trigger();
 	VideoSrv->Trigger();
 
 	if (RenderSrv->BeginFrame())

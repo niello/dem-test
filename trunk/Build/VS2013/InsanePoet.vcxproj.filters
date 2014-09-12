@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Src">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Src\App">
+      <UniqueIdentifier>{2eb9239d-797b-4385-ab79-9ebc41555ecd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\UI">
+      <UniqueIdentifier>{dd85def6-f535-4d64-8995-3d4698128f00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Notes, docs etc">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Src\FactoryRegHelper.h">
+      <Filter>Src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\App\AppStateGame.h">
+      <Filter>Src\App</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\App\AppStateLoading.h">
+      <Filter>Src\App</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\App\AppStateMenu.h">
+      <Filter>Src\App</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\App\AppStates.h">
+      <Filter>Src\App</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\App\IPGApplication.h">
+      <Filter>Src\App</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\UI\ActionListPopup.h">
+      <Filter>Src\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\UI\ContainerWindow.h">
+      <Filter>Src\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\UI\DialogueWindow.h">
+      <Filter>Src\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\UI\IngameMenuPanel.h">
+      <Filter>Src\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\UI\IngameScreen.h">
+      <Filter>Src\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\UI\Inventory.h">
+      <Filter>Src\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\UI\LoadingScreen.h">
+      <Filter>Src\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\UI\MainMenu.h">
+      <Filter>Src\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\UI\MoveItemsWindow.h">
+      <Filter>Src\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\UI\TipWindow.h">
+      <Filter>Src\UI</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Src\Main.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\App\AppStateGame.cpp">
+      <Filter>Src\App</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\App\AppStateLoading.cpp">
+      <Filter>Src\App</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\App\AppStateMenu.cpp">
+      <Filter>Src\App</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\App\IPGApplication.cpp">
+      <Filter>Src\App</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\UI\ActionListPopup.cpp">
+      <Filter>Src\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\UI\ContainerWindow.cpp">
+      <Filter>Src\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\UI\DialogueWindow.cpp">
+      <Filter>Src\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\UI\IngameMenuPanel.cpp">
+      <Filter>Src\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\UI\IngameScreen.cpp">
+      <Filter>Src\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\UI\Inventory.cpp">
+      <Filter>Src\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\UI\LoadingScreen.cpp">
+      <Filter>Src\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\UI\MainMenu.cpp">
+      <Filter>Src\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\UI\MoveItemsWindow.cpp">
+      <Filter>Src\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\UI\TipWindow.cpp">
+      <Filter>Src\UI</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\Docs\Coding\Nav.txt">
+      <Filter>Notes, docs etc</Filter>
+    </Text>
+    <Text Include="..\..\Docs\Coding\Render.txt">
+      <Filter>Notes, docs etc</Filter>
+    </Text>
+    <Text Include="..\..\Docs\Coding\SOANIM.txt">
+      <Filter>Notes, docs etc</Filter>
+    </Text>
+    <Text Include="..\..\Docs\Coding\TODO.txt">
+      <Filter>Notes, docs etc</Filter>
+    </Text>
+  </ItemGroup>
+</Project>
