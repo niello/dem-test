@@ -17,7 +17,6 @@
 #include <Scene/Events/SetTransform.h>
 #include <UI/PropUIControl.h>
 //#include <Audio/AudioServer.h>
-#include <Scene/SceneServer.h>
 #include <Physics/PhysicsServer.h>
 #include <Video/VideoServer.h>
 #include <Input/InputServer.h>

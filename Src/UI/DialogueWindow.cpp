@@ -164,7 +164,7 @@ bool CDialogueWindow::OnDlgEnd(const Events::CEventBase& Event)
 
 	n_assert_dbg(DlgID.IsValid() && P->Get<CStrID>(CStrID("Initiator")) == DlgID);
 
-	DlgID = CStrID.Empty;
+	DlgID = CStrID::Empty;
 	Hide();
 	pTextArea->resetList();
 	OK;
