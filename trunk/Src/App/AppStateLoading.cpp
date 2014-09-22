@@ -13,7 +13,6 @@
 //#include <Audio/AudioServer.h>
 #include <Video/VideoServer.h>
 #include <Render/RenderServer.h>
-#include <Scene/SceneServer.h>
 #include <Physics/PhysicsServer.h>
 
 namespace App
@@ -36,7 +35,7 @@ void CAppStateLoading::DeleteUnreferencedResources()
 	RenderSrv->MeshMgr.DeleteUnreferenced();
 	RenderSrv->MaterialMgr.DeleteUnreferenced();
 	RenderSrv->TextureMgr.DeleteUnreferenced();
-	SceneSrv->AnimationMgr.DeleteUnreferenced();
+	GameSrv->AnimationMgr.DeleteUnreferenced();
 	PhysicsSrv->CollisionShapeMgr.DeleteUnreferenced();
 }
 //---------------------------------------------------------------------
