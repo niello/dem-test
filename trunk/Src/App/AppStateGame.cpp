@@ -18,6 +18,7 @@
 #include <UI/PropUIControl.h>
 //#include <Audio/AudioServer.h>
 #include <Physics/PhysicsServer.h>
+#include <Render/RenderServer.h>
 #include <Video/VideoServer.h>
 #include <Input/InputServer.h>
 #include <Input/Events/MouseMoveRaw.h>
