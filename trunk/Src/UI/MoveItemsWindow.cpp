@@ -25,7 +25,7 @@ void CMoveItemsWindow::Init(CEGUI::Window* pWindow)
 	IgnoreSpinnerValueEvent = false;
 	DialogResult = false;
 
-	CWindow::Init(pWindow);
+	CUIWindow::Init(pWindow);
 
 	CString WndName = pWindow->getName().c_str();
 

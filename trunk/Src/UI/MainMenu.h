@@ -2,7 +2,7 @@
 #ifndef __IPG_UI_MAIN_MENU_H__
 #define __IPG_UI_MAIN_MENU_H__
 
-#include <UI/Window.h>
+#include <UI/UIWindow.h>
 #include <Events/EventsFwd.h>
 
 // Main menu allows user to start new game or load saved or smth
@@ -16,7 +16,7 @@ namespace CEGUI
 namespace UI
 {
 
-class CMainMenu: public CWindow //???CWindow or CScreen derivative? CScreen owns CDict<CStrID, CWindow>
+class CMainMenu: public CUIWindow //???CUIWindow or CScreen derivative? CScreen owns CDict<CStrID, CUIWindow>
 {
 	__DeclareClassNoFactory;
 

@@ -24,8 +24,6 @@
 #include <SI/SI_L3.h>
 #include <time.h> //???!!!wrap needed func in Time::?
 
-#undef DeleteFile
-
 namespace App
 {
 __ImplementSingleton(App::CIPGApplication);

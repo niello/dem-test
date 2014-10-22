@@ -17,7 +17,7 @@
 
 namespace UI
 {
-__ImplementClassNoFactory(UI::CIngameScreen, UI::CWindow);
+__ImplementClassNoFactory(UI::CIngameScreen, UI::CUIWindow);
 
 using namespace Events;
 
@@ -33,7 +33,7 @@ CIngameScreen::~CIngameScreen()
 
 void CIngameScreen::Init(CEGUI::Window* pWindow)
 {
-	CWindow::Init(pWindow);
+	CUIWindow::Init(pWindow);
 
 	CString WndName = pWindow->getName().c_str();
 

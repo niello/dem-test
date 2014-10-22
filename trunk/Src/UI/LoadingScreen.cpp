@@ -2,7 +2,7 @@
 
 namespace UI
 {
-__ImplementClassNoFactory(UI::CLoadingScreen, UI::CWindow);
+__ImplementClassNoFactory(UI::CLoadingScreen, UI::CUIWindow);
 
 using namespace Events;
 
@@ -18,7 +18,7 @@ CLoadingScreen::~CLoadingScreen()
 
 void CLoadingScreen::Init(CEGUI::Window* pWindow)
 {
-	CWindow::Init(pWindow);
+	CUIWindow::Init(pWindow);
 
 	//CString WndName = pWindow->getName().c_str();
 }

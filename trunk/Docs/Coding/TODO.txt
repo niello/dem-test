@@ -46,6 +46,15 @@ Double click on UI window passes through UI and adds task, which is wrong
 
 I.a. Low-level code
 -------------------
+Display from Render to Sys or smth like
+Scene activator attr
+Scene dynamic loader attr
+DebugDraw must only collect renderable elements, and then pass them into renderers
+	If so, CRenderObject must not be successor of a CNodeAttribute, but CModel: public RenderObj, NodeAttr or smth like this
+	So that debug shapes and texts will be render objects, that store necessary data, and specific rendering
+	techs are implemented in renderers
+	Or renderers should split on object renderers, text renderers etc with only vitual Render() in the root class
+	(?)So, can move debugdraw into a Debug lib, since there won't be any actual rendering
 Split L1 on parts, reduce dependencies
 Cleanup Math
 Remove math headers from CString, use utils for it
@@ -186,7 +195,7 @@ CFlags<T> or CFlags<int NumBits>
 Error processing for LUA calls (see nlua stack dumping)
 
 Fix CEGUI connections bug & write right (dis)connections
-Clear all CEGUI windows when they aren't needed (CWindow::Init() opposite)
+Clear all CEGUI windows when they aren't needed (CUIWindow::Init() opposite)
 Event pools, ???CParams/CDataArray/CData pools?
 Use pool allocation for properties to reuse them efficiently
 Predefined StrIDs

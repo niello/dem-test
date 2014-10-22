@@ -20,7 +20,7 @@ CDialogueWindow::~CDialogueWindow()
 
 void CDialogueWindow::Init(CEGUI::Window* pWindow)
 {
-	CWindow::Init(pWindow);
+	CUIWindow::Init(pWindow);
 
 	CString WndName = pWindow->getName().c_str();
 

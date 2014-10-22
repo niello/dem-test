@@ -2,7 +2,7 @@
 #ifndef __IPG_UI_CONTAINER_WINDOW_H__
 #define __IPG_UI_CONTAINER_WINDOW_H__
 
-#include <UI/Window.h>
+#include <UI/UIWindow.h>
 #include <Data/StringID.h>
 #include <Events/EventsFwd.h>
 
@@ -22,7 +22,7 @@ namespace UI
 {
 using namespace Prop;
 
-class CContainerWindow: public CWindow
+class CContainerWindow: public CUIWindow
 {
 private:
 
