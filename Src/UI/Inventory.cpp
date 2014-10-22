@@ -30,7 +30,7 @@ CInventory::CInventory()
 
 void CInventory::Init(CEGUI::Window* pWindow)
 {
-	CWindow::Init(pWindow);
+	CUIWindow::Init(pWindow);
 	
 	pWnd->subscribeEvent(CEGUI::FrameWindow::EventCloseClicked,
 		CEGUI::Event::Subscriber(&CInventory::OnCloseClick, this));

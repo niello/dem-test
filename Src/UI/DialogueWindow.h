@@ -2,7 +2,7 @@
 #ifndef __IPG_UI_DLG_WINDOW_H__
 #define __IPG_UI_DLG_WINDOW_H__
 
-#include <UI/Window.h>
+#include <UI/UIWindow.h>
 #include <Data/StringID.h>
 #include <Events/EventsFwd.h>
 
@@ -24,7 +24,7 @@ namespace Story
 namespace UI
 {
 
-class CDialogueWindow: public CWindow
+class CDialogueWindow: public CUIWindow
 {
 protected:
 

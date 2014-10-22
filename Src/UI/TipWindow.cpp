@@ -39,7 +39,7 @@ void CTipWindow::SetVisible(bool Visible)
 		UNSUBSCRIBE_EVENT(OnUIUpdate);
 		//EntityID = CStrID::Empty;
 	}
-	CWindow::SetVisible(Visible);
+	CUIWindow::SetVisible(Visible);
 }
 //---------------------------------------------------------------------
 

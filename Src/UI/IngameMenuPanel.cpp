@@ -17,7 +17,7 @@ CIngameMenuPanel::CIngameMenuPanel()
 
 void CIngameMenuPanel::Init(CEGUI::Window* pWindow)
 {
-	CWindow::Init(pWindow);
+	CUIWindow::Init(pWindow);
 
 	CString WndName = pWindow->getName().c_str();
 

@@ -2,7 +2,7 @@
 #ifndef __IPG_UI_MOVE_ITEMS_WINDOW_H__
 #define __IPG_UI_MOVE_ITEMS_WINDOW_H__
 
-#include <UI/Window.h>
+#include <UI/UIWindow.h>
 #include <Data/StringID.h>
 #include <Events/EventsFwd.h>
 #include <CEGUIEvent.h>
@@ -23,7 +23,7 @@ namespace UI
 {
 using namespace Prop;
 
-class CMoveItemsWindow: public CWindow
+class CMoveItemsWindow: public CUIWindow
 {
 private:
 

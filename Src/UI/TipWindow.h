@@ -2,7 +2,7 @@
 #ifndef __IPG_UI_TIP_WINDOW_H__
 #define __IPG_UI_TIP_WINDOW_H__
 
-#include <UI/Window.h>
+#include <UI/UIWindow.h>
 #include <Events/EventsFwd.h>
 #include <Events/Subscription.h>
 #include <Data/StringID.h>
@@ -23,7 +23,7 @@ enum ETipAlignment
 	TipAlignRight	= 0x08
 };
 
-class CTipWindow: public CWindow
+class CTipWindow: public CUIWindow
 {
 private:
 

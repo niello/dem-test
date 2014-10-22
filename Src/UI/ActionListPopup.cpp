@@ -13,7 +13,7 @@ namespace UI
 
 void CActionListPopup::Init(CEGUI::Window* pWindow)
 {
-	CWindow::Init(pWindow);
+	CUIWindow::Init(pWindow);
 
 	pWnd->setFont("DejaVuSans-8");
 

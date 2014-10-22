@@ -2,7 +2,7 @@
 #ifndef __IPG_UI_MAIN_MENU_H__
 #define __IPG_UI_MAIN_MENU_H__
 
-#include <UI/Window.h>
+#include <UI/UIWindow.h>
 #include <Events/EventsFwd.h>
 
 // Loading screen. Reflects loading process and progress for user
@@ -16,7 +16,7 @@ namespace CEGUI
 namespace UI
 {
 
-class CLoadingScreen: public CWindow //???CWindow or CScreen derivative? CScreen owns CDict<CStrID, CWindow>
+class CLoadingScreen: public CUIWindow //???CUIWindow or CScreen derivative? CScreen owns CDict<CStrID, CUIWindow>
 {
 	__DeclareClassNoFactory;
 

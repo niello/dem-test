@@ -19,7 +19,7 @@ class CInventory;
 class CMoveItemsWindow;
 class CTipWindow;
 
-class CIngameScreen: public CWindow //???CWindow or CScreen derivative? CScreen owns CDict<CStrID, CWindow>
+class CIngameScreen: public CUIWindow //???CUIWindow or CScreen derivative? CScreen owns CDict<CStrID, CUIWindow>
 {
 	__DeclareClassNoFactory;
 
@@ -31,7 +31,7 @@ protected:
 	Ptr<CInventory>			Inventory;
 	Ptr<CContainerWindow>	ContainerWindow;
 	Ptr<CMoveItemsWindow>	MoveItemsWindow;
-	//CArray<Ptr<CWindow>>	IAOTip;
+	//CArray<Ptr<CUIWindow>>	IAOTip;
 	Ptr<CTipWindow>			IAOTip; //!!!for now only 1 tip available simultaneously!
 	CArray<Ptr<CTipWindow>> PhraseTips;
 

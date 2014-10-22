@@ -2,7 +2,7 @@
 #ifndef __IPG_UI_ACT_LIST_POPUP_H__
 #define __IPG_UI_ACT_LIST_POPUP_H__
 
-#include <UI/Window.h>
+#include <UI/UIWindow.h>
 #include <Data/StringID.h>
 #include <Events/EventsFwd.h>
 
@@ -23,7 +23,7 @@ namespace UI
 
 using namespace Prop;
 
-class CActionListPopup: public CWindow
+class CActionListPopup: public CUIWindow
 {
 protected:
 
