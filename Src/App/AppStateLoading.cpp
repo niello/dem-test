@@ -12,7 +12,6 @@
 #include <Events/EventServer.h>
 //#include <Audio/AudioServer.h>
 #include <Video/VideoServer.h>
-#include <Render/RenderServer.h>
 #include <Physics/PhysicsServer.h>
 
 namespace App
@@ -32,9 +31,10 @@ CAppStateLoading::CAppStateLoading(CStrID StateID): CStateHandler(StateID)
 
 void CAppStateLoading::DeleteUnreferencedResources()
 {
-	RenderSrv->MeshMgr.DeleteUnreferenced();
-	RenderSrv->MaterialMgr.DeleteUnreferenced();
-	RenderSrv->TextureMgr.DeleteUnreferenced();
+n_assert(false);
+	//RenderSrv->MeshMgr.DeleteUnreferenced();
+	//RenderSrv->MaterialMgr.DeleteUnreferenced();
+	//RenderSrv->TextureMgr.DeleteUnreferenced();
 	GameSrv->AnimationMgr.DeleteUnreferenced();
 	PhysicsSrv->CollisionShapeMgr.DeleteUnreferenced();
 }
@@ -149,20 +149,21 @@ CStrID CAppStateLoading::OnFrame()
 {
 	TimeSrv->Trigger();
 	EventSrv->ProcessPendingEvents();
-	RenderSrv->GetDisplay().ProcessWindowMessages();
+//	RenderSrv->GetDisplay().ProcessWindowMessages();
 	DbgSrv->Trigger();
 	UISrv->Trigger((float)TimeSrv->GetFrameTime());
 
 	VideoSrv->Trigger();
 //	AudioSrv->Trigger();
 
-	if (RenderSrv->BeginFrame())
-	{
-		RenderSrv->Clear(Render::Clear_All, 0xff000000, 1.f, 0); 
-		UISrv->Render();
-		RenderSrv->EndFrame();
-		RenderSrv->Present(); //!!!must be called as late as possible after EndFrame!
-	}
+n_assert(false);
+	//if (RenderSrv->BeginFrame())
+	//{
+	//	RenderSrv->Clear(Render::Clear_All, 0xff000000, 1.f, 0); 
+	//	UISrv->Render();
+	//	RenderSrv->EndFrame();
+	//	RenderSrv->Present(); //!!!must be called as late as possible after EndFrame!
+	//}
 
 	CoreSrv->Trigger();
 

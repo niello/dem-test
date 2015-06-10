@@ -1,6 +1,5 @@
 #include "AppStateMenu.h"
 
-#include <Render/RenderServer.h>
 #include <Debug/DebugServer.h>
 #include <UI/UIServer.h>
 #include <UI/MainMenu.h>
@@ -38,20 +37,21 @@ CStrID CAppStateMenu::OnFrame()
 	TimeSrv->Trigger();
 	EventSrv->ProcessPendingEvents();
 	InputSrv->Trigger();
-	RenderSrv->GetDisplay().ProcessWindowMessages();
+//	RenderSrv->GetDisplay().ProcessWindowMessages();
 	DbgSrv->Trigger();
 	UISrv->Trigger((float)TimeSrv->GetFrameTime());
 
 	//AudioSrv->Trigger();
 	VideoSrv->Trigger();
 
-	if (RenderSrv->BeginFrame())
-	{
-		RenderSrv->Clear(Render::Clear_All, 0xff000000, 1.f, 0); 
-		UISrv->Render();
-		RenderSrv->EndFrame();
-		RenderSrv->Present(); //!!!must be called as late as possible after EndFrame!
-	}
+n_assert(false);
+	//if (RenderSrv->BeginFrame())
+	//{
+	//	RenderSrv->Clear(Render::Clear_All, 0xff000000, 1.f, 0); 
+	//	UISrv->Render();
+	//	RenderSrv->EndFrame();
+	//	RenderSrv->Present(); //!!!must be called as late as possible after EndFrame!
+	//}
 
 	CoreSrv->Trigger();
 

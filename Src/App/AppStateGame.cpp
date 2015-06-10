@@ -18,7 +18,6 @@
 #include <UI/PropUIControl.h>
 //#include <Audio/AudioServer.h>
 #include <Physics/PhysicsServer.h>
-#include <Render/RenderServer.h>
 #include <Video/VideoServer.h>
 #include <Input/InputServer.h>
 #include <Input/Events/MouseMoveRaw.h>
@@ -66,11 +65,12 @@ void CAppStateGame::OnStateEnter(CStrID PrevState, Data::PParams Params)
 	UISrv->SetRootScreen(IngameScreen);
 	UISrv->ShowGUI();
 
-	if (RenderSrv->BeginFrame())
-	{
-		RenderSrv->Clear(Render::Clear_Color, 0xff000000, 1.f, 0);
-		RenderSrv->EndFrame();
-	}
+n_assert(false);
+	//if (RenderSrv->BeginFrame())
+	//{
+	//	RenderSrv->Clear(Render::Clear_Color, 0xff000000, 1.f, 0);
+	//	RenderSrv->EndFrame();
+	//}
 
 	SUBSCRIBE_INPUT_EVENT(MouseMoveRaw, CAppStateGame, OnMouseMoveRaw, Input::InputPriority_Raw);
 	SUBSCRIBE_INPUT_EVENT(MouseWheel, CAppStateGame, OnMouseWheel, Input::InputPriority_Raw);
@@ -117,7 +117,7 @@ CStrID CAppStateGame::OnFrame()
 	TimeSrv->Trigger();
 	EventSrv->ProcessPendingEvents();
 	InputSrv->Trigger();
-	RenderSrv->GetDisplay().ProcessWindowMessages();
+//	RenderSrv->GetDisplay().ProcessWindowMessages();
 	DbgSrv->Trigger();
 	UISrv->Trigger((float)TimeSrv->GetFrameTime());
 
@@ -165,12 +165,13 @@ CStrID CAppStateGame::OnFrame()
 
 	PROFILER_START(profRender);
 
-	RenderSrv->Present(); // Must be called as late as possible after EndFrame
-	if (RenderSrv->BeginFrame())
-	{
-		if (GameSrv->GetActiveLevel()) GameSrv->GetActiveLevel()->RenderScene();
-		RenderSrv->EndFrame();
-	}
+n_assert(false);
+	//RenderSrv->Present(); // Must be called as late as possible after EndFrame
+	//if (RenderSrv->BeginFrame())
+	//{
+	//	if (GameSrv->GetActiveLevel()) GameSrv->GetActiveLevel()->RenderScene();
+	//	RenderSrv->EndFrame();
+	//}
 
 	PROFILER_STOP(profRender);
 
@@ -458,7 +459,8 @@ bool CAppStateGame::OnToggleRenderDbgPhysics(const Events::CEventBase& Event)
 bool CAppStateGame::OnToggleRenderDbgGfx(const Events::CEventBase& Event)
 {
 	RenderDbgGfx = !RenderDbgGfx;
-	RenderSrv->SetWireframe(RenderDbgGfx);
+n_assert(false);
+//	RenderSrv->SetWireframe(RenderDbgGfx);
 	OK;
 }
 //---------------------------------------------------------------------

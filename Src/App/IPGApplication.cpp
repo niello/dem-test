@@ -42,13 +42,14 @@ CIPGApplication::~CIPGApplication()
 
 void CIPGApplication::SetupDisplayMode()
 {
-	CDisplayMode Mode;
-	Mode.PosX = 0;
-	Mode.PosY = 0;
-	Mode.Width = 1024;
-	Mode.Height = 640;
-	Mode.PixelFormat = D3DFMT_X8R8G8B8;
-	AppEnv->SetDisplayMode(Mode);
+n_assert(false);
+	//CDisplayMode Mode;
+	//Mode.PosX = 0;
+	//Mode.PosY = 0;
+	//Mode.Width = 1024;
+	//Mode.Height = 640;
+	//Mode.PixelFormat = D3DFMT_X8R8G8B8;
+	//AppEnv->SetDisplayMode(Mode);
 
 	CString WindowTitle = GetVendorName() + " - " + GetAppName() + " - " + GetAppVersion();
 	AppEnv->SetWindowTitle(WindowTitle.CStr());

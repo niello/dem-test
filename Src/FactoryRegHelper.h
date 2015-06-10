@@ -30,10 +30,10 @@
 
 // RENDERERS =======================================
 
-#include <Render/Renderers/ModelRenderer.h>
-#include <Render/Renderers/TerrainRenderer.h>
-#include <Render/Renderers/DebugGeomRenderer.h>
-#include <Render/Renderers/DebugTextRenderer.h>
+//#include <Render/Renderers/ModelRenderer.h>
+//#include <Render/Renderers/TerrainRenderer.h>
+//#include <Render/Renderers/DebugGeomRenderer.h>
+//#include <Render/Renderers/DebugTextRenderer.h>
 #include <UI/UIRenderer.h>
 
 // OTHER ===========================================
@@ -47,11 +47,11 @@ void ForceFactoryRegistration()
 	Debug::CLuaConsole::ForceFactoryRegistration();
 	Debug::CWatcherWindow::ForceFactoryRegistration();
 
-	Render::CModelRenderer::ForceFactoryRegistration();
-	Render::CTerrainRenderer::ForceFactoryRegistration();
+	//Render::CModelRenderer::ForceFactoryRegistration();
+	//Render::CTerrainRenderer::ForceFactoryRegistration();
+	//Render::CDebugGeomRenderer::ForceFactoryRegistration();
+	//Render::CDebugTextRenderer::ForceFactoryRegistration();
 	Render::CUIRenderer::ForceFactoryRegistration();
-	Render::CDebugGeomRenderer::ForceFactoryRegistration();
-	Render::CDebugTextRenderer::ForceFactoryRegistration();
 
 	AI::CActionTplIdle::ForceFactoryRegistration();
 	AI::CActionTplWander::ForceFactoryRegistration();
