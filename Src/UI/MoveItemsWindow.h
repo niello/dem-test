@@ -5,7 +5,7 @@
 #include <UI/UIWindow.h>
 #include <Data/StringID.h>
 #include <Events/EventsFwd.h>
-#include <CEGUIEvent.h>
+#include <CEGUI/Event.h>
 
 namespace Prop
 {
