@@ -36,7 +36,7 @@ void CActionListPopup::Clear()
 }
 //---------------------------------------------------------------------
 
-bool CActionListPopup::OnShow(const Events::CEventBase& Event)
+bool CActionListPopup::OnShow(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
 	Data::PParams P = ((const Events::CEvent&)Event).Params;
 
@@ -76,7 +76,7 @@ bool CActionListPopup::OnShow(const Events::CEventBase& Event)
 }
 //---------------------------------------------------------------------
 
-bool CActionListPopup::OnHide(const Events::CEventBase& Event)
+bool CActionListPopup::OnHide(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
 	if (pCtl == ((const Events::CEvent&)Event).Params->Get<PVOID>(CStrID("CtlPtr"))) Hide();
 	OK;

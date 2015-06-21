@@ -140,13 +140,13 @@ bool CIngameScreen::OnDbgExitBtnClick(const CEGUI::EventArgs& e)
 }
 //---------------------------------------------------------------------
 
-bool CIngameScreen::ShowIAOTip(const CEventBase& Event)
+bool CIngameScreen::ShowIAOTip(CEventDispatcher* pDispatcher, const CEventBase& Event)
 {
 	return ShowTip((const CEvent&)Event, IAOTip, TipAlignTop);
 }
 //---------------------------------------------------------------------
 
-bool CIngameScreen::HideIAOTip(const CEventBase& Event)
+bool CIngameScreen::HideIAOTip(CEventDispatcher* pDispatcher, const CEventBase& Event)
 {
 	IAOTip->Hide();
 	////???keep open until ActionListPopup is present? (remember bool IsTipVisible and OnPopupClose apply)?
@@ -155,7 +155,7 @@ bool CIngameScreen::HideIAOTip(const CEventBase& Event)
 }
 //---------------------------------------------------------------------
 
-bool CIngameScreen::ShowPhrase(const CEventBase& Event)
+bool CIngameScreen::ShowPhrase(CEventDispatcher* pDispatcher, const CEventBase& Event)
 {
 	const CEvent& e = (const CEvent&)Event;
 
@@ -170,7 +170,7 @@ bool CIngameScreen::ShowPhrase(const CEventBase& Event)
 }
 //---------------------------------------------------------------------
 
-bool CIngameScreen::HidePhrase(const CEventBase& Event)
+bool CIngameScreen::HidePhrase(CEventDispatcher* pDispatcher, const CEventBase& Event)
 {
 	Data::PParams P = ((const CEvent&)Event).Params;
 
@@ -197,7 +197,7 @@ bool CIngameScreen::ShowTip(const CEvent& Event, CTipWindow* pTipWnd, ETipAlignm
 }
 //---------------------------------------------------------------------
 
-bool CIngameScreen::OnQuestStatusChanged(const CEventBase& Event)
+bool CIngameScreen::OnQuestStatusChanged(CEventDispatcher* pDispatcher, const CEventBase& Event)
 {
 	Data::PParams P = ((const CEvent&)Event).Params;
 
@@ -229,7 +229,7 @@ bool CIngameScreen::OnQuestStatusChanged(const CEventBase& Event)
 }
 //---------------------------------------------------------------------
 
-bool CIngameScreen::OnObjectDescRequested(const CEventBase& Event)
+bool CIngameScreen::OnObjectDescRequested(CEventDispatcher* pDispatcher, const CEventBase& Event)
 {
 	const CString& UIDesc = ((const CEvent&)Event).Params->Get<CString>(CStrID("UIDesc"));
 	CEGUI::FormattedListboxTextItem* NewItem =
@@ -241,7 +241,7 @@ bool CIngameScreen::OnObjectDescRequested(const CEventBase& Event)
 }
 //---------------------------------------------------------------------
 
-bool CIngameScreen::OnIAOActionStart(const CEventBase& Event)
+bool CIngameScreen::OnIAOActionStart(CEventDispatcher* pDispatcher, const CEventBase& Event)
 {
 	Data::PParams P = ((const CEvent&)Event).Params;
 	if (P->Get<CStrID>(CStrID("Action")) == "OpenContainer")
@@ -253,7 +253,7 @@ bool CIngameScreen::OnIAOActionStart(const CEventBase& Event)
 }
 //---------------------------------------------------------------------
 
-bool CIngameScreen::OnIAOActionAbort(const CEventBase& Event)
+bool CIngameScreen::OnIAOActionAbort(CEventDispatcher* pDispatcher, const CEventBase& Event)
 {
 	Data::PParams P = ((const CEvent&)Event).Params;
 	if (P->Get<CStrID>(CStrID("Action")) == "OpenContainer")

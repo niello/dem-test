@@ -149,7 +149,7 @@ bool CInventory::OnUnequipBtnClick(const CEGUI::EventArgs& e)
 }
 //---------------------------------------------------------------------
 
-bool CInventory::OnShow(const CEventBase& Event)
+bool CInventory::OnShow(CEventDispatcher* pDispatcher, const CEventBase& Event)
 {
 	const CEvent& e = (const CEvent&)Event;
 
@@ -176,7 +176,7 @@ bool CInventory::OnShow(const CEventBase& Event)
 //---------------------------------------------------------------------
 
 //???!!!subscribe OnShow, unsubscribe OnHide?
-bool CInventory::OnInvContentsChanged(const CEventBase& Event)
+bool CInventory::OnInvContentsChanged(CEventDispatcher* pDispatcher, const CEventBase& Event)
 {
 	if (IsVisible() && pEquip &&
 		((const CEvent&)Event).Params->Get<CString>(CStrID("Entity")) == pEquip->GetEntity()->GetUID().CStr())

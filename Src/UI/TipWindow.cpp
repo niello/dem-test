@@ -80,7 +80,7 @@ void CTipWindow::UpdateBinding()
 }
 //---------------------------------------------------------------------
 
-bool CTipWindow::OnUIUpdate(const Events::CEventBase& Event)
+bool CTipWindow::OnUIUpdate(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
 	UpdateBinding();
 	OK;

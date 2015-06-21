@@ -35,8 +35,8 @@ n_assert(false);
 	//RenderSrv->MeshMgr.DeleteUnreferenced();
 	//RenderSrv->MaterialMgr.DeleteUnreferenced();
 	//RenderSrv->TextureMgr.DeleteUnreferenced();
-	GameSrv->AnimationMgr.DeleteUnreferenced();
-	PhysicsSrv->CollisionShapeMgr.DeleteUnreferenced();
+	//GameSrv->AnimationMgr.DeleteUnreferenced();
+	//PhysicsSrv->CollisionShapeMgr.DeleteUnreferenced();
 }
 //---------------------------------------------------------------------
 
