@@ -53,7 +53,7 @@ void CMoveItemsWindow::Init(CEGUI::Window* pWindow)
 }
 //---------------------------------------------------------------------
 
-bool CMoveItemsWindow::OnShow(const Events::CEventBase& Event)
+bool CMoveItemsWindow::OnShow(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
 	DialogResult = false;
 

@@ -46,7 +46,7 @@ void CContainerWindow::Init(CEGUI::Window* pWindow)
 }
 //---------------------------------------------------------------------
 
-bool CContainerWindow::OnShow(const Events::CEventBase& Event)
+bool CContainerWindow::OnShow(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
 	Data::PParams P = ((const Events::CEvent&)Event).Params;
 
@@ -69,7 +69,7 @@ bool CContainerWindow::OnShow(const Events::CEventBase& Event)
 }
 //---------------------------------------------------------------------
 
-bool CContainerWindow::OnHide(const Events::CEventBase& Event)
+bool CContainerWindow::OnHide(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
 	Hide();
 	OK;
@@ -192,7 +192,7 @@ bool CContainerWindow::MoveSelectedItem(CEGUI::Listbox* pFromListBox,
 }
 //---------------------------------------------------------------------
 
-bool CContainerWindow::OnMoveItemsWindowClosed(const Events::CEventBase& Event)
+bool CContainerWindow::OnMoveItemsWindowClosed(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
 	UNSUBSCRIBE_EVENT(MoveItemsWindowClosed);
 

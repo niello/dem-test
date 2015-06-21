@@ -236,7 +236,7 @@ bool CAppStateGame::IssueActorCommand(bool Run, bool ClearQueue)
 }
 //---------------------------------------------------------------------
 
-bool CAppStateGame::OnMouseMoveRaw(const Events::CEventBase& Event)
+bool CAppStateGame::OnMouseMoveRaw(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
 	Scene::CCameraManager* pCamMgr = GameSrv->GetActiveLevel()->GetCameraMgr();
 	if (!pCamMgr || !pCamMgr->IsCameraThirdPerson()) FAIL;
@@ -276,7 +276,7 @@ bool CAppStateGame::OnMouseMoveRaw(const Events::CEventBase& Event)
 }
 //---------------------------------------------------------------------
 
-bool CAppStateGame::OnMouseWheel(const Events::CEventBase& Event)
+bool CAppStateGame::OnMouseWheel(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
 	Scene::CCameraManager* pCamMgr = GameSrv->GetActiveLevel()->GetCameraMgr();
 	if (!pCamMgr || !pCamMgr->IsCameraThirdPerson()) FAIL;
@@ -287,7 +287,7 @@ bool CAppStateGame::OnMouseWheel(const Events::CEventBase& Event)
 }
 //---------------------------------------------------------------------
 
-bool CAppStateGame::OnMouseBtnDown(const Events::CEventBase& Event)
+bool CAppStateGame::OnMouseBtnDown(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
 	Input::EMouseButton Button = ((const Event::MouseBtnDown&)Event).Button;
 	switch (Button)
@@ -324,7 +324,7 @@ bool CAppStateGame::OnMouseBtnDown(const Events::CEventBase& Event)
 }
 //---------------------------------------------------------------------
 
-bool CAppStateGame::OnMouseBtnUp(const Events::CEventBase& Event)
+bool CAppStateGame::OnMouseBtnUp(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
 	Input::EMouseButton Button = ((const Event::MouseBtnDown&)Event).Button;
 	if (Button == Input::MBMiddle)
@@ -336,7 +336,7 @@ bool CAppStateGame::OnMouseBtnUp(const Events::CEventBase& Event)
 }
 //---------------------------------------------------------------------
 
-bool CAppStateGame::OnMouseDoubleClick(const Events::CEventBase& Event)
+bool CAppStateGame::OnMouseDoubleClick(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
 	Input::EMouseButton Button = ((const Event::MouseBtnDown&)Event).Button;
 	if (Button == Input::MBLeft)
@@ -350,7 +350,7 @@ bool CAppStateGame::OnMouseDoubleClick(const Events::CEventBase& Event)
 }
 //---------------------------------------------------------------------
 
-bool CAppStateGame::OnWorldTransitionRequested(const Events::CEventBase& Event)
+bool CAppStateGame::OnWorldTransitionRequested(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
 	Data::PParams P = ((const Events::CEvent&)Event).Params;
 
@@ -403,7 +403,7 @@ bool CAppStateGame::OnWorldTransitionRequested(const Events::CEventBase& Event)
 }
 //---------------------------------------------------------------------
 
-bool CAppStateGame::OnQuickSave(const Events::CEventBase& Event)
+bool CAppStateGame::OnQuickSave(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
 	int QuickSaveCount = GameSrv->GetGlobalAttr(CStrID("QuickSaveCount"), 3);
 	int CurrQuickSave = GameSrv->GetGlobalAttr(CStrID("CurrQuickSave"), QuickSaveCount);
@@ -416,7 +416,7 @@ bool CAppStateGame::OnQuickSave(const Events::CEventBase& Event)
 }
 //---------------------------------------------------------------------
 
-bool CAppStateGame::OnQuickLoad(const Events::CEventBase& Event)
+bool CAppStateGame::OnQuickLoad(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
 	int CurrQuickSave;
 	if (!GameSrv->GetGlobalAttr(CurrQuickSave, CStrID("CurrQuickSave"))) OK;
@@ -435,28 +435,28 @@ bool CAppStateGame::OnQuickLoad(const Events::CEventBase& Event)
 }
 //---------------------------------------------------------------------
 
-bool CAppStateGame::OnToggleGamePause(const Events::CEventBase& Event)
+bool CAppStateGame::OnToggleGamePause(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
 	GameSrv->ToggleGamePause();
 	OK;
 }
 //---------------------------------------------------------------------
 
-bool CAppStateGame::OnToggleRenderDbgAI(const Events::CEventBase& Event)
+bool CAppStateGame::OnToggleRenderDbgAI(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
 	RenderDbgAI = !RenderDbgAI;
 	OK;
 }
 //---------------------------------------------------------------------
 
-bool CAppStateGame::OnToggleRenderDbgPhysics(const Events::CEventBase& Event)
+bool CAppStateGame::OnToggleRenderDbgPhysics(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
 	RenderDbgPhysics = !RenderDbgPhysics;
 	OK;
 }
 //---------------------------------------------------------------------
 
-bool CAppStateGame::OnToggleRenderDbgGfx(const Events::CEventBase& Event)
+bool CAppStateGame::OnToggleRenderDbgGfx(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
 	RenderDbgGfx = !RenderDbgGfx;
 n_assert(false);
@@ -465,14 +465,14 @@ n_assert(false);
 }
 //---------------------------------------------------------------------
 
-bool CAppStateGame::OnToggleRenderDbgEntities(const Events::CEventBase& Event)
+bool CAppStateGame::OnToggleRenderDbgEntities(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
 	RenderDbgEntities = !RenderDbgEntities;
 	OK;
 }
 //---------------------------------------------------------------------
 
-bool CAppStateGame::OnTeleportSelected(const Events::CEventBase& Event)
+bool CAppStateGame::OnTeleportSelected(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
 	if (!GameSrv->GetActiveLevel()->GetSelectedCount()) OK;
 

@@ -216,7 +216,7 @@ void CIPGApplication::Close()
 }
 //---------------------------------------------------------------------
 
-bool CIPGApplication::OnDisplayClose(const Events::CEventBase& Event)
+bool CIPGApplication::OnDisplayClose(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
 	FSM.RequestState(APP_STATE_EXIT);
 	OK;

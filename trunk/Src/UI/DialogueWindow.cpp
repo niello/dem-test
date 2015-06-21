@@ -143,7 +143,7 @@ void CDialogueWindow::SelectAnswer(Story::CDlgContext& Ctx, int Idx)
 }
 //---------------------------------------------------------------------
 
-bool CDialogueWindow::OnDlgStart(const Events::CEventBase& Event)
+bool CDialogueWindow::OnDlgStart(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
 	Data::PParams P = ((const Events::CEvent&)Event).Params;
 	if (!P->Get<bool>(CStrID("IsForeground"))) FAIL;
@@ -157,7 +157,7 @@ bool CDialogueWindow::OnDlgStart(const Events::CEventBase& Event)
 }
 //---------------------------------------------------------------------
 
-bool CDialogueWindow::OnDlgEnd(const Events::CEventBase& Event)
+bool CDialogueWindow::OnDlgEnd(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
 	Data::PParams P = ((const Events::CEvent&)Event).Params;
 	if (!P->Get<bool>(CStrID("IsForeground"))) FAIL;
@@ -171,7 +171,7 @@ bool CDialogueWindow::OnDlgEnd(const Events::CEventBase& Event)
 }
 //---------------------------------------------------------------------
 
-bool CDialogueWindow::OnDlgNodeEnter(const Events::CEventBase& Event)
+bool CDialogueWindow::OnDlgNodeEnter(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
 	n_assert_dbg(DlgID.IsValid());
 
