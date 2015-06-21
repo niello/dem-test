@@ -6,9 +6,9 @@
 #include <UI/UIServer.h>
 #include <UI/CEGUI/CEGUIFmtLbTextItem.h>
 
-#include <CEGUIEvent.h>
-#include <elements/CEGUIListbox.h>
-#include <elements/CEGUIPushButton.h>
+#include <CEGUI/Event.h>
+#include <CEGUI/widgets/Listbox.h>
+#include <CEGUI/widgets/PushButton.h>
 
 namespace UI
 {
@@ -197,7 +197,7 @@ bool CDialogueWindow::OnDlgNodeEnter(Events::CEventDispatcher* pDispatcher, cons
 	CEGUI::FormattedListboxTextItem* NewItem =
 		n_new(CEGUI::FormattedListboxTextItem((CEGUI::utf8*)Text.CStr(), CEGUI::HTF_WORDWRAP_LEFT_ALIGNED));//!!!, 0, 0, true);
 	n_assert(NewItem);
-	NewItem->setTextColours(CEGUI::colour(0xffb0b0b0));
+	NewItem->setTextColours(CEGUI::Colour(0xffb0b0b0));
 	pTextArea->addItem(NewItem);
 	pTextArea->ensureItemIsVisible(pTextArea->getItemCount() - 1);
 
@@ -222,7 +222,7 @@ bool CDialogueWindow::OnDlgNodeEnter(Events::CEventDispatcher* pDispatcher, cons
 			CEGUI::FormattedListboxTextItem* pNewItem =
 				n_new(CEGUI::FormattedListboxTextItem((CEGUI::utf8*)Text.CStr(), CEGUI::HTF_WORDWRAP_LEFT_ALIGNED));
 			n_assert(pNewItem);
-			pNewItem->setTextColours(CEGUI::colour(0xffff0000));
+			pNewItem->setTextColours(CEGUI::Colour(0xffff0000));
 			pTextArea->addItem(pNewItem);
 			pTextArea->ensureItemIsVisible(pTextArea->getItemCount());
 		}

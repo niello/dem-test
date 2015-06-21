@@ -6,15 +6,14 @@
 #include <Game/EntityManager.h>
 #include <Items/Prop/PropEquipment.h>
 
-#include <CEGUIEvent.h>
-#include <elements/CEGUIFrameWindow.h>
-#include <elements/CEGUIListbox.h>
-#include <elements/CEGUIListboxTextItem.h>
-#include <elements/CEGUIPushButton.h>
+#include <CEGUI/Event.h>
+#include <CEGUI/widgets/FrameWindow.h>
+#include <CEGUI/widgets/Listbox.h>
+#include <CEGUI/widgets/ListboxTextItem.h>
+#include <CEGUI/widgets/PushButton.h>
 
 namespace UI
 {
-
 using namespace Events;
 using namespace Game;
 
@@ -87,9 +86,9 @@ void CInventory::Update()
 		CEGUI::ListboxTextItem* NewItem =
 			n_new(CEGUI::ListboxTextItem((CEGUI::utf8*)Name.CStr(), 0, &Stack));
 		n_assert(NewItem);
-		NewItem->setTextColours(CEGUI::colour(0xffffffff));
-		NewItem->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
-		NewItem->setSelectionColours(CEGUI::colour(0xff606099));
+		NewItem->setTextColours(CEGUI::Colour(0xffffffff));
+		NewItem->setSelectionBrushImage("TaharezLook/MultiListSelectionBrush");
+		NewItem->setSelectionColours(CEGUI::Colour(0xff606099));
 		pInvList->addItem(NewItem);
 	}
 
@@ -107,9 +106,9 @@ void CInventory::Update()
 		CEGUI::ListboxTextItem* NewItem =
 			n_new(CEGUI::ListboxTextItem((CEGUI::utf8*)Text.CStr(), 0, (void*)((int)pEquip->Slots.KeyAt(i))));
 		n_assert(NewItem);
-		NewItem->setTextColours(CEGUI::colour(0xffffffff));
-		NewItem->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
-		NewItem->setSelectionColours(CEGUI::colour(0xff606099));
+		NewItem->setTextColours(CEGUI::Colour(0xffffffff));
+		NewItem->setSelectionBrushImage("TaharezLook/MultiListSelectionBrush");
+		NewItem->setSelectionColours(CEGUI::Colour(0xff606099));
 		pEquipList->addItem(NewItem);
 	}
 

@@ -6,11 +6,11 @@
 #include <Items/Item.h>
 #include <UI/UIServer.h>
 
-#include <CEGUIEvent.h>
-#include <CEGUIWindowManager.h>
-#include <elements/CEGUIFrameWindow.h>
-#include <elements/CEGUIPushButton.h>
-#include <elements/CEGUISpinner.h>
+#include <CEGUI/Event.h>
+#include <CEGUI/WindowManager.h>
+#include <CEGUI/widgets/FrameWindow.h>
+#include <CEGUI/widgets/PushButton.h>
+#include <CEGUI/widgets/Spinner.h>
 
 namespace UI
 {
@@ -71,7 +71,9 @@ bool CMoveItemsWindow::OnShow(Events::CEventDispatcher* pDispatcher, const Event
 
 	if (WindowOwnerID.IsValid())
 	{
-		pOwnerWnd = CEGUI::WindowManager::getSingleton().getWindow(CEGUI::String(WindowOwnerID.CStr()));
+		//!!!TEST IT!
+		n_assert(false);
+		pOwnerWnd = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->getChild(CEGUI::String(WindowOwnerID.CStr()));
 		n_assert(pOwnerWnd);
 		pOwnerWnd->setEnabled(false);
 		pConnectionOnWindowParentHide = pOwnerWnd->subscribeEvent(CEGUI::FrameWindow::EventHidden,

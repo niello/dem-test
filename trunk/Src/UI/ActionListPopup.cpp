@@ -4,9 +4,9 @@
 #include <UI/UIServer.h>
 #include <Events/EventServer.h>
 
-#include <CEGUIWindowManager.h>
-#include <elements/CEGUIMenuItem.h>
-#include <elements/CEGUIPopupMenu.h>
+#include <CEGUI/WindowManager.h>
+#include <CEGUI/widgets/MenuItem.h>
+#include <CEGUI/widgets/PopupMenu.h>
 
 namespace UI
 {
@@ -62,7 +62,7 @@ bool CActionListPopup::OnShow(Events::CEventDispatcher* pDispatcher, const Event
 				pItem->subscribeEvent(CEGUI::MenuItem::EventClicked,
 					CEGUI::Event::Subscriber(&CActionListPopup::OnBtnClicked, this));
 			}
-			pWnd->addChildWindow(pItem);
+			pWnd->addChild(pItem);
 		}
 
 	if (((CEGUI::PopupMenu*)pWnd)->getItemCount())
@@ -97,7 +97,7 @@ bool CActionListPopup::OnClickOutsideRect(const CEGUI::EventArgs& e)
 {
 	//!!!check is outside rect! subscribe & process event correctly!
 	//!!!NOW DIRTY HACK!
-	CEGUI::Point p = UISrv->GetMousePosition();
+	CEGUI::Vector2f p = UISrv->GetMousePosition();
 	p.d_x += 2.f;
 	p.d_y += 2.f;
 	if (!pWnd->isHit(p, true))

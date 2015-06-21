@@ -109,7 +109,7 @@ bool CIPGApplication::Open()
 	UISrv->LoadFont("DejaVuSans-14.font");
 	UISrv->LoadFont("CourierNew-10.font");
 	UISrv->LoadScheme("TaharezLook.scheme");
-	UISrv->SetDefaultMouseCursor("TaharezLook", "MouseArrow");
+	UISrv->SetDefaultMouseCursor("TaharezLook/MouseArrow");
 
 	Sys::Log("AppEnv->InitGameSystem() ...\n");
 

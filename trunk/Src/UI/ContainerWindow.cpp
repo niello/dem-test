@@ -6,11 +6,11 @@
 #include <Items/Item.h>
 #include <Items/ItemStack.h>
 
-#include <CEGUIEvent.h>
-#include <elements/CEGUIFrameWindow.h>
-#include <elements/CEGUIPushButton.h>
-#include <elements/CEGUIListbox.h>
-#include <elements/CEGUIListboxTextItem.h>
+#include <CEGUI/Event.h>
+#include <CEGUI/widgets/FrameWindow.h>
+#include <CEGUI/widgets/PushButton.h>
+#include <CEGUI/widgets/Listbox.h>
+#include <CEGUI/widgets/ListboxTextItem.h>
 
 namespace UI
 {
@@ -136,9 +136,9 @@ void CContainerWindow::FillList(CPropInventory* pInventory, CEGUI::Listbox* pLis
 		CEGUI::ListboxTextItem* NewItem =
 			n_new(CEGUI::ListboxTextItem((CEGUI::utf8*)Name.CStr(), 0, Stack.GetItem()));
 		n_assert(NewItem);
-		NewItem->setTextColours(CEGUI::colour(0xffffffff));
-		NewItem->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
-		NewItem->setSelectionColours(CEGUI::colour(0xff606099));
+		NewItem->setTextColours(CEGUI::Colour(0xffffffff));
+		NewItem->setSelectionBrushImage("TaharezLook/MultiListSelectionBrush");
+		NewItem->setSelectionColours(CEGUI::Colour(0xff606099));
 
 		pListBox->addItem(NewItem);
 	}

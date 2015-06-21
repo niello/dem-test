@@ -10,10 +10,10 @@
 #include <UI/CEGUI/CEGUIFmtLbTextItem.h>
 #include <Events/EventServer.h>
 
-#include <CEGUIWindowManager.h>
-#include <CEGUIFont.h>
-#include <elements/CEGUIListbox.h>
-#include <elements/CEGUIPushButton.h>
+#include <CEGUI/WindowManager.h>
+#include <CEGUI/Font.h>
+#include <CEGUI/widgets/Listbox.h>
+#include <CEGUI/widgets/PushButton.h>
 
 namespace UI
 {
@@ -39,7 +39,7 @@ void CIngameScreen::Init(CEGUI::Window* pWindow)
 
 	CEGUI::Window* pAPWnd =
 		CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/PopupMenu", (WndName + "/ActionListPopup").CStr());
-	pWnd->addChildWindow(pAPWnd);
+	pWnd->addChild(pAPWnd);
 	ActionPopup = n_new(CActionListPopup);
 	ActionPopup->Init(pAPWnd);
 	ActionPopup->Hide();
@@ -98,9 +98,9 @@ Ptr<CTipWindow> CIngameScreen::CreateTipWindow(int TipID)
 	pTipWnd->setProperty("BackgroundEnabled", "false");
 	pTipWnd->setMousePassThroughEnabled(true);
 	pTipWnd->setFont("DejaVuSans-8");
-	pTipWnd->setSize(CEGUI::UVector2(CEGUI::UDim(0.f, 20.f),
+	pTipWnd->setSize(CEGUI::USize(CEGUI::UDim(0.f, 20.f),
 		CEGUI::UDim(0.f, pWnd->getFont()->getFontHeight() + 10.f)));
-	pWnd->addChildWindow(pTipWnd);
+	pWnd->addChild(pTipWnd);
 	Ptr<CTipWindow> Tip = n_new(CTipWindow);
 	Tip->Init(pTipWnd);
 	Tip->Hide();
@@ -187,9 +187,9 @@ bool CIngameScreen::ShowTip(const CEvent& Event, CTipWindow* pTipWnd, ETipAlignm
 	const CString& Text = Event.Params->Get<CString>(CStrID("Text"));
 	CStrID EntityID = Event.Params->Get<CStrID>(CStrID("EntityID"));
 
-	CEGUI::Font* f = pTipWnd->GetWnd()->getFont();
-	pTipWnd->GetWnd()->setSize(CEGUI::UVector2(	CEGUI::UDim(0.f, f->getTextExtent((CEGUI::utf8*)Text.CStr()) + 20.f),
-							   CEGUI::UDim(0.f, f->getFontHeight() + 14.f)));
+	const CEGUI::Font* f = pTipWnd->GetWnd()->getFont();
+	pTipWnd->GetWnd()->setSize(CEGUI::USize(CEGUI::UDim(0.f, f->getTextExtent((CEGUI::utf8*)Text.CStr()) + 20.f),
+											CEGUI::UDim(0.f, f->getFontHeight() + 14.f)));
 	pTipWnd->GetWnd()->setText((CEGUI::utf8*)Text.CStr());
 	pTipWnd->BindToEntity(EntityID, Alignment);
 	if (!pTipWnd->IsVisible()) pTipWnd->Show();
@@ -221,7 +221,7 @@ bool CIngameScreen::OnQuestStatusChanged(CEventDispatcher* pDispatcher, const CE
 
 	CEGUI::FormattedListboxTextItem* NewItem =
 		n_new(CEGUI::FormattedListboxTextItem((CEGUI::utf8*)Text.CStr(), CEGUI::HTF_WORDWRAP_LEFT_ALIGNED));//!!!, 0, 0, true);
-	NewItem->setTextColours(CEGUI::colour(0xffb0b0b0));
+	NewItem->setTextColours(CEGUI::Colour(0xffb0b0b0));
 	Console->addItem(NewItem);
 	Console->ensureItemIsVisible(Console->getItemCount() - 1);
 
@@ -234,7 +234,7 @@ bool CIngameScreen::OnObjectDescRequested(CEventDispatcher* pDispatcher, const C
 	const CString& UIDesc = ((const CEvent&)Event).Params->Get<CString>(CStrID("UIDesc"));
 	CEGUI::FormattedListboxTextItem* NewItem =
 		n_new(CEGUI::FormattedListboxTextItem((CEGUI::utf8*)UIDesc.CStr(), CEGUI::HTF_WORDWRAP_LEFT_ALIGNED));//!!!, 0, 0, true);
-	NewItem->setTextColours(CEGUI::colour(0xffd0d0d0));
+	NewItem->setTextColours(CEGUI::Colour(0xffd0d0d0));
 	Console->addItem(NewItem);
 	Console->ensureItemIsVisible(Console->getItemCount() - 1);
 	OK;

@@ -4,8 +4,8 @@
 #include <Game/Entity.h>
 #include <Game/GameServer.h>
 #include <Events/EventServer.h>
-#include <CEGUIEvent.h>
-#include <elements/CEGUIPushButton.h>
+#include <CEGUI/Event.h>
+#include <CEGUI/widgets/PushButton.h>
 
 namespace UI
 {

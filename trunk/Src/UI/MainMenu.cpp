@@ -3,7 +3,7 @@
 #include <App/IPGApplication.h>
 #include <App/AppStates.h>
 
-#include <elements/CEGUIPushButton.h>
+#include <CEGUI/widgets/PushButton.h>
 
 namespace UI
 {
