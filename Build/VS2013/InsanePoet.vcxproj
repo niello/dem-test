@@ -58,7 +58,7 @@
       <AdditionalIncludeDirectories>..\..\Src;..\..\..\Engine\DEM\Src\L3;..\..\..\Engine\DEM\Src\L2;..\..\..\Engine\DEM\Src\L1;..\..\..\Engine\DEM\Src\nebula2\inc;..\..\..\Engine\3rdParty\Recast\Detour\Include;..\..\..\Engine\3rdParty\Recast\DetourCrowd\Include;..\..\..\Engine\3rdParty\Lua\src;..\..\..\Engine\3rdParty\CEGUI\cegui\include;..\..\..\Engine\3rdParty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;__WIN32__;N_STATIC;NT_PLUGIN;CEGUI_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
-      <ExceptionHandling />
+      <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -68,7 +68,7 @@
     </ClCompile>
     <Link>
       <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>DEM_L1.lib;DEM_L2.lib;DEM_L3.lib;lua5.1.lib;TinyXML2.lib;BulletCollision_vs2008.lib;BulletDynamics_vs2008.lib;LinearMath_vs2008.lib;Detour.lib;DetourCrowd.lib;DetourDebug.lib;CEGUIBase_Static.lib;CEGUIDirect3D9Renderer_Static.lib;CEGUITinyXML2Parser_Static.lib;CEGUIFalagardWRBase_Static.lib;CEGUISILLYImageCodec_Static.lib;SILLY.lib;libpng.lib;jpeg.lib;freetype.lib;zlib.lib;pcre.lib;d3d9.lib;dsound.lib;dxguid.lib;libogg_static.lib;libvorbis_static.lib;libtheora_static_sse2.lib;winmm.lib;strmiids.lib;Uxtheme.lib;Dbghelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>DEM_L1.lib;DEM_L2.lib;DEM_L3.lib;lua5.1.lib;TinyXML2.lib;BulletCollision_vs2008.lib;BulletDynamics_vs2008.lib;LinearMath_vs2008.lib;Detour.lib;DetourCrowd.lib;DetourDebug.lib;CEGUIBase-0_Static.lib;CEGUICoreWindowRendererSet_Static.lib;CEGUITinyXML2Parser_Static.lib;CEGUISILLYImageCodec_Static.lib;SILLY.lib;libpng.lib;jpeg.lib;freetype.lib;zlib.lib;d3d9.lib;dsound.lib;dxguid.lib;libogg_static.lib;libvorbis_static.lib;libtheora_static_sse2.lib;winmm.lib;strmiids.lib;Uxtheme.lib;Dbghelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>..\..\..\Engine\3rdParty\Bullet\lib;..\..\..\Engine\3rdParty\Recast\Lib;..\..\..\Engine\3rdParty\TinyXML2\Lib;..\..\..\Engine\3rdParty\Lua\Lib;..\..\..\Engine\3rdParty\CEGUI\dependencies\lib\static;..\..\..\Engine\3rdParty\Xiph\ogg\win32\Lib;..\..\..\Engine\3rdParty\Xiph\vorbis\win32\Lib;..\..\..\Engine\3rdParty\Xiph\theora\win32\Lib;..\..\..\Engine\3rdParty\CEGUI\lib;..\..\..\Engine\DEM\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -76,6 +76,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers />
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -85,13 +86,15 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;__WIN32__;N_STATIC;NT_PLUGIN;CEGUI_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <MinimalRebuild>false</MinimalRebuild>
-      <ExceptionHandling />
+      <ExceptionHandling>false</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <PrecompiledHeader />
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <FunctionLevelLinking>
+      </FunctionLevelLinking>
     </ClCompile>
     <Link>
       <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
@@ -101,6 +104,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers />
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
