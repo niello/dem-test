@@ -40,23 +40,6 @@ CIPGApplication::~CIPGApplication()
 }
 //---------------------------------------------------------------------
 
-void CIPGApplication::SetupDisplayMode()
-{
-n_assert(false);
-	//CDisplayMode Mode;
-	//Mode.PosX = 0;
-	//Mode.PosY = 0;
-	//Mode.Width = 1024;
-	//Mode.Height = 640;
-	//Mode.PixelFormat = D3DFMT_X8R8G8B8;
-	//AppEnv->SetDisplayMode(Mode);
-
-	CString WindowTitle = GetVendorName() + " - " + GetAppName() + " - " + GetAppVersion();
-	AppEnv->SetWindowTitle(WindowTitle.CStr());
-	AppEnv->SetWindowIcon("Icon");
-}
-//---------------------------------------------------------------------
-
 bool CIPGApplication::Open()
 {
 	srand((UINT)time(NULL));
@@ -76,7 +59,12 @@ bool CIPGApplication::Open()
 		FAIL;
 	}
 
-	SetupDisplayMode();
+	CString WindowTitle = GetVendorName() + " - " + GetAppName() + " - " + GetAppVersion();
+	AppEnv->MainWindow = n_new(Sys::COSWindow);
+	AppEnv->MainWindow->SetTitle(WindowTitle.CStr());
+	AppEnv->MainWindow->SetIcon("Icon");
+	AppEnv->MainWindow->SetRect(Data::CRect(50, 50, 800, 600));
+	AppEnv->MainWindow->Open();
 
 	//???only add CFileSystemNPK here?
 	IOSrv->MountNPK("Proj:Export.npk");
@@ -104,12 +92,15 @@ bool CIPGApplication::Open()
 	Sys::Log("Setup input - OK\n");
 
 	//!!!to HRD params! data/cfg/UI.hrd
-	UISrv->LoadFont("DejaVuSans-8.font");
-	UISrv->LoadFont("DejaVuSans-10.font");
-	UISrv->LoadFont("DejaVuSans-14.font");
-	UISrv->LoadFont("CourierNew-10.font");
-	UISrv->LoadScheme("TaharezLook.scheme");
-	UISrv->SetDefaultMouseCursor("TaharezLook/MouseArrow");
+	if (UI::CUIServer::HasInstance())
+	{
+		UISrv->LoadFont("DejaVuSans-8.font");
+		UISrv->LoadFont("DejaVuSans-10.font");
+		UISrv->LoadFont("DejaVuSans-14.font");
+		UISrv->LoadFont("CourierNew-10.font");
+		UISrv->LoadScheme("TaharezLook.scheme");
+		UISrv->SetDefaultMouseCursor("TaharezLook/MouseArrow");
+	}
 
 	Sys::Log("AppEnv->InitGameSystem() ...\n");
 
@@ -175,8 +166,8 @@ bool CIPGApplication::Open()
 	Sys::Log("Setup L3 SI - OK\n");
 
 	FSM.AddStateHandler(n_new(CAppStateMenu(CStrID("Menu"))));
-	FSM.AddStateHandler(n_new(CAppStateLoading(CStrID("Loading"))));
-	FSM.AddStateHandler(n_new(CAppStateGame(CStrID("Game"))));
+	//FSM.AddStateHandler(n_new(CAppStateLoading(CStrID("Loading"))));
+	//FSM.AddStateHandler(n_new(CAppStateGame(CStrID("Game"))));
 	
 	Sys::Log("Seting state: Menu...\n");
 	
@@ -218,7 +209,7 @@ void CIPGApplication::Close()
 
 bool CIPGApplication::OnDisplayClose(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
-	FSM.RequestState(APP_STATE_EXIT);
+	FSM.RequestState(CStrID::Empty);
 	OK;
 }
 //---------------------------------------------------------------------

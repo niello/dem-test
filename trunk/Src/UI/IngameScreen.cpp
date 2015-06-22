@@ -7,7 +7,7 @@
 #include "ContainerWindow.h"
 #include "MoveItemsWindow.h"
 #include <Quests/Quest.h> //!!!only for status!
-#include <UI/CEGUI/CEGUIFmtLbTextItem.h>
+#include <UI/CEGUI/FmtLbTextItem.h>
 #include <Events/EventServer.h>
 
 #include <CEGUI/WindowManager.h>

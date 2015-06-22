@@ -53,7 +53,7 @@ bool CMainMenu::OnNewGameBtnClick(const CEGUI::EventArgs& e)
 
 bool CMainMenu::OnQuitBtnClick(const CEGUI::EventArgs& e)
 {
-	IPGApp->FSM.RequestState(APP_STATE_EXIT);
+	IPGApp->FSM.RequestState(CStrID::Empty);
 	OK;
 }
 //---------------------------------------------------------------------

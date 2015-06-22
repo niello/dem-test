@@ -4,7 +4,7 @@
 #include <Game/EntityManager.h> // For entity attr "Name"
 #include <Events/EventServer.h>
 #include <UI/UIServer.h>
-#include <UI/CEGUI/CEGUIFmtLbTextItem.h>
+#include <UI/CEGUI/FmtLbTextItem.h>
 
 #include <CEGUI/Event.h>
 #include <CEGUI/widgets/Listbox.h>
