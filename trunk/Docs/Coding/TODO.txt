@@ -43,10 +43,10 @@ Click on Broom sometimes leads to no action
 Arei can't start talking if GG moves from initial position
  - if GG moves from Arei, sometimes Arei detects that he can never reach GG (interception time < 0)
 Double click on UI window passes through UI and adds task, which is wrong
+Fix reference counting in D3D code
 
 I.a. Low-level code
 -------------------
-Display from Render to Sys or smth like
 Scene activator attr
 Scene dynamic loader attr
 DebugDraw must only collect renderable elements, and then pass them into renderers
@@ -54,7 +54,6 @@ DebugDraw must only collect renderable elements, and then pass them into rendere
 	So that debug shapes and texts will be render objects, that store necessary data, and specific rendering
 	techs are implemented in renderers
 	Or renderers should split on object renderers, text renderers etc with only vitual Render() in the root class
-	(?)So, can move debugdraw into a Debug lib, since there won't be any actual rendering
 Split L1 on parts, reduce dependencies
 Cleanup Math
 Remove math headers from CString, use utils for it
