@@ -16,6 +16,7 @@
 #include <Render/D3D9/D3D9DriverFactory.h>
 #include <Render/GPUDriver.h>
 #include <Render/RenderTarget.h>
+#include <Render/DepthStencilBuffer.h>
 #include <Render/SwapChain.h>
 #include <Resources/ResourceManager.h>
 #include <Physics/PropPhysics.h>
@@ -90,7 +91,7 @@ bool CIPGApplication::Open()
 
 	// Rendering
 
-	const bool UseD3D9 = false;
+	const bool UseD3D9 = true;
 	if (UseD3D9)
 	{
 		Render::PD3D9DriverFactory Fct = n_new(Render::CD3D9DriverFactory);
@@ -106,7 +107,7 @@ bool CIPGApplication::Open()
 		//!!!register shader, mesh & texture loaders!
 	}
 
-	Render::PGPUDriver GPU = VideoDrvFct->CreateGPUDriver(Render::Adapter_Primary, Render::GPU_Hardware);
+	GPU = VideoDrvFct->CreateGPUDriver(Render::Adapter_Primary, Render::GPU_Hardware);
 
 	Render::CRenderTargetDesc BBDesc;
 	BBDesc.Format = Render::PixelFmt_X8R8G8B8;
@@ -120,7 +121,35 @@ bool CIPGApplication::Open()
 	SCDesc.SwapMode = Render::SwapMode_CopyDiscard;
 	SCDesc.Flags = Render::SwapChain_AutoAdjustSize | Render::SwapChain_VSync;
 
-	DWORD SCIdx = GPU->CreateSwapChain(BBDesc, SCDesc, MainWindow);
+	int SCIdx = GPU->CreateSwapChain(BBDesc, SCDesc, MainWindow);
+	n_assert(GPU->SwapChainExists(SCIdx));
+	Render::PRenderTarget SCRT = GPU->GetSwapChainRenderTarget(SCIdx);
+
+	//Render::CRenderTargetDesc DSDesc;
+	//BBDesc.Format = Render::PixelFmt_X8R8G8B8;
+	//BBDesc.MSAAQuality = Render::MSAA_None;
+	//BBDesc.UseAsShaderInput = false;
+	//BBDesc.Width = 0; //???from created RT?
+	//BBDesc.Height = 0; //???from created RT?
+
+	//Render::PDepthStencilBuffer DSBuf = GPU->CreateDepthStencilBuffer(DSDesc);
+
+	//!!!set render target and ds surface!
+	if (GPU->BeginFrame())
+	{
+		GPU->Clear(Render::Clear_Color, 0xffff0000, 1.f, 0);
+		GPU->EndFrame();
+		GPU->Present(SCIdx);
+	}
+
+///////////////////////
+	//!!!need multiwindow!
+	Wnd2 = n_new(Sys::COSWindow);
+	Wnd2->SetTitle("Window 2");
+	Wnd2->SetIcon("Icon");
+	Wnd2->SetRect(Data::CRect(900, 50, 150, 200));
+	Wnd2->Open();
+///////////////////////
 
 	//Render::PFrameShader DefaultFrameShader = n_new(Render::CFrameShader);
 	//n_assert(DefaultFrameShader->Init(*DataSrv->LoadPRM("Shaders:Default.prm")));
