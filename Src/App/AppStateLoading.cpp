@@ -1,6 +1,5 @@
 #include "AppStateLoading.h"
 
-#include <App/IPGApplication.h>
 #include <App/AppStates.h>
 #include <Game/GameServer.h>
 #include <UI/LoadingScreen.h>
@@ -13,6 +12,7 @@
 //#include <Audio/AudioServer.h>
 #include <Video/VideoServer.h>
 #include <Physics/PhysicsServer.h>
+#include <App/IPGApplication.h>
 
 namespace App
 {
