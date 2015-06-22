@@ -65,6 +65,8 @@ private:
 	Ptr<UI::CUIServer>					UIServer;
 
 	Ptr<Render::CVideoDriverFactory>	VideoDrvFct;
+	Render::PGPUDriver					GPU;
+
 	Ptr<RPG::CWorldManager>				WorldManager;
 	Ptr<Story::CQuestManager>			QuestManager;
 	Ptr<Story::CDialogueManager>		DialogueManager;
@@ -77,6 +79,9 @@ public:
 
 	CAppFSM								FSM;
 	Sys::POSWindow						MainWindow;
+
+	//!!!DBG TMP!
+	Sys::POSWindow Wnd2;
 
 	CIPGApplication() { __ConstructSingleton; }
 	~CIPGApplication() { __DestructSingleton; }
