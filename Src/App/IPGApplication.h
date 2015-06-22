@@ -26,7 +26,6 @@ private:
 	Ptr<RPG::CFactionManager>		FactionManager;
 	
 	void	RegisterAttributes();
-	void	SetupDisplayMode();
 
 	DECLARE_EVENT_HANDLER(OnDisplayClose, OnDisplayClose);
 

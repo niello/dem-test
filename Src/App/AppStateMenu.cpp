@@ -8,6 +8,7 @@
 #include <Video/VideoServer.h>
 #include <Input/InputServer.h>
 #include <Core/CoreServer.h>
+#include <App/Environment.h> //!!!TMP!
 
 namespace App
 {
@@ -18,33 +19,37 @@ void CAppStateMenu::OnStateEnter(CStrID PrevState, Data::PParams Params)
 	TimeSrv->Trigger();
 
 	//???load once?
-	Ptr<UI::CMainMenu> MainMenu = n_new(UI::CMainMenu);
-	MainMenu->Load("MainMenu.layout");
-	UISrv->RegisterScreen(CStrID("MainMenu"), MainMenu);
-	UISrv->SetRootScreen(MainMenu);
-	UISrv->ShowGUI();
+	if (UI::CUIServer::HasInstance())
+	{
+		Ptr<UI::CMainMenu> MainMenu = n_new(UI::CMainMenu);
+		MainMenu->Load("MainMenu.layout");
+		UISrv->RegisterScreen(CStrID("MainMenu"), MainMenu);
+		UISrv->SetRootScreen(MainMenu);
+		UISrv->ShowGUI();
+	}
 }
 //---------------------------------------------------------------------
 
 void CAppStateMenu::OnStateLeave(CStrID NextState)
 {
-	UISrv->HideGUI();
+	if (UI::CUIServer::HasInstance()) UISrv->HideGUI();
 }
 //---------------------------------------------------------------------
 
 CStrID CAppStateMenu::OnFrame()
 {
+	if (!AppEnv->MainWindow->IsOpen()) return CStrID::Empty;
+
 	TimeSrv->Trigger();
 	EventSrv->ProcessPendingEvents();
 	InputSrv->Trigger();
-//	RenderSrv->GetDisplay().ProcessWindowMessages();
+	AppEnv->MainWindow->ProcessMessages();
 	DbgSrv->Trigger();
-	UISrv->Trigger((float)TimeSrv->GetFrameTime());
+	if (UI::CUIServer::HasInstance()) UISrv->Trigger((float)TimeSrv->GetFrameTime());
 
 	//AudioSrv->Trigger();
 	VideoSrv->Trigger();
 
-n_assert(false);
 	//if (RenderSrv->BeginFrame())
 	//{
 	//	RenderSrv->Clear(Render::Clear_All, 0xff000000, 1.f, 0); 
@@ -59,4 +64,4 @@ n_assert(false);
 }
 //---------------------------------------------------------------------
 
-} // namespace Application
+}
