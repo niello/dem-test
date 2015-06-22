@@ -1,5 +1,7 @@
 #include "AppStateMenu.h"
 
+#include <App/IPGApplication.h>
+#include <System/OSWindow.h>
 #include <Debug/DebugServer.h>
 #include <UI/UIServer.h>
 #include <UI/MainMenu.h>
@@ -8,7 +10,6 @@
 #include <Video/VideoServer.h>
 #include <Input/InputServer.h>
 #include <Core/CoreServer.h>
-#include <App/Environment.h> //!!!TMP!
 
 namespace App
 {
@@ -38,12 +39,12 @@ void CAppStateMenu::OnStateLeave(CStrID NextState)
 
 CStrID CAppStateMenu::OnFrame()
 {
-	if (!AppEnv->MainWindow->IsOpen()) return CStrID::Empty;
+	if (!IPGApp->MainWindow->IsOpen()) return CStrID::Empty;
 
 	TimeSrv->Trigger();
 	EventSrv->ProcessPendingEvents();
 	InputSrv->Trigger();
-	AppEnv->MainWindow->ProcessMessages();
+	IPGApp->MainWindow->ProcessMessages();
 	DbgSrv->Trigger();
 	if (UI::CUIServer::HasInstance()) UISrv->Trigger((float)TimeSrv->GetFrameTime());
 
