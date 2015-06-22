@@ -8,9 +8,18 @@
 
 #include <Data/Singleton.h>
 
+namespace Sys
+{
+	typedef Ptr<class COSWindow> POSWindow;
+}
+
+namespace Render
+{
+	class CVideoDriverFactory;
+}
+
 namespace App
 {
-
 #define IPGApp App::CIPGApplication::Instance()
 
 class CIPGApplication
@@ -19,11 +28,14 @@ class CIPGApplication
 
 private:
 
-	Ptr<RPG::CWorldManager>			WorldManager;
-	Ptr<Story::CQuestManager>		QuestManager;
-	Ptr<Story::CDialogueManager>	DialogueManager;
-	Ptr<Items::CItemManager>		ItemManager;
-	Ptr<RPG::CFactionManager>		FactionManager;
+	CString								ProjDir;
+
+	Ptr<Render::CVideoDriverFactory>	VideoDrvFct;
+	Ptr<RPG::CWorldManager>				WorldManager;
+	Ptr<Story::CQuestManager>			QuestManager;
+	Ptr<Story::CDialogueManager>		DialogueManager;
+	Ptr<Items::CItemManager>			ItemManager;
+	Ptr<RPG::CFactionManager>			FactionManager;
 	
 	void	RegisterAttributes();
 
@@ -31,10 +43,11 @@ private:
 
 public:
 
-	CAppFSM FSM;
+	CAppFSM								FSM;
+	Sys::POSWindow						MainWindow;
 
-	CIPGApplication();
-	~CIPGApplication();
+	CIPGApplication() { __ConstructSingleton; }
+	~CIPGApplication() { __DestructSingleton; }
 
 	CString	GetAppName() const { return "Insane Poet"; }
 	CString	GetAppVersion() const;

@@ -1,5 +1,6 @@
 #include "IPGApplication.h"
 
+#include <System/OSWindow.h>
 #include "AppStateMenu.h"
 #include "AppStateLoading.h"
 #include "AppStateGame.h"
@@ -13,6 +14,10 @@
 #include <Scripting/PropScriptable.h>
 #include <Animation/PropAnimation.h>
 #include <UI/PropUIControl.h>
+#include <Render/D3D11/D3D11DriverFactory.h>
+#include <Render/GPUDriver.h>
+#include <Render/RenderTarget.h>
+#include <Render/SwapChain.h>
 #include <Physics/PropPhysics.h>
 #include <Physics/PropCharacterController.h>
 #include <Dlg/PropTalking.h>
@@ -28,53 +33,59 @@ namespace App
 {
 __ImplementSingleton(App::CIPGApplication);
 
-CIPGApplication::CIPGApplication()
-{
-	__ConstructSingleton;
-}
-//---------------------------------------------------------------------
-
-CIPGApplication::~CIPGApplication()
-{
-	__DestructSingleton;
-}
-//---------------------------------------------------------------------
-
 bool CIPGApplication::Open()
 {
 	srand((UINT)time(NULL));
 
-	AppEnv->SetAppName(GetAppName());
-	AppEnv->SetAppVersion(GetAppVersion());
-	AppEnv->SetVendorName(GetVendorName());
+	n_new(Core::CCoreServer);
 
-	// Old:
-	//SetupFromDefaults();
-	//SetupFromProfile();
-	//SetupFromCmdLineArgs();
+	n_new(IO::CIOServer);
 
-	if (!AppEnv->InitCore())
+	if (!ProjDir.IsValid()) ProjDir = IOSrv->GetAssign("Home");
+	IOSrv->SetAssign("Proj", ProjDir);
+
+	CString AppData;
+	AppData.Format("AppData:%s/%s", GetVendorName().CStr(), GetAppName().CStr());
+	IOSrv->SetAssign("AppData", IOSrv->ManglePath(AppData));
+
+	IOSrv->MountNPK("Proj:Export.npk"); //???only add CFileSystemNPK here?
+
+	n_new(Data::CDataServer);
+
+	Data::PParams PathList = DataSrv->LoadHRD("Proj:PathList.hrd", false);
+	if (PathList.IsValid())
+		for (int i = 0; i < PathList->GetCount(); ++i)
+			IOSrv->SetAssign(PathList->Get(i).GetName().CStr(), IOSrv->ManglePath(PathList->Get<CString>(i)));
+
+	if (!AppEnv->InitEngine())
 	{
-		AppEnv->ReleaseCore();
+		Close();
 		FAIL;
 	}
 
 	CString WindowTitle = GetVendorName() + " - " + GetAppName() + " - " + GetAppVersion();
-	AppEnv->MainWindow = n_new(Sys::COSWindow);
-	AppEnv->MainWindow->SetTitle(WindowTitle.CStr());
-	AppEnv->MainWindow->SetIcon("Icon");
-	AppEnv->MainWindow->SetRect(Data::CRect(50, 50, 800, 600));
-	AppEnv->MainWindow->Open();
+	MainWindow = n_new(Sys::COSWindow);
+	MainWindow->SetTitle(WindowTitle.CStr());
+	MainWindow->SetIcon("Icon");
+	MainWindow->SetRect(Data::CRect(50, 50, 800, 600));
+	MainWindow->Open();
 
-	//???only add CFileSystemNPK here?
-	IOSrv->MountNPK("Proj:Export.npk");
+	VideoDrvFct = n_new(Render::CD3D11DriverFactory);
+	Render::PGPUDriver GPU = VideoDrvFct->CreateGPUDriver(0, Render::GPU_Hardware);
 
-	if (!AppEnv->InitEngine())
-	{
-		AppEnv->ReleaseEngine();
-		AppEnv->ReleaseCore();
-		FAIL;
-	}
+	Render::CRenderTargetDesc BBDesc;
+	BBDesc.Format = Render::PixelFmt_X8R8G8B8;
+	BBDesc.MSAAQuality = Render::MSAA_None;
+	BBDesc.UseAsShaderInput = false;
+	BBDesc.Width = 0;
+	BBDesc.Height = 0;
+
+	Render::CSwapChainDesc SCDesc;
+	SCDesc.BackBufferCount = 2;
+	SCDesc.SwapMode = Render::SwapMode_CopyDiscard;
+	SCDesc.Flags = Render::SwapChain_AutoAdjustSize | Render::SwapChain_VSync;
+
+	DWORD SCIdx = GPU->CreateSwapChain(BBDesc, SCDesc, MainWindow);
 	
 	Sys::Log("AppEnv->InitEngine() - OK\n");
 
@@ -106,9 +117,7 @@ bool CIPGApplication::Open()
 
 	if (!AppEnv->InitGameSystem())
 	{
-		AppEnv->ReleaseGameSystem();
-		AppEnv->ReleaseEngine();
-		AppEnv->ReleaseCore();
+		Close();
 		FAIL;
 	}
 
@@ -203,7 +212,9 @@ void CIPGApplication::Close()
 
 	AppEnv->ReleaseGameSystem();
 	AppEnv->ReleaseEngine();
-	AppEnv->ReleaseCore();
+	n_delete(DataSrv);
+	n_delete(IOSrv);
+	n_delete(CoreSrv);
 }
 //---------------------------------------------------------------------
 
