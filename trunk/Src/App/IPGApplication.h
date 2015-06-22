@@ -1,12 +1,34 @@
 #include <App/AppFSM.h>
 
+#include <System/OSWindow.h>
+
 #include <World/WorldManager.h>
 #include <Dlg/DialogueManager.h>
 #include <Quests/QuestManager.h>
 #include <Items/ItemManager.h>
 #include <Factions/FactionManager.h>
 
-#include <Data/Singleton.h>
+//???!!!forward declarations?
+#include <Core/CoreServer.h>
+#include <Time/TimeServer.h>
+#include <Debug/DebugServer.h>
+#include <IO/IOServer.h>
+#include <Data/DataServer.h>
+#include <Events/EventServer.h>
+#include <Scripting/ScriptServer.h>
+#include <Debug/DebugDraw.h>
+//#include <Audio/AudioServer.h>
+#include <Physics/PhysicsServer.h>
+#include <Input/InputServer.h>
+#include <Game/GameServer.h>
+#include <AI/AIServer.h>
+#include <UI/UIServer.h>
+#include <Render/DisplayMode.h>
+#include <Render/VideoDriverFactory.h>
+#include <Video/VideoServer.h>
+#ifdef RegisterClass
+#undef RegisterClass
+#endif
 
 namespace Sys
 {
@@ -22,7 +44,7 @@ namespace App
 {
 #define IPGApp App::CIPGApplication::Instance()
 
-class CIPGApplication
+class CIPGApplication //???!!!check multiple instances? bool AllowMultipleInstances
 {
 	__DeclareSingleton(CIPGApplication);
 
@@ -30,16 +52,26 @@ private:
 
 	CString								ProjDir;
 
+	Ptr<Events::CEventServer>			EventServer;
+
+	Ptr<Time::CTimeServer>				TimeServer;
+	Ptr<Debug::CDebugServer>			DebugServer;
+	Ptr<Debug::CDebugDraw>				DD;
+	Ptr<Physics::CPhysicsServer>		PhysicsServer;
+	Ptr<Input::CInputServer>			InputServer;
+	Ptr<Video::CVideoServer>			VideoServer;
+	Ptr<Game::CGameServer>				GameServer;
+	Ptr<AI::CAIServer>					AIServer;
+	Ptr<UI::CUIServer>					UIServer;
+
 	Ptr<Render::CVideoDriverFactory>	VideoDrvFct;
 	Ptr<RPG::CWorldManager>				WorldManager;
 	Ptr<Story::CQuestManager>			QuestManager;
 	Ptr<Story::CDialogueManager>		DialogueManager;
 	Ptr<Items::CItemManager>			ItemManager;
 	Ptr<RPG::CFactionManager>			FactionManager;
-	
-	void	RegisterAttributes();
 
-	DECLARE_EVENT_HANDLER(OnDisplayClose, OnDisplayClose);
+	DECLARE_EVENT_HANDLER(OnClosing, OnOSWindowClosing);
 
 public:
 
@@ -51,7 +83,7 @@ public:
 
 	CString	GetAppName() const { return "Insane Poet"; }
 	CString	GetAppVersion() const;
-	CString	GetVendorName() const { return "STILL NO TEAM NAME"; }
+	CString	GetVendorName() const { return "DeusExMachina"; }
 
 	bool	Open();
 	bool	AdvanceFrame();
@@ -61,9 +93,9 @@ public:
 inline CString CIPGApplication::GetAppVersion() const
 {
 #ifdef _DEBUG
-	return "0.1d Step 19";
+	return "0.2.0.0-d";
 #else
-	return "0.1 Step 19";
+	return "0.2.0.0";
 #endif
 }
 //---------------------------------------------------------------------
