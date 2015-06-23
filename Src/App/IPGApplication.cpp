@@ -1,5 +1,6 @@
 #include "IPGApplication.h"
 
+#include <System/OSWindowClass.h>
 #include "AppStateMenu.h"
 #include "AppStateLoading.h"
 #include "AppStateGame.h"
@@ -79,15 +80,27 @@ bool CIPGApplication::Open()
 
 	// Application window
 
+	EngineWindowClass = n_new(Sys::COSWindowClass);
+	n_assert(EngineWindowClass->Create("DeusExMachina::MainWindow", "Icon"));
+
 	CString WindowTitle = GetVendorName() + " - " + GetAppName() + " - " + GetAppVersion();
 	MainWindow = n_new(Sys::COSWindow);
+	MainWindow->SetWindowClass(*(Sys::COSWindowClassWin32*)EngineWindowClass.GetUnsafe()); //!!!bad design!
 	MainWindow->SetTitle(WindowTitle.CStr());
-	MainWindow->SetIcon("Icon");
 	MainWindow->SetRect(Data::CRect(50, 50, 800, 600));
 	MainWindow->Open();
 
 	DISP_SUBSCRIBE_PEVENT(MainWindow, OnClosing, CIPGApplication, OnOSWindowClosing);
 
+///////////////////////
+//!!!DBG TMP!
+	Wnd2 = n_new(Sys::COSWindow);
+	Wnd2->SetWindowClass(*(Sys::COSWindowClassWin32*)EngineWindowClass.GetUnsafe()); //!!!bad design!
+	Wnd2->SetTitle("Window 2");
+	Wnd2->SetIcon("Icon");
+	Wnd2->SetRect(Data::CRect(900, 50, 150, 200));
+	Wnd2->Open();
+///////////////////////
 
 	// Rendering
 
@@ -123,7 +136,6 @@ bool CIPGApplication::Open()
 
 	int SCIdx = GPU->CreateSwapChain(BBDesc, SCDesc, MainWindow);
 	n_assert(GPU->SwapChainExists(SCIdx));
-	Render::PRenderTarget SCRT = GPU->GetSwapChainRenderTarget(SCIdx);
 
 	//Render::CRenderTargetDesc DSDesc;
 	//BBDesc.Format = Render::PixelFmt_X8R8G8B8;
@@ -134,22 +146,17 @@ bool CIPGApplication::Open()
 
 	//Render::PDepthStencilBuffer DSBuf = GPU->CreateDepthStencilBuffer(DSDesc);
 
-	//!!!set render target and ds surface!
-	if (GPU->BeginFrame())
-	{
-		GPU->Clear(Render::Clear_Color, 0xffff0000, 1.f, 0);
-		GPU->EndFrame();
-		GPU->Present(SCIdx);
-	}
+	GPU->SetRenderTarget(0, GPU->GetSwapChainRenderTarget(SCIdx));
+	GPU->PresentBlankScreen(SCIdx, 0xff109010);
 
-///////////////////////
-	//!!!need multiwindow!
-	Wnd2 = n_new(Sys::COSWindow);
-	Wnd2->SetTitle("Window 2");
-	Wnd2->SetIcon("Icon");
-	Wnd2->SetRect(Data::CRect(900, 50, 150, 200));
-	Wnd2->Open();
-///////////////////////
+////////////////////////////
+//!!!DBG TMP!
+	int SCIdx2 = GPU->CreateSwapChain(BBDesc, SCDesc, Wnd2);
+	n_assert(GPU->SwapChainExists(SCIdx2));
+
+	GPU->SetRenderTarget(0, GPU->GetSwapChainRenderTarget(SCIdx2));
+	GPU->PresentBlankScreen(SCIdx2, 0xff901090);
+////////////////////////////
 
 	//Render::PFrameShader DefaultFrameShader = n_new(Render::CFrameShader);
 	//n_assert(DefaultFrameShader->Init(*DataSrv->LoadPRM("Shaders:Default.prm")));
@@ -339,8 +346,14 @@ void CIPGApplication::Close()
 	//if (RenderServer.IsValid() && RenderServer->IsOpen()) RenderServer->Close();
 	//RenderServer = NULL;
 
+	Wnd2->Close();
+	Wnd2 = NULL;
+
 	MainWindow->Close();
 	MainWindow = NULL;
+
+	EngineWindowClass->Destroy();
+	EngineWindowClass = NULL;
 
 	if (InputServer.IsValid() && InputServer->IsOpen()) InputServer->Close();
 	InputServer = NULL;
