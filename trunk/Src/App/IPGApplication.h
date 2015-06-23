@@ -32,6 +32,7 @@
 
 namespace Sys
 {
+	typedef Ptr<class COSWindowClass> POSWindowClass;
 	typedef Ptr<class COSWindow> POSWindow;
 }
 
@@ -64,6 +65,7 @@ private:
 	Ptr<AI::CAIServer>					AIServer;
 	Ptr<UI::CUIServer>					UIServer;
 
+	Sys::POSWindowClass					EngineWindowClass;
 	Ptr<Render::CVideoDriverFactory>	VideoDrvFct;
 	Render::PGPUDriver					GPU;
 
