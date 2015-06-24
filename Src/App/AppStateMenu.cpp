@@ -44,7 +44,6 @@ CStrID CAppStateMenu::OnFrame()
 	TimeSrv->Trigger();
 	EventSrv->ProcessPendingEvents();
 	InputSrv->Trigger();
-	IPGApp->MainWindow->ProcessMessages();
 	DbgSrv->Trigger();
 	if (UI::CUIServer::HasInstance()) UISrv->Trigger((float)TimeSrv->GetFrameTime());
 
