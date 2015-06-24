@@ -97,9 +97,8 @@ bool CIPGApplication::Open()
 	Wnd2 = n_new(Sys::COSWindow);
 	Wnd2->SetWindowClass(*(Sys::COSWindowClassWin32*)EngineWindowClass.GetUnsafe()); //!!!bad design!
 	Wnd2->SetTitle("Window 2");
-	Wnd2->SetIcon("Icon");
 	Wnd2->SetRect(Data::CRect(900, 50, 150, 200));
-	Wnd2->Open();
+	//Wnd2->Open();
 ///////////////////////
 
 	// Rendering
@@ -137,6 +136,18 @@ bool CIPGApplication::Open()
 	int SCIdx = GPU->CreateSwapChain(BBDesc, SCDesc, MainWindow);
 	n_assert(GPU->SwapChainExists(SCIdx));
 
+	GPU->SetRenderTarget(0, GPU->GetSwapChainRenderTarget(SCIdx));
+	GPU->PresentBlankScreen(SCIdx, 0xff109010);
+
+////////////////////////////
+//!!!DBG TMP!
+	//int SCIdx2 = GPU->CreateSwapChain(BBDesc, SCDesc, Wnd2);
+	//n_assert(GPU->SwapChainExists(SCIdx2));
+
+	//GPU->SetRenderTarget(0, GPU->GetSwapChainRenderTarget(SCIdx2));
+	//GPU->PresentBlankScreen(SCIdx2, 0xff901090);
+////////////////////////////
+
 	//Render::CRenderTargetDesc DSDesc;
 	//BBDesc.Format = Render::PixelFmt_X8R8G8B8;
 	//BBDesc.MSAAQuality = Render::MSAA_None;
@@ -145,18 +156,6 @@ bool CIPGApplication::Open()
 	//BBDesc.Height = 0; //???from created RT?
 
 	//Render::PDepthStencilBuffer DSBuf = GPU->CreateDepthStencilBuffer(DSDesc);
-
-	GPU->SetRenderTarget(0, GPU->GetSwapChainRenderTarget(SCIdx));
-	GPU->PresentBlankScreen(SCIdx, 0xff109010);
-
-////////////////////////////
-//!!!DBG TMP!
-	int SCIdx2 = GPU->CreateSwapChain(BBDesc, SCDesc, Wnd2);
-	n_assert(GPU->SwapChainExists(SCIdx2));
-
-	GPU->SetRenderTarget(0, GPU->GetSwapChainRenderTarget(SCIdx2));
-	GPU->PresentBlankScreen(SCIdx2, 0xff901090);
-////////////////////////////
 
 	//Render::PFrameShader DefaultFrameShader = n_new(Render::CFrameShader);
 	//n_assert(DefaultFrameShader->Init(*DataSrv->LoadPRM("Shaders:Default.prm")));
@@ -305,6 +304,23 @@ bool CIPGApplication::Open()
 
 bool CIPGApplication::AdvanceFrame()
 {
+	//!!!TMP REDESIGN!
+	MSG Msg;
+	while (::PeekMessage(&Msg, NULL, 0, 0, PM_REMOVE))
+	{
+		if (Msg.hwnd == MainWindow->GetHWND())
+		{
+			HACCEL hAccel = MainWindow->GetWin32AcceleratorTable();
+			if (hAccel && ::TranslateAccelerator(MainWindow->GetHWND(), hAccel, &Msg) != FALSE) continue;
+		}
+		if (Msg.hwnd == Wnd2->GetHWND())
+		{
+			HACCEL hAccel = Wnd2->GetWin32AcceleratorTable();
+			if (hAccel && ::TranslateAccelerator(Wnd2->GetHWND(), hAccel, &Msg) != FALSE) continue;
+		}
+		::TranslateMessage(&Msg);
+		::DispatchMessage(&Msg);
+	}
 	return FSM.Advance();
 }
 //---------------------------------------------------------------------
