@@ -133,19 +133,14 @@ bool CIPGApplication::Open()
 	SCDesc.SwapMode = Render::SwapMode_CopyDiscard;
 	SCDesc.Flags = Render::SwapChain_AutoAdjustSize | Render::SwapChain_VSync;
 
-	int SCIdx = GPU->CreateSwapChain(BBDesc, SCDesc, MainWindow);
-	n_assert(GPU->SwapChainExists(SCIdx));
-
-	GPU->SetRenderTarget(0, GPU->GetSwapChainRenderTarget(SCIdx));
-	GPU->PresentBlankScreen(SCIdx, 0xff109010);
+	SCIdx = GPU->CreateSwapChain(BBDesc, SCDesc, MainWindow);
 
 ////////////////////////////
 //!!!DBG TMP!
-	//int SCIdx2 = GPU->CreateSwapChain(BBDesc, SCDesc, Wnd2);
+	//SCIdx2 = GPU->CreateSwapChain(BBDesc, SCDesc, Wnd2);
 	//n_assert(GPU->SwapChainExists(SCIdx2));
 
 	//GPU->SetRenderTarget(0, GPU->GetSwapChainRenderTarget(SCIdx2));
-	//GPU->PresentBlankScreen(SCIdx2, 0xff901090);
 ////////////////////////////
 
 	//Render::CRenderTargetDesc DSDesc;
@@ -321,6 +316,11 @@ bool CIPGApplication::AdvanceFrame()
 		::TranslateMessage(&Msg);
 		::DispatchMessage(&Msg);
 	}
+
+	//!!!TMP DBG!
+	GPU->PresentBlankScreen(SCIdx, 0xff109010);
+	//GPU->PresentBlankScreen(SCIdx2, 0xff901090);
+
 	return FSM.Advance();
 }
 //---------------------------------------------------------------------

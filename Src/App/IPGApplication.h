@@ -83,7 +83,7 @@ public:
 	Sys::POSWindow						MainWindow;
 
 	//!!!DBG TMP!
-	Sys::POSWindow Wnd2;
+	Sys::POSWindow Wnd2; int SCIdx, SCIdx2;
 
 	CIPGApplication() { __ConstructSingleton; }
 	~CIPGApplication() { __DestructSingleton; }
