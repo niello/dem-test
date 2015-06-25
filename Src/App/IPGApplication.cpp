@@ -58,7 +58,7 @@ bool CIPGApplication::Open()
 	n_new(Data::CDataServer); //???need at all? can store DSS as rsrc!
 
 	Data::PParams PathList = DataSrv->LoadHRD("Proj:PathList.hrd", false);
-	if (PathList.IsValid())
+	if (PathList.IsValidPtr())
 		for (int i = 0; i < PathList->GetCount(); ++i)
 			IOSrv->SetAssign(PathList->Get(i).GetName().CStr(), IOSrv->ManglePath(PathList->Get<CString>(i)));
 
@@ -98,7 +98,8 @@ bool CIPGApplication::Open()
 	Wnd2->SetWindowClass(*(Sys::COSWindowClassWin32*)EngineWindowClass.GetUnsafe()); //!!!bad design!
 	Wnd2->SetTitle("Window 2");
 	Wnd2->SetRect(Data::CRect(900, 50, 150, 200));
-	//Wnd2->Open();
+	Wnd2->Open();
+	SCIdx = -1; SCIdx2 = -1;
 ///////////////////////
 
 	// Rendering
@@ -137,10 +138,8 @@ bool CIPGApplication::Open()
 
 ////////////////////////////
 //!!!DBG TMP!
-	//SCIdx2 = GPU->CreateSwapChain(BBDesc, SCDesc, Wnd2);
-	//n_assert(GPU->SwapChainExists(SCIdx2));
-
-	//GPU->SetRenderTarget(0, GPU->GetSwapChainRenderTarget(SCIdx2));
+	SCIdx2 = GPU->CreateSwapChain(BBDesc, SCDesc, Wnd2);
+	n_assert(GPU->SwapChainExists(SCIdx2));
 ////////////////////////////
 
 	//Render::CRenderTargetDesc DSDesc;
@@ -211,7 +210,7 @@ bool CIPGApplication::Open()
 
 	// Actor action templates
 	Data::PParams ActTpls = DataSrv->LoadPRM("AI:AIActionTpls.prm");
-	if (ActTpls.IsValid())
+	if (ActTpls.IsValidPtr())
 	{
 		for (int i = 0; i < ActTpls->GetCount(); ++i)
 		{
@@ -223,7 +222,7 @@ bool CIPGApplication::Open()
 
 	// Smart object action templates
 	Data::PParams SOActTpls = DataSrv->LoadPRM("AI:AISOActionTpls.prm");
-	if (SOActTpls.IsValid())
+	if (SOActTpls.IsValidPtr())
 		for (int i = 0; i < SOActTpls->GetCount(); ++i)
 		{
 			const Data::CParam& Prm = SOActTpls->Get(i);
@@ -318,8 +317,24 @@ bool CIPGApplication::AdvanceFrame()
 	}
 
 	//!!!TMP DBG!
-	GPU->PresentBlankScreen(SCIdx, 0xff109010);
-	//GPU->PresentBlankScreen(SCIdx2, 0xff901090);
+	if (SCIdx >= 0)
+	{
+		Render::PRenderTarget RT = GPU->GetSwapChainRenderTarget(SCIdx);
+		if (RT.IsValidPtr() && RT->IsValid())
+		{
+			GPU->SetRenderTarget(0, RT);
+			GPU->PresentBlankScreen(SCIdx, 0xff109010);
+		}
+	}
+	if (SCIdx2 >= 0)
+	{
+		Render::PRenderTarget RT = GPU->GetSwapChainRenderTarget(SCIdx2);
+		if (RT.IsValidPtr() && RT->IsValid())
+		{
+			GPU->SetRenderTarget(0, RT);
+			GPU->PresentBlankScreen(SCIdx2, 0xff901090);
+		}
+	}
 
 	return FSM.Advance();
 }
@@ -350,7 +365,7 @@ void CIPGApplication::Close()
 	DbgSrv->AllowUI(false);
 	UIServer = NULL;
 
-	if (VideoServer.IsValid() && VideoServer->IsOpen()) VideoServer->Close();
+	if (VideoServer.IsValidPtr() && VideoServer->IsOpen()) VideoServer->Close();
 	VideoServer = NULL;
 
 	//if (AudioServer.IsValid() && AudioServer->IsOpen()) AudioServer->Close();
@@ -371,7 +386,7 @@ void CIPGApplication::Close()
 	EngineWindowClass->Destroy();
 	EngineWindowClass = NULL;
 
-	if (InputServer.IsValid() && InputServer->IsOpen()) InputServer->Close();
+	if (InputServer.IsValidPtr() && InputServer->IsOpen()) InputServer->Close();
 	InputServer = NULL;
 
 	//if (LoaderServer.IsValid() && LoaderServer->IsOpen()) LoaderServer->Close();

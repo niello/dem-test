@@ -53,7 +53,7 @@ bool CContainerWindow::OnShow(Events::CEventDispatcher* pDispatcher, const Event
 	const Data::CParam& Prm = P->Get(CStrID("SO"));
 	CStrID EntID = Prm.IsA<CStrID>() ? Prm.GetValue<CStrID>() : CStrID(Prm.GetValue<CString>().CStr());
 	PEntity pContEnt = EntityMgr->GetEntity(EntID);
-	n_assert2(pContEnt.IsValid(), "Show container window: container not found.");
+	n_assert2(pContEnt.IsValidPtr(), "Show container window: container not found.");
 
 	const Data::CParam& Prm2 = P->Get(CStrID("Actor"));
 	EntID = Prm2.IsA<CStrID>() ? Prm2.GetValue<CStrID>() : CStrID(Prm2.GetValue<CString>().CStr());

@@ -60,7 +60,7 @@ bool CMoveItemsWindow::OnShow(Events::CEventDispatcher* pDispatcher, const Event
 	Data::PParams P = ((const CEvent&)Event).Params;
 
 	PEntity pContEnt = EntityMgr->GetEntity(P->Get<CStrID>(CStrID("ContainerID")));
-	n_assert2(pContEnt.IsValid(), "Show container window: container not found.");
+	n_assert2(pContEnt.IsValidPtr(), "Show container window: container not found.");
 
 	PEntity pActor = EntityMgr->GetEntity(P->Get<CStrID>(CStrID("InventoryID")));
 	n_assert2(pActor, "Show container window: actor not found.");

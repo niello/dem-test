@@ -44,6 +44,8 @@ Arei can't start talking if GG moves from initial position
  - if GG moves from Arei, sometimes Arei detects that he can never reach GG (interception time < 0)
 Double click on UI window passes through UI and adds task, which is wrong
 Fix reference counting in D3D code
+???CRefCounted leak detection?
+Win32 window class as arg in window creation. Use some base class to increase code reusability?
 
 I.a. Low-level code
 -------------------

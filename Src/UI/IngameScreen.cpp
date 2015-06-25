@@ -124,7 +124,7 @@ Ptr<CTipWindow> CIngameScreen::GetOrCreatePhraseTip(CStrID EntityID)
 		if ((*it)->GetEntityID() == CStrID::Empty)
 			TipWnd = *it; //This window is unbound, so we don't need to create a new window.
 	}
-	if (!TipWnd.IsValid())
+	if (TipWnd.IsNullPtr())
 	{
 		TipWnd = CreateTipWindow(TipIndexOffset + PhraseTips.GetCount());
 		PhraseTips.Add(TipWnd);
@@ -176,7 +176,7 @@ bool CIngameScreen::HidePhrase(CEventDispatcher* pDispatcher, const CEventBase& 
 
 	CStrID EntityID = P->Get<CStrID>(CStrID("EntityID"));
 	Ptr<CTipWindow> PhraseTip = GetPhraseTip(EntityID);
-	if (PhraseTip.IsValid()) PhraseTip->Hide();
+	if (PhraseTip.IsValidPtr()) PhraseTip->Hide();
 
 	OK;
 }
