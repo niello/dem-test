@@ -71,7 +71,7 @@ void CAppStateLoading::OnStateEnter(CStrID PrevState, PParams Params)
 			const CString& FileName = Params->Get<CString>(CStrID("FileName"));
 			n_assert(FileName.IsValid());
 			PParams Desc = DataSrv->LoadPRM(FileName);
-			n_assert(Desc.IsValid());
+			n_assert(Desc.IsValidPtr());
 			GameSrv->LoadLevel(LevelID, *Desc);
 			break;
 		}

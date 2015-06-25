@@ -154,7 +154,7 @@ bool CInventory::OnShow(CEventDispatcher* pDispatcher, const CEventBase& Event)
 
 	PEntity pOwnerEnt = EntityMgr->GetEntity(e.Params->Get<CStrID>(CStrID("EntityID")));
 	
-	if (!pOwnerEnt.IsValid())
+	if (pOwnerEnt.IsNullPtr())
 	{
 		Hide();
 		OK;
