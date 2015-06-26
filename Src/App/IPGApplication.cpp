@@ -374,7 +374,6 @@ void CIPGApplication::Close()
 	DD->Close();
 	DD = NULL;
 
-	GPU->Release();
 	GPU = NULL;
 	VideoDrvFct = NULL;
 
