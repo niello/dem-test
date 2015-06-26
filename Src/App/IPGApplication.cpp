@@ -323,7 +323,7 @@ bool CIPGApplication::AdvanceFrame()
 		if (RT.IsValidPtr() && RT->IsValid())
 		{
 			GPU->SetRenderTarget(0, RT);
-			GPU->PresentBlankScreen(SCIdx, 0xff109010);
+			GPU->PresentBlankScreen(SCIdx, vector4(0.1f, 0.7f, 0.1f, 1.f));
 		}
 	}
 	if (SCIdx2 >= 0)
@@ -332,7 +332,7 @@ bool CIPGApplication::AdvanceFrame()
 		if (RT.IsValidPtr() && RT->IsValid())
 		{
 			GPU->SetRenderTarget(0, RT);
-			GPU->PresentBlankScreen(SCIdx2, 0xff901090);
+			GPU->PresentBlankScreen(SCIdx2, vector4(0.7f, 0.1f, 0.7f, 1.f));
 		}
 	}
 
@@ -374,8 +374,9 @@ void CIPGApplication::Close()
 	DD->Close();
 	DD = NULL;
 
-	//if (RenderServer.IsValid() && RenderServer->IsOpen()) RenderServer->Close();
-	//RenderServer = NULL;
+	GPU->Release();
+	GPU = NULL;
+	VideoDrvFct = NULL;
 
 	Wnd2->Close();
 	Wnd2 = NULL;
