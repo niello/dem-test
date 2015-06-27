@@ -45,7 +45,9 @@ Arei can't start talking if GG moves from initial position
 Double click on UI window passes through UI and adds task, which is wrong
 Fix reference counting in D3D code
 ???CRefCounted leak detection?
-Win32 window class as arg in window creation. Use some base class to increase code reusability?
+When drag window border, send special message OnManualResizeEnd not to resize swap chains 100500 times
+Catch when DXGI relinquishes fullscreen and update swap chain status
+Close DXGI fullscreen swap chain - breaks screen
 
 I.a. Low-level code
 -------------------

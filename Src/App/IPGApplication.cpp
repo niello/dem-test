@@ -16,6 +16,7 @@
 #include <Render/D3D11/D3D11DriverFactory.h>
 #include <Render/D3D9/D3D9DriverFactory.h>
 #include <Render/GPUDriver.h>
+#include <Render/Texture.h>
 #include <Render/RenderTarget.h>
 #include <Render/DepthStencilBuffer.h>
 #include <Render/SwapChain.h>
@@ -123,7 +124,7 @@ bool CIPGApplication::Open()
 	GPU = VideoDrvFct->CreateGPUDriver(Render::Adapter_Primary, Render::GPU_Hardware);
 
 	Render::CRenderTargetDesc BBDesc;
-	BBDesc.Format = Render::PixelFmt_X8R8G8B8;
+	BBDesc.Format = Render::PixelFmt_DefaultBackBuffer;
 	BBDesc.MSAAQuality = Render::MSAA_None;
 	BBDesc.UseAsShaderInput = false;
 	BBDesc.Width = 0;
@@ -135,6 +136,20 @@ bool CIPGApplication::Open()
 	SCDesc.Flags = Render::SwapChain_AutoAdjustSize | Render::SwapChain_VSync;
 
 	SCIdx = GPU->CreateSwapChain(BBDesc, SCDesc, MainWindow);
+
+	{
+		Render::CTextureDesc TexDesc;
+		TexDesc.Type = Render::Texture_2D;
+		TexDesc.Width = 128;
+		TexDesc.Height = 128;
+		TexDesc.ArraySize = 1;
+		TexDesc.MipLevels = 0;
+		TexDesc.MSAAQuality = Render::MSAA_None;
+		TexDesc.Format = Render::PixelFmt_DXT1;
+		//TexDesc.Depth = 0;
+		Render::PTexture Tex = GPU->CreateTexture(TexDesc, Render::Access_GPU_Read);
+		int tmp = 0;
+	}
 
 ////////////////////////////
 //!!!DBG TMP!
@@ -315,6 +330,31 @@ bool CIPGApplication::AdvanceFrame()
 		::TranslateMessage(&Msg);
 		::DispatchMessage(&Msg);
 	}
+
+///////////////////////
+//!!!DBG TMP!
+	if (!Wnd2->IsOpen())
+	{
+		Wnd2->SetWindowClass(*(Sys::COSWindowClassWin32*)EngineWindowClass.GetUnsafe()); //!!!bad design!
+		Wnd2->SetTitle("Window 2");
+		Wnd2->SetRect(Data::CRect(900, 50, 150, 200));
+		Wnd2->Open();
+
+		Render::CRenderTargetDesc BBDesc;
+		BBDesc.Format = Render::PixelFmt_DefaultBackBuffer;
+		BBDesc.MSAAQuality = Render::MSAA_None;
+		BBDesc.UseAsShaderInput = false;
+		BBDesc.Width = 0;
+		BBDesc.Height = 0;
+
+		Render::CSwapChainDesc SCDesc;
+		SCDesc.BackBufferCount = 2;
+		SCDesc.SwapMode = Render::SwapMode_CopyDiscard;
+		SCDesc.Flags = Render::SwapChain_AutoAdjustSize | Render::SwapChain_VSync;
+
+		SCIdx2 = GPU->CreateSwapChain(BBDesc, SCDesc, Wnd2);
+	}
+///////////////////////
 
 	//!!!TMP DBG!
 	if (SCIdx >= 0)
