@@ -53,6 +53,7 @@ I.a. Low-level code
 -------------------
 Scene activator attr
 Scene dynamic loader attr
+Can implement CSceneNode::Clone/DeepCopy to instantiate models loaded once from scn
 DebugDraw must only collect renderable elements, and then pass them into renderers
 	If so, CRenderObject must not be successor of a CNodeAttribute, but CModel: public RenderObj, NodeAttr or smth like this
 	So that debug shapes and texts will be render objects, that store necessary data, and specific rendering

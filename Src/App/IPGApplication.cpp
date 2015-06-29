@@ -105,7 +105,7 @@ bool CIPGApplication::Open()
 
 	// Rendering
 
-	const bool UseD3D9 = true;
+	const bool UseD3D9 = false;
 	if (UseD3D9)
 	{
 		Render::PD3D9DriverFactory Fct = n_new(Render::CD3D9DriverFactory);
@@ -120,6 +120,7 @@ bool CIPGApplication::Open()
 		VideoDrvFct = Fct;
 		//!!!register shader, mesh & texture loaders!
 	}
+	//???or loaders are universal and use abstract GPUDriver as a factory?
 
 	GPU = VideoDrvFct->CreateGPUDriver(Render::Adapter_Primary, Render::GPU_Hardware);
 
@@ -147,7 +148,7 @@ bool CIPGApplication::Open()
 		TexDesc.MSAAQuality = Render::MSAA_None;
 		TexDesc.Format = Render::PixelFmt_DXT1;
 		//TexDesc.Depth = 0;
-		Render::PTexture Tex = GPU->CreateTexture(TexDesc, Render::Access_GPU_Read);
+		Render::PTexture Tex = GPU->CreateTexture(TexDesc, Render::Access_GPU_Read, NULL);
 		int tmp = 0;
 	}
 
@@ -157,14 +158,17 @@ bool CIPGApplication::Open()
 	n_assert(GPU->SwapChainExists(SCIdx2));
 ////////////////////////////
 
-	//Render::CRenderTargetDesc DSDesc;
-	//BBDesc.Format = Render::PixelFmt_X8R8G8B8;
-	//BBDesc.MSAAQuality = Render::MSAA_None;
-	//BBDesc.UseAsShaderInput = false;
-	//BBDesc.Width = 0; //???from created RT?
-	//BBDesc.Height = 0; //???from created RT?
+	const Render::CRenderTargetDesc& RealRTDesc = GPU->GetSwapChainRenderTarget(SCIdx)->GetDesc();
 
-	//Render::PDepthStencilBuffer DSBuf = GPU->CreateDepthStencilBuffer(DSDesc);
+	Render::CRenderTargetDesc DSDesc;
+	DSDesc.Format = Render::PixelFmt_DefaultDepthBuffer;
+	DSDesc.MSAAQuality = Render::MSAA_None;
+	DSDesc.UseAsShaderInput = false;
+	DSDesc.Width = RealRTDesc.Width;
+	DSDesc.Height = RealRTDesc.Height;
+
+	Render::PDepthStencilBuffer DSBuf = GPU->CreateDepthStencilBuffer(DSDesc);
+	n_assert(DSBuf.IsValidPtr());
 
 	//Render::PFrameShader DefaultFrameShader = n_new(Render::CFrameShader);
 	//n_assert(DefaultFrameShader->Init(*DataSrv->LoadPRM("Shaders:Default.prm")));
