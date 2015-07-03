@@ -128,6 +128,7 @@ bool CIPGApplication::Open()
 	BBDesc.Format = Render::PixelFmt_DefaultBackBuffer;
 	BBDesc.MSAAQuality = Render::MSAA_None;
 	BBDesc.UseAsShaderInput = false;
+	BBDesc.MipLevels = 0;
 	BBDesc.Width = 0;
 	BBDesc.Height = 0;
 
@@ -143,12 +144,12 @@ bool CIPGApplication::Open()
 		TexDesc.Type = Render::Texture_2D;
 		TexDesc.Width = 128;
 		TexDesc.Height = 128;
-		TexDesc.ArraySize = 1;
+		TexDesc.ArraySize = 2;
 		TexDesc.MipLevels = 0;
 		TexDesc.MSAAQuality = Render::MSAA_None;
 		TexDesc.Format = Render::PixelFmt_DXT1;
 		//TexDesc.Depth = 0;
-		Render::PTexture Tex = GPU->CreateTexture(TexDesc, Render::Access_GPU_Read, NULL);
+		Render::PTexture Tex = GPU->CreateTexture(TexDesc, Render::Access_GPU_Read | Render::Access_CPU_Write, NULL);
 		int tmp = 0;
 	}
 
@@ -158,17 +159,20 @@ bool CIPGApplication::Open()
 	n_assert(GPU->SwapChainExists(SCIdx2));
 ////////////////////////////
 
-	const Render::CRenderTargetDesc& RealRTDesc = GPU->GetSwapChainRenderTarget(SCIdx)->GetDesc();
+	{
+		const Render::CRenderTargetDesc& RealRTDesc = GPU->GetSwapChainRenderTarget(SCIdx)->GetDesc();
 
-	Render::CRenderTargetDesc DSDesc;
-	DSDesc.Format = Render::PixelFmt_DefaultDepthBuffer;
-	DSDesc.MSAAQuality = Render::MSAA_None;
-	DSDesc.UseAsShaderInput = false;
-	DSDesc.Width = RealRTDesc.Width;
-	DSDesc.Height = RealRTDesc.Height;
+		Render::CRenderTargetDesc DSDesc;
+		DSDesc.Format = Render::PixelFmt_DefaultDepthBuffer;
+		DSDesc.MSAAQuality = Render::MSAA_None;
+		DSDesc.UseAsShaderInput = false;
+		DSDesc.MipLevels = 0;
+		DSDesc.Width = RealRTDesc.Width;
+		DSDesc.Height = RealRTDesc.Height;
 
-	Render::PDepthStencilBuffer DSBuf = GPU->CreateDepthStencilBuffer(DSDesc);
-	n_assert(DSBuf.IsValidPtr());
+		Render::PDepthStencilBuffer DSBuf = GPU->CreateDepthStencilBuffer(DSDesc);
+		n_assert(DSBuf.IsValidPtr());
+	}
 
 	//Render::PFrameShader DefaultFrameShader = n_new(Render::CFrameShader);
 	//n_assert(DefaultFrameShader->Init(*DataSrv->LoadPRM("Shaders:Default.prm")));
@@ -348,6 +352,7 @@ bool CIPGApplication::AdvanceFrame()
 		BBDesc.Format = Render::PixelFmt_DefaultBackBuffer;
 		BBDesc.MSAAQuality = Render::MSAA_None;
 		BBDesc.UseAsShaderInput = false;
+		BBDesc.MipLevels = 0;
 		BBDesc.Width = 0;
 		BBDesc.Height = 0;
 
