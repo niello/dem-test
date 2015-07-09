@@ -121,8 +121,10 @@ bool CIPGApplication::Open()
 		//!!!register shader, mesh & texture loaders!
 	}
 	//???or loaders are universal and use abstract GPUDriver as a factory?
+	//???or register parallel loaders for D3D9 and D3D11, but there is no practical reason!
 
 	GPU = VideoDrvFct->CreateGPUDriver(Render::Adapter_Primary, Render::GPU_Hardware);
+	n_assert(GPU.IsValidPtr());
 
 	Render::CRenderTargetDesc BBDesc;
 	BBDesc.Format = Render::PixelFmt_DefaultBackBuffer;
@@ -144,13 +146,48 @@ bool CIPGApplication::Open()
 		TexDesc.Type = Render::Texture_2D;
 		TexDesc.Width = 128;
 		TexDesc.Height = 128;
-		TexDesc.ArraySize = 2;
+		//TexDesc.Depth = 128;
+		TexDesc.ArraySize = 1;
 		TexDesc.MipLevels = 0;
 		TexDesc.MSAAQuality = Render::MSAA_None;
 		TexDesc.Format = Render::PixelFmt_DXT1;
-		//TexDesc.Depth = 0;
-		Render::PTexture Tex = GPU->CreateTexture(TexDesc, Render::Access_GPU_Read | Render::Access_CPU_Write, NULL);
-		int tmp = 0;
+		Render::PTexture Tex = GPU->CreateTexture(TexDesc, Render::Access_GPU_Read /*| Render::Access_CPU_Write*/, NULL);
+		n_assert(Tex.IsValidPtr());
+
+		//!!!profile align16 copying vs non-aligned!
+		char* pData = (char*)n_malloc_aligned(4 * 1024 * 1024, 16);
+		char* pData2 = (char*)n_malloc_aligned(4 * 1024 * 1024, 16);
+		memset(pData, 0x40, 4 * 1024 * 1024 * sizeof(char));
+		memset(pData2, 0x00, 4 * 1024 * 1024 * sizeof(char));
+		Render::CImageData Data;
+		Data.pData = pData;
+		Data.RowPitch = Tex->GetRowPitch();
+		n_assert(GPU->WriteToResource(*Tex, Data));
+		Data.pData = pData2;
+		n_assert(GPU->ReadFromResource(Data, *Tex));
+		n_free_aligned(pData);
+		n_free_aligned(pData2);
+	}
+
+	{
+		Render::CVertexComponent Components[] = {
+				{ Render::VCSem_Position, NULL, 0, Render::VCFmt_Float32_3, 0, DEM_VERTEX_COMPONENT_OFFSET_DEFAULT },
+				{ Render::VCSem_Color, NULL, 0, Render::VCFmt_UInt8_4_Norm, 0, DEM_VERTEX_COMPONENT_OFFSET_DEFAULT },
+				{ Render::VCSem_TexCoord, NULL, 0, Render::VCFmt_Float32_2, 0, DEM_VERTEX_COMPONENT_OFFSET_DEFAULT } };
+
+		Render::PVertexLayout VertexLayout = GPU->CreateVertexLayout(Components, sizeof_array(Components));
+		n_assert(VertexLayout.IsValidPtr());
+
+		Render::PVertexBuffer VB = GPU->CreateVertexBuffer(*VertexLayout, 16, Render::Access_GPU_Read);
+		n_assert(VB.IsValidPtr());
+
+		Render::PIndexBuffer IB = GPU->CreateIndexBuffer(Render::Index_32, 64, Render::Access_GPU_Read | Render::Access_CPU_Write);
+		n_assert(IB.IsValidPtr());
+
+		char Data[65536];
+		memset(Data, 0x40, sizeof(Data));
+		n_assert(GPU->WriteToResource(*VB, Data));
+		n_assert(GPU->WriteToResource(*IB, Data));
 	}
 
 ////////////////////////////
@@ -159,19 +196,24 @@ bool CIPGApplication::Open()
 	n_assert(GPU->SwapChainExists(SCIdx2));
 ////////////////////////////
 
+	////DBG TMP check asm for fabs
+	//volatile int xxx = n_fequal(0.533f, 0.53346f, 0.001f);
+
 	{
 		const Render::CRenderTargetDesc& RealRTDesc = GPU->GetSwapChainRenderTarget(SCIdx)->GetDesc();
+		//if (xxx && RealRTDesc.Width > 0)
+		//{
+			Render::CRenderTargetDesc DSDesc;
+			DSDesc.Format = Render::PixelFmt_DefaultDepthBuffer;
+			DSDesc.MSAAQuality = Render::MSAA_None;
+			DSDesc.UseAsShaderInput = false;
+			DSDesc.MipLevels = 0;
+			DSDesc.Width = RealRTDesc.Width;
+			DSDesc.Height = RealRTDesc.Height;
 
-		Render::CRenderTargetDesc DSDesc;
-		DSDesc.Format = Render::PixelFmt_DefaultDepthBuffer;
-		DSDesc.MSAAQuality = Render::MSAA_None;
-		DSDesc.UseAsShaderInput = false;
-		DSDesc.MipLevels = 0;
-		DSDesc.Width = RealRTDesc.Width;
-		DSDesc.Height = RealRTDesc.Height;
-
-		Render::PDepthStencilBuffer DSBuf = GPU->CreateDepthStencilBuffer(DSDesc);
-		n_assert(DSBuf.IsValidPtr());
+			Render::PDepthStencilBuffer DSBuf = GPU->CreateDepthStencilBuffer(DSDesc);
+			n_assert(DSBuf.IsValidPtr());
+		//}
 	}
 
 	//Render::PFrameShader DefaultFrameShader = n_new(Render::CFrameShader);
