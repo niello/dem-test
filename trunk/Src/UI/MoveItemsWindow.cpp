@@ -27,7 +27,7 @@ void CMoveItemsWindow::Init(CEGUI::Window* pWindow)
 
 	CUIWindow::Init(pWindow);
 
-	CString WndName = pWindow->getName().c_str();
+	CString WndName(pWindow->getName().c_str());
 
 	pContSpn = (CEGUI::Spinner*)pWnd->getChild(CString(WndName + "/ContainerSpinner").CStr());
 	pInvSpn = (CEGUI::Spinner*)pWnd->getChild(CString(WndName + "/InventorySpinner").CStr());
@@ -67,7 +67,7 @@ bool CMoveItemsWindow::OnShow(Events::CEventDispatcher* pDispatcher, const Event
 	
 	ItemID = P->Get<CStrID>(CStrID("ItemID"));
 
-	const CString& WindowOwnerID = P->Get<CString>(CStrID("OwnerWndName"), NULL);
+	const CString& WindowOwnerID = P->Get<CString>(CStrID("OwnerWndName"), CString::Empty);
 
 	if (WindowOwnerID.IsValid())
 	{

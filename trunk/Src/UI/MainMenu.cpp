@@ -25,7 +25,7 @@ void CMainMenu::Init(CEGUI::Window* pWindow)
 {
 	CUIWindow::Init(pWindow);
 
-	CString WndName = pWindow->getName().c_str();
+	CString WndName(pWindow->getName().c_str());
 
 	pNewGameBtn = (CEGUI::PushButton*)pWnd->getChild((WndName + "/BtnNewGame").CStr());
 	//ConnOnNewGameBtnClick = 

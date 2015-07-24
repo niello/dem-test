@@ -35,7 +35,7 @@ void CIngameScreen::Init(CEGUI::Window* pWindow)
 {
 	CUIWindow::Init(pWindow);
 
-	CString WndName = pWindow->getName().c_str();
+	CString WndName(pWindow->getName().c_str());
 
 	CEGUI::Window* pAPWnd =
 		CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/PopupMenu", (WndName + "/ActionListPopup").CStr());
@@ -203,7 +203,7 @@ bool CIngameScreen::OnQuestStatusChanged(CEventDispatcher* pDispatcher, const CE
 
 	Story::CQuest::EStatus Status = (Story::CQuest::EStatus)P->Get<int>(CStrID("Status"));
 
-	CString Text = (P->Get<bool>(CStrID("IsTask"))) ? "Task \"" : "Quest \"";
+	CString Text((P->Get<bool>(CStrID("IsTask"))) ? "Task \"" : "Quest \"");
 	Text += P->Get<CString>(CStrID("Name"));
 
 	switch (Status)

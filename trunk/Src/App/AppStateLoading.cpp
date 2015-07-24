@@ -79,7 +79,7 @@ void CAppStateLoading::OnStateEnter(CStrID PrevState, PParams Params)
 		{
 			bool WasGameStarted = GameSrv->IsGameStarted();
 			//???where to get file name? ???Params->Get<CString>(CStrID("FileName"));
-			GameSrv->StartNewGame("Export:Game/Main.prm");
+			GameSrv->StartNewGame(CString("Export:Game/Main.prm"));
 			if (WasGameStarted) DeleteUnreferencedResources();
 			GameSrv->ValidateAllLevels();
 			break;
@@ -88,7 +88,7 @@ void CAppStateLoading::OnStateEnter(CStrID PrevState, PParams Params)
 		{
 			bool WasGameStarted = GameSrv->IsGameStarted();
 			//???where to get file name? ???Params->Get<CString>(CStrID("FileName"));
-			GameSrv->ContinueGame("Export:Game/Main.prm");
+			GameSrv->ContinueGame(CString("Export:Game/Main.prm"));
 			if (WasGameStarted) DeleteUnreferencedResources();
 			GameSrv->ValidateAllLevels();
 			break;

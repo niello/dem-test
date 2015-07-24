@@ -5,6 +5,7 @@
 #include <Events/EventServer.h>
 #include <UI/UIServer.h>
 #include <UI/CEGUI/FmtLbTextItem.h>
+#include <Data/StringUtils.h>
 
 #include <CEGUI/Event.h>
 #include <CEGUI/widgets/Listbox.h>
@@ -22,7 +23,7 @@ void CDialogueWindow::Init(CEGUI::Window* pWindow)
 {
 	CUIWindow::Init(pWindow);
 
-	CString WndName = pWindow->getName().c_str();
+	CString WndName(pWindow->getName().c_str());
 
 	pContinueBtn = (CEGUI::PushButton*)pWnd->getChild((WndName + "/MainButton").CStr());
 	pContinueBtn->subscribeEvent(CEGUI::PushButton::EventClicked,
@@ -214,7 +215,7 @@ bool CDialogueWindow::OnDlgNodeEnter(Events::CEventDispatcher* pDispatcher, cons
 		{
 			Story::CDlgNode::CLink& Link = pCtx->pCurrNode->Links[pCtx->ValidLinkIndices[i]];
 
-			Text = CString::FromInt(i + 1);
+			Text = StringUtils::FromInt(i + 1);
 			Text += ": ";
 			Text += Link.pTargetNode ? Link.pTargetNode->Phrase.CStr() : NULL;
 

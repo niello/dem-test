@@ -5,6 +5,7 @@
 #include <Events/EventServer.h>
 #include <Game/EntityManager.h>
 #include <Items/Prop/PropEquipment.h>
+#include <Data/StringUtils.h>
 
 #include <CEGUI/Event.h>
 #include <CEGUI/widgets/FrameWindow.h>
@@ -34,7 +35,7 @@ void CInventory::Init(CEGUI::Window* pWindow)
 	pWnd->subscribeEvent(CEGUI::FrameWindow::EventCloseClicked,
 		CEGUI::Event::Subscriber(&CInventory::OnCloseClick, this));
 
-	CString WndName = pWindow->getName().c_str();
+	CString WndName(pWindow->getName().c_str());
 
 	pInvList = (CEGUI::Listbox*)pWnd->getChild((WndName + "/InvList").CStr());
 	pInvList->setShowVertScrollbar(true);
@@ -79,10 +80,10 @@ void CInventory::Update()
 		
 		if (!Stack.GetNotEquippedCount()) continue;
 
-		CString Name = Stack.GetTpl()->UIName.CStr();
+		CString Name(Stack.GetTpl()->UIName.CStr());
 		if (Name.IsEmpty()) Name = Stack.GetItemID().CStr();
 		if (Stack.GetNotEquippedCount() > 1)
-			Name += " (" + CString::FromInt(Stack.GetNotEquippedCount()) + ")";
+			Name += " (" + StringUtils::FromInt(Stack.GetNotEquippedCount()) + ")";
 		CEGUI::ListboxTextItem* NewItem =
 			n_new(CEGUI::ListboxTextItem((CEGUI::utf8*)Name.CStr(), 0, &Stack));
 		n_assert(NewItem);
@@ -95,7 +96,7 @@ void CInventory::Update()
 	pEquipList->resetList();
 	for (int i = 0; i < pEquip->Slots.GetCount(); i++)
 	{
-		CString Text = pEquip->Slots.KeyAt(i).CStr();
+		CString Text(pEquip->Slots.KeyAt(i).CStr());
 		Text += ": ";
 		CItemStack* pStack = pEquip->Slots.ValueAt(i).pStack;
 		if (pStack)
