@@ -184,12 +184,12 @@ n_assert(false);
 	FPSTimeAccum += (float)TimeSrv->GetFrameTime();
 	if (FPSTimeAccum > 0.5f)
 	{
-		CoreSrv->SetGlobal<float>("FPS", FPSFrameCount / FPSTimeAccum);
+		CoreSrv->SetGlobal<float>(CString("FPS"), FPSFrameCount / FPSTimeAccum);
 		FPSFrameCount = 0;
 		FPSTimeAccum = 0.f;
 	}
 
-	CoreSrv->SetGlobal<int>("Events_FiredTotal", (int)EventSrv->GetFiredEventsCount());
+	CoreSrv->SetGlobal<int>(CString("Events_FiredTotal"), (int)EventSrv->GetFiredEventsCount());
 
 	PROFILER_STOP(profCompleteFrame);
 

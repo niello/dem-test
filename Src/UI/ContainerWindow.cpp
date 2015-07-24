@@ -5,6 +5,7 @@
 #include <Items/Prop/PropInventory.h>
 #include <Items/Item.h>
 #include <Items/ItemStack.h>
+#include <Data/StringUtils.h>
 
 #include <CEGUI/Event.h>
 #include <CEGUI/widgets/FrameWindow.h>
@@ -21,7 +22,7 @@ void CContainerWindow::Init(CEGUI::Window* pWindow)
 {
 	CUIWindow::Init(pWindow);
 		
-	CString WndName = pWindow->getName().c_str();
+	CString WndName(pWindow->getName().c_str());
 	
 	pGiveBtn = (CEGUI::PushButton*)pWnd->getChild((WndName + "/GiveBtn").CStr());
 	pGiveBtn->subscribeEvent(CEGUI::PushButton::EventClicked,
@@ -130,9 +131,9 @@ void CContainerWindow::FillList(CPropInventory* pInventory, CEGUI::Listbox* pLis
 
 		WORD Count = IgnoreEquippedItems ? Stack.GetNotEquippedCount() : Stack.GetCount();
 
-		CString Name = Stack.GetTpl()->UIName.CStr();
+		CString Name(Stack.GetTpl()->UIName.CStr());
 		if (Name.IsEmpty()) Name = Stack.GetItemID().CStr();
-		if (Count > 1) Name += " (" + CString::FromInt(Count) + ")";
+		if (Count > 1) Name += " (" + StringUtils::FromInt(Count) + ")";
 		CEGUI::ListboxTextItem* NewItem =
 			n_new(CEGUI::ListboxTextItem((CEGUI::utf8*)Name.CStr(), 0, Stack.GetItem()));
 		n_assert(NewItem);

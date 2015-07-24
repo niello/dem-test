@@ -88,16 +88,16 @@ public:
 	CIPGApplication() { __ConstructSingleton; }
 	~CIPGApplication() { __DestructSingleton; }
 
-	CString	GetAppName() const { return "Insane Poet"; }
-	CString	GetAppVersion() const;
-	CString	GetVendorName() const { return "DeusExMachina"; }
+	const char*	GetAppName() const { return "Insane Poet"; }
+	const char*	GetAppVersion() const;
+	const char*	GetVendorName() const { return "DeusExMachina"; }
 
-	bool	Open();
-	bool	AdvanceFrame();
-	void	Close();
+	bool		Open();
+	bool		AdvanceFrame();
+	void		Close();
 };
 
-inline CString CIPGApplication::GetAppVersion() const
+inline const char* CIPGApplication::GetAppVersion() const
 {
 #ifdef _DEBUG
 	return "0.2.0.0-d";

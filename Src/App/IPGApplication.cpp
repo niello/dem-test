@@ -20,6 +20,7 @@
 #include <Render/RenderTarget.h>
 #include <Render/DepthStencilBuffer.h>
 #include <Render/SwapChain.h>
+#include <Render/RenderStateDesc.h>
 #include <Resources/ResourceManager.h>
 #include <Physics/PropPhysics.h>
 #include <Physics/PropCharacterController.h>
@@ -48,7 +49,7 @@ bool CIPGApplication::Open()
 	IOSrv->SetAssign("Proj", ProjDir);
 
 	CString AppData;
-	AppData.Format("AppData:%s/%s", GetVendorName().CStr(), GetAppName().CStr());
+	AppData.Format("AppData:%s/%s", GetVendorName(), GetAppName());
 	IOSrv->SetAssign("AppData", IOSrv->ManglePath(AppData));
 
 	IOSrv->MountNPK("Proj:Export.npk"); //???only add CFileSystemNPK here?
@@ -84,7 +85,7 @@ bool CIPGApplication::Open()
 	EngineWindowClass = n_new(Sys::COSWindowClass);
 	n_assert(EngineWindowClass->Create("DeusExMachina::MainWindow", "Icon"));
 
-	CString WindowTitle = GetVendorName() + " - " + GetAppName() + " - " + GetAppVersion();
+	CString WindowTitle = CString(GetVendorName()) + " - " + GetAppName() + " - " + GetAppVersion();
 	MainWindow = n_new(Sys::COSWindow);
 	MainWindow->SetWindowClass(*(Sys::COSWindowClassWin32*)EngineWindowClass.GetUnsafe()); //!!!bad design!
 	MainWindow->SetTitle(WindowTitle.CStr());
@@ -188,6 +189,58 @@ bool CIPGApplication::Open()
 		memset(Data, 0x40, sizeof(Data));
 		n_assert(GPU->WriteToResource(*VB, Data));
 		n_assert(GPU->WriteToResource(*IB, Data));
+	}
+
+	{
+		//!!!load shaders! can create PShader objects manually, not from file/URI!
+
+		Render::CRenderStateDesc RSDesc;
+		Render::CRenderStateDesc::CRTBlend& RTBlendDesc = RSDesc.RTBlend[0];
+		RSDesc.SetDefaults();
+		RSDesc.VertexShader = NULL;
+		RSDesc.PixelShader = NULL;
+		RSDesc.Flags.Set(Render::CRenderStateDesc::Blend_RTBlendEnable << 0);
+		RSDesc.Flags.Clear(Render::CRenderStateDesc::DS_DepthEnable |
+						   Render::CRenderStateDesc::DS_DepthWriteEnable |
+						   Render::CRenderStateDesc::Rasterizer_DepthClipEnable |
+						   Render::CRenderStateDesc::Rasterizer_Wireframe |
+						   Render::CRenderStateDesc::Rasterizer_CullFront |
+						   Render::CRenderStateDesc::Rasterizer_CullBack |
+						   Render::CRenderStateDesc::Blend_AlphaToCoverage |
+						   Render::CRenderStateDesc::Blend_Independent);
+
+		// Normal blend
+		RTBlendDesc.SrcBlendArgAlpha = Render::BlendArg_InvDestAlpha;
+		RTBlendDesc.DestBlendArgAlpha = Render::BlendArg_One;
+		RTBlendDesc.SrcBlendArg = Render::BlendArg_SrcAlpha;
+		RTBlendDesc.DestBlendArg = Render::BlendArg_InvSrcAlpha;
+
+		// Unclipped
+		RSDesc.Flags.Clear(Render::CRenderStateDesc::Rasterizer_ScissorEnable);
+
+		Render::PRenderState NormalUnclipped = GPU->CreateRenderState(RSDesc);
+		n_assert(NormalUnclipped.IsValidPtr());
+
+		// Clipped
+		RSDesc.Flags.Set(Render::CRenderStateDesc::Rasterizer_ScissorEnable);
+
+		Render::PRenderState NormalClipped = GPU->CreateRenderState(RSDesc);
+		n_assert(NormalClipped.IsValidPtr());
+
+		// Premultiplied alpha blend
+		RTBlendDesc.SrcBlendArgAlpha = Render::BlendArg_One;
+		RTBlendDesc.DestBlendArgAlpha = Render::BlendArg_InvSrcAlpha;
+		RTBlendDesc.SrcBlendArg = Render::BlendArg_One;
+		RTBlendDesc.DestBlendArg = Render::BlendArg_InvSrcAlpha;
+
+		Render::PRenderState PremultipliedClipped = GPU->CreateRenderState(RSDesc);
+		n_assert(PremultipliedClipped.IsValidPtr());
+
+		// Unclipped
+		RSDesc.Flags.Clear(Render::CRenderStateDesc::Rasterizer_ScissorEnable);
+
+		Render::PRenderState PremultipliedUnclipped = GPU->CreateRenderState(RSDesc);
+		n_assert(PremultipliedUnclipped.IsValidPtr());
 	}
 
 ////////////////////////////
