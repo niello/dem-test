@@ -14,6 +14,8 @@
 #include <Animation/PropAnimation.h>
 #include <UI/PropUIControl.h>
 #include <Render/D3D11/D3D11DriverFactory.h>
+#include <Render/D3D11/D3D11Shader.h>
+#include <Render/D3D11/D3D11ShaderLoaders.h>
 #include <Render/D3D9/D3D9DriverFactory.h>
 #include <Render/GPUDriver.h>
 #include <Render/Texture.h>
@@ -50,7 +52,7 @@ bool CIPGApplication::Open()
 
 	CString AppData;
 	AppData.Format("AppData:%s/%s", GetVendorName(), GetAppName());
-	IOSrv->SetAssign("AppData", IOSrv->ManglePath(AppData));
+	IOSrv->SetAssign("AppData", IOSrv->ResolveAssigns(AppData));
 
 	IOSrv->MountNPK("Proj:Export.npk"); //???only add CFileSystemNPK here?
 
@@ -62,7 +64,7 @@ bool CIPGApplication::Open()
 	Data::PParams PathList = DataSrv->LoadHRD("Proj:PathList.hrd", false);
 	if (PathList.IsValidPtr())
 		for (int i = 0; i < PathList->GetCount(); ++i)
-			IOSrv->SetAssign(PathList->Get(i).GetName().CStr(), IOSrv->ManglePath(PathList->Get<CString>(i)));
+			IOSrv->SetAssign(PathList->Get(i).GetName().CStr(), IOSrv->ResolveAssigns(PathList->Get<CString>(i)));
 
 	// Store reference just in case. It is a dispatcher and ma be assigned to a smart ptr somewhere.
 	EventServer = n_new(Events::CEventServer);
@@ -120,6 +122,10 @@ bool CIPGApplication::Open()
 		Fct->Open();
 		VideoDrvFct = Fct;
 		//!!!register shader, mesh & texture loaders!
+
+		//!!!set CD3D11Shader type!
+		ResourceMgr->RegisterDefaultLoader("vsh", &Render::CShader::RTTI, &Resources::CD3D11VertexShaderLoader::RTTI);
+		ResourceMgr->RegisterDefaultLoader("psh", &Render::CShader::RTTI, &Resources::CD3D11PixelShaderLoader::RTTI);
 	}
 	//???or loaders are universal and use abstract GPUDriver as a factory?
 	//???or register parallel loaders for D3D9 and D3D11, but there is no practical reason!
@@ -279,8 +285,9 @@ bool CIPGApplication::Open()
 
 	VideoServer = n_new(Video::CVideoServer);
 	VideoServer->Open();
-	
-	UIServer = n_new(UI::CUIServer)(*GPU, SCIdx, "Export:Shaders/CEGUI.vsh", "Export:Shaders/CEGUI.psh");
+
+	//!!!can use different GUI contexts, one per swap chain!
+	UIServer = n_new(UI::CUIServer)(*GPU, SCIdx, "Shaders:CEGUI.vsh", "Shaders:CEGUI.psh");
 	DbgSrv->AllowUI(true);
 
 	n_new(Scripting::CScriptServer);
