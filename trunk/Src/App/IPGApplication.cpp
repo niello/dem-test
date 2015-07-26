@@ -280,8 +280,8 @@ bool CIPGApplication::Open()
 	VideoServer = n_new(Video::CVideoServer);
 	VideoServer->Open();
 	
-	//UIServer = n_new(UI::CUIServer);
-	//DbgSrv->AllowUI(true);
+	UIServer = n_new(UI::CUIServer)(*GPU, SCIdx, "Export:Shaders/CEGUI.vsh", "Export:Shaders/CEGUI.psh");
+	DbgSrv->AllowUI(true);
 
 	n_new(Scripting::CScriptServer);
 	if (!Scripting::CEntityScriptObject::RegisterClass())
