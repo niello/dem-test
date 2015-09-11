@@ -197,6 +197,10 @@ bool CIPGApplication::Open()
 		n_assert(GPU->WriteToResource(*IB, Data));
 	}
 
+	//{
+	//	Render::PConstantBuffer CB = GPU->CreateConstantBuffer(*n_new(Render::CD3D11Shader), CStrID::Empty, 0, NULL);
+	//}
+
 	{
 		//!!!load shaders! can create PShader objects manually, not from file/URI!
 
