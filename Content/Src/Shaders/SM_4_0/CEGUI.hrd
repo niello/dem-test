@@ -1,0 +1,102 @@
+Techniques
+{
+	NormalClipped
+	{
+		Passes = [ 'NormalClipped' ]
+	}
+	NormalUnclipped
+	{
+		Passes = [ 'NormalUnclipped' ]
+	}
+	PremultipliedClipped
+	{
+		Passes = [ 'PremultipliedClipped' ]
+	}
+	PremultipliedUnclipped
+	{
+		Passes = [ 'PremultipliedUnclipped' ]
+	}
+}
+
+//!!!need samplers!
+
+RenderStates
+{
+	Common
+	{
+		VS
+		{
+			Src = "SrcShaders:SM_4_0/CEGUI_VS.hlsl"
+			Target = 0x0400
+			Entry = "VSMain"
+			Defines = "DEM_SHADER;_TEST=1;DEBUG;NO_LIGHTS" //!!!DBG!
+			//!!!variations - light count etc! or different techs?
+		}
+
+		PS
+		{
+			Src = "SrcShaders:SM_4_0/CEGUI_PS.hlsl"
+			Target = 0x0400
+			Entry = "PSMain"
+		}
+
+		Cull = "none"
+
+		DepthClipEnable = false
+		DepthEnable = false
+		DepthWriteEnable = false
+		
+		Blend
+		{
+			Enable = true
+		}
+	}
+
+	Normal
+	{
+		Base = 'Common'
+		Blend
+		{
+			SrcBlendArgAlpha = "InvDestAlpha"
+			DestBlendArgAlpha = "One"
+			SrcBlendArg = "SrcAlpha"
+			DestBlendArg = "InvSrcAlpha"
+		}
+	}
+
+	PremultipliedAlpha
+	{
+		Base = 'Common'
+		Blend
+		{
+			SrcBlendArgAlpha = "One"
+			DestBlendArgAlpha = "InvSrcAlpha"
+			SrcBlendArg = "One"
+			DestBlendArg = "InvSrcAlpha"
+		}
+	}
+
+	NormalClipped
+	{
+		Base = 'Normal'
+		ScissorEnable = true
+	}
+
+	NormalUnclipped
+	{
+		Base = 'Normal'
+		ScissorEnable = false
+	}
+
+	PremultipliedClipped
+	{
+		Base = 'PremultipliedAlpha'
+		ScissorEnable = true
+	}
+
+	PremultipliedUnclipped
+	{
+		Base = 'PremultipliedAlpha'
+		ScissorEnable = false
+	}
+}
