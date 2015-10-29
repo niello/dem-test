@@ -18,19 +18,34 @@ Techniques
 	}
 }
 
-//!!!need samplers!
+MaterialConsts
+{
+	//
+}
+
+Samplers
+{
+	LinearSampler
+	{
+		AddressU = "Clamp"
+		AddressV = "Clamp"
+		Filter = "MinMagMip_Linear"
+	}
+}
 
 RenderStates
 {
 	Common
 	{
-		VS
+		VS //???sm3 & sm4+ variations inside?
 		{
 			Src = "SrcShaders:SM_4_0/CEGUI_VS.hlsl"
 			Target = 0x0400
 			Entry = "VSMain"
 			Defines = "DEM_SHADER;_TEST=1;DEBUG;NO_LIGHTS" //!!!DBG!
 			//!!!variations - light count etc! or different techs?
+			//!!!really may store shader array for lit shaders, index by light count without additional mapping!
+			//create array on tool side, store 'lit' flag and variation count
 		}
 
 		PS

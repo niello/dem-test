@@ -30,6 +30,7 @@ State //!!!construct state only if there is a final state block with no override
 {
 	// Rasterizer
 	ScissorTest = false
+	//int CullMode = 2;
 
 	// Blend
 	AlphaBlend = false
@@ -55,9 +56,12 @@ Variables
 
 Phases
 {
+//???TransformGeometry? - pre-transform with stream-output, later use bypass vertex shader? skinned will benefit, instanced probably won't
+
 	Depth
 	{
-		Shader = 'Depth' // Overrides object shaders
+	//???in batches?
+		//Shader = 'Depth' // Overrides object shaders
 
 		Targets
 		{
@@ -67,18 +71,20 @@ Phases
 
 		State
 		{
-			// Blend
-			ColorWriteMask = 0
-			
 			// Depth-stencil
 			DepthWrite = true
 		}
 		
 		Batches
 		{
+		//???or these are techs? can set tech flags!
+			Shader = 'Depth' // Overrides object shaders
+			Shader = 'Depth_ATest' // Overrides object shaders
+			Shader = 'Depth_CDLODTerrain' // Overrides object shaders
 			// Geometry - Solid
 			// Geometry - ATest
-			// Terrain //!!!note that shader Depth must have tech for terrain! So it may be constructed from multiple sources!
+			// Terrain //???or before ATest? what about early-Z?
+			 //note that shader Depth must have tech for terrain! So it may be constructed from multiple sources!
 		}
 	}
 	
@@ -134,13 +140,29 @@ Phases
 		State
 		{
 			// Blend
-			ColorWriteMask = 0xffffffff
+			ColorWriteMask = 0xffffffff //???if channel can be only enabled or disabled, mb no need in 0xff etc, use single bit per channel?
 			
 			// Depth-stencil
 			DepthWrite = false
 		}
 		
 		Batches
-		{}
+		{
+			// Opaque - alpha-blend disabled
+			// ATest - alpha-blend disabled float AlphaRef = 0.5;
+			// Terrain
+			// Skybox //???is there any trick to fill only pixels not filled without much testing?
+			// Alpha
+			
+			// Debug shapes:
+			//AlphaBlendEnable	= True;
+			//AlphaTestEnable		= False;
+			//CullMode			= None; //CW;
+			//SrcBlend			= SrcAlpha;
+			//DestBlend			= InvSrcAlpha;
+			//ZEnable				= False; //True;
+			//ZFunc				= LessEqual;
+			//ZWriteEnable		= False;
+		}
 	}
 }
