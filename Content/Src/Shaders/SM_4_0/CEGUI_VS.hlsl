@@ -6,8 +6,15 @@ struct PSSceneIn
 	float2 Tex: TEXCOORD;
 };
 
-matrix WorldMatrix;
-matrix ProjectionMatrix;
+cbuffer ChangePerObject
+{
+	matrix WorldMatrix;
+}
+
+cbuffer ChangeOnResize
+{
+	matrix ProjectionMatrix;
+}
 
 struct VSSceneIn
 {

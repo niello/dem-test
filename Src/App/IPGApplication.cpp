@@ -292,7 +292,7 @@ bool CIPGApplication::Open()
 
 	//!!!can use different GUI contexts, one per swap chain!
 	//!!!need to compile properly named non-effect shaders!
-	UIServer = n_new(UI::CUIServer)(*GPU, SCIdx, "Shaders:Bin/1.vsh", "Shaders:Bin/3.psh");
+	UIServer = n_new(UI::CUIServer)(*GPU, SCIdx, "Shaders:Bin/2.vsh", "Shaders:Bin/3.psh");
 	DbgSrv->AllowUI(true);
 
 	n_new(Scripting::CScriptServer);
