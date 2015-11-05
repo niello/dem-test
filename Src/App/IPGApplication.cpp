@@ -290,6 +290,16 @@ bool CIPGApplication::Open()
 	VideoServer = n_new(Video::CVideoServer);
 	VideoServer->Open();
 
+	//!!!DBG TMP!
+	if (SCIdx >= 0)
+	{
+		Render::PRenderTarget RT = GPU->GetSwapChainRenderTarget(SCIdx);
+		if (RT.IsValidPtr() && RT->IsValid())
+		{
+			GPU->SetRenderTarget(0, RT);
+		}
+	}
+
 	//!!!can use different GUI contexts, one per swap chain!
 	//!!!need to compile properly named non-effect shaders!
 	UIServer = n_new(UI::CUIServer)(*GPU, SCIdx, "Shaders:Bin/2.vsh", "Shaders:Bin/3.psh");
@@ -479,7 +489,9 @@ bool CIPGApplication::AdvanceFrame()
 		if (RT.IsValidPtr() && RT->IsValid())
 		{
 			GPU->SetRenderTarget(0, RT);
-			GPU->PresentBlankScreen(SCIdx, vector4(0.1f, 0.7f, 0.1f, 1.f));
+			GPU->ClearRenderTarget(*RT, vector4(0.1f, 0.7f, 0.1f, 1.f));
+			UISrv->Render();
+			GPU->Present(SCIdx);
 		}
 	}
 	if (SCIdx2 >= 0)

@@ -53,7 +53,7 @@ CStrID CAppStateMenu::OnFrame()
 	//if (RenderSrv->BeginFrame())
 	//{
 	//	RenderSrv->Clear(Render::Clear_All, 0xff000000, 1.f, 0); 
-		UISrv->Render();
+	//	UISrv->Render();
 	//	RenderSrv->EndFrame();
 	//	RenderSrv->Present(); //!!!must be called as late as possible after EndFrame!
 	//}
