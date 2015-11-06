@@ -14,10 +14,11 @@
 #include <Animation/PropAnimation.h>
 #include <UI/PropUIControl.h>
 #include <Render/D3D11/D3D11DriverFactory.h>
-#include <Render/D3D11/D3D11Shader.h>
 #include <Render/D3D11/D3D11ShaderLoaders.h>
 #include <Render/D3D9/D3D9DriverFactory.h>
+#include <Render/D3D9/D3D9ShaderLoaders.h>
 #include <Render/GPUDriver.h>
+#include <Render/Shader.h>
 #include <Render/Texture.h>
 #include <Render/RenderTarget.h>
 #include <Render/DepthStencilBuffer.h>
@@ -108,13 +109,23 @@ bool CIPGApplication::Open()
 
 	// Rendering
 
-	const bool UseD3D9 = false;
+	const bool UseD3D9 = true;
+	const char* pCEGUIVS;
+	const char* pCEGUIPS;
 	if (UseD3D9)
 	{
 		Render::PD3D9DriverFactory Fct = n_new(Render::CD3D9DriverFactory);
 		Fct->Open(MainWindow);
 		VideoDrvFct = Fct;
 		//!!!register shader, mesh & texture loaders!
+
+		//ResourceMgr->RegisterDefaultLoader("vsh", &Render::CShader::RTTI, &Resources::CD3D9VertexShaderLoader::RTTI);
+		//ResourceMgr->RegisterDefaultLoader("psh", &Render::CShader::RTTI, &Resources::CD3D9PixelShaderLoader::RTTI);
+		ResourceMgr->RegisterDefaultLoader("vsh", &Render::CShader::RTTI, &Resources::CD3D9ShaderLoader::RTTI);
+		ResourceMgr->RegisterDefaultLoader("psh", &Render::CShader::RTTI, &Resources::CD3D9ShaderLoader::RTTI);
+
+		pCEGUIVS = "Shaders:Bin/1.vsh";
+		pCEGUIPS = "Shaders:Bin/2.psh";
 	}
 	else
 	{
@@ -126,6 +137,9 @@ bool CIPGApplication::Open()
 		//!!!set CD3D11Shader type!
 		ResourceMgr->RegisterDefaultLoader("vsh", &Render::CShader::RTTI, &Resources::CD3D11VertexShaderLoader::RTTI);
 		ResourceMgr->RegisterDefaultLoader("psh", &Render::CShader::RTTI, &Resources::CD3D11PixelShaderLoader::RTTI);
+
+		pCEGUIVS = "Shaders:Bin/4.vsh";
+		pCEGUIPS = "Shaders:Bin/5.psh";
 	}
 	//???or loaders are universal and use abstract GPUDriver as a factory?
 	//???or register parallel loaders for D3D9 and D3D11, but there is no practical reason!
@@ -302,7 +316,7 @@ bool CIPGApplication::Open()
 
 	//!!!can use different GUI contexts, one per swap chain!
 	//!!!need to compile properly named non-effect shaders!
-	UIServer = n_new(UI::CUIServer)(*GPU, SCIdx, "Shaders:Bin/2.vsh", "Shaders:Bin/3.psh");
+	UIServer = n_new(UI::CUIServer)(*GPU, SCIdx, pCEGUIVS, pCEGUIPS);
 	DbgSrv->AllowUI(true);
 
 	n_new(Scripting::CScriptServer);

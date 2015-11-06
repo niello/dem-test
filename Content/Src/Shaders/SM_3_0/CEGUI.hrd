@@ -1,0 +1,113 @@
+Techniques
+{
+	NormalClipped
+	{
+		Passes = [ 'NormalClipped' ]
+	}
+	NormalUnclipped
+	{
+		Passes = [ 'NormalUnclipped' ]
+	}
+	PremultipliedClipped
+	{
+		Passes = [ 'PremultipliedClipped' ]
+	}
+	PremultipliedUnclipped
+	{
+		Passes = [ 'PremultipliedUnclipped' ]
+	}
+}
+
+MaterialConsts
+{
+	//
+}
+
+Samplers
+{
+	LinearSampler
+	{
+		AddressU = "Clamp"
+		AddressV = "Clamp"
+		Filter = "MinMagMip_Linear"
+	}
+}
+
+RenderStates
+{
+	Common
+	{
+		VS
+		{
+			Src = "SrcShaders:SM_3_0/CEGUI_VS.hlsl"
+			Target = 0x0300
+			Entry = "VSMain"
+		}
+
+		PS
+		{
+			Src = "SrcShaders:SM_3_0/CEGUI_PS.hlsl"
+			Target = 0x0300
+			Entry = "PSMain"
+		}
+
+		Cull = "none"
+
+		DepthClipEnable = false
+		DepthEnable = false
+		DepthWriteEnable = false
+		
+		Blend
+		{
+			Enable = true
+		}
+	}
+
+	Normal
+	{
+		Base = 'Common'
+		Blend
+		{
+			SrcBlendArgAlpha = "InvDestAlpha"
+			DestBlendArgAlpha = "One"
+			SrcBlendArg = "SrcAlpha"
+			DestBlendArg = "InvSrcAlpha"
+		}
+	}
+
+	PremultipliedAlpha
+	{
+		Base = 'Common'
+		Blend
+		{
+			SrcBlendArgAlpha = "One"
+			DestBlendArgAlpha = "InvSrcAlpha"
+			SrcBlendArg = "One"
+			DestBlendArg = "InvSrcAlpha"
+		}
+	}
+
+	NormalClipped
+	{
+		Base = 'Normal'
+		ScissorEnable = true
+	}
+
+	NormalUnclipped
+	{
+		Base = 'Normal'
+		ScissorEnable = false
+	}
+
+	PremultipliedClipped
+	{
+		Base = 'PremultipliedAlpha'
+		ScissorEnable = true
+	}
+
+	PremultipliedUnclipped
+	{
+		Base = 'PremultipliedAlpha'
+		ScissorEnable = false
+	}
+}
