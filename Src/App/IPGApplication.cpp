@@ -117,10 +117,8 @@ bool CIPGApplication::Open()
 		Render::PD3D9DriverFactory Fct = n_new(Render::CD3D9DriverFactory);
 		Fct->Open(MainWindow);
 		VideoDrvFct = Fct;
-		//!!!register shader, mesh & texture loaders!
+		//!!!register mesh & texture loaders!
 
-		//ResourceMgr->RegisterDefaultLoader("vsh", &Render::CShader::RTTI, &Resources::CD3D9VertexShaderLoader::RTTI);
-		//ResourceMgr->RegisterDefaultLoader("psh", &Render::CShader::RTTI, &Resources::CD3D9PixelShaderLoader::RTTI);
 		ResourceMgr->RegisterDefaultLoader("vsh", &Render::CShader::RTTI, &Resources::CD3D9ShaderLoader::RTTI);
 		ResourceMgr->RegisterDefaultLoader("psh", &Render::CShader::RTTI, &Resources::CD3D9ShaderLoader::RTTI);
 
@@ -132,7 +130,7 @@ bool CIPGApplication::Open()
 		Render::PD3D11DriverFactory Fct = n_new(Render::CD3D11DriverFactory);
 		Fct->Open();
 		VideoDrvFct = Fct;
-		//!!!register shader, mesh & texture loaders!
+		//!!!register mesh & texture loaders!
 
 		//!!!set CD3D11Shader type!
 		ResourceMgr->RegisterDefaultLoader("vsh", &Render::CShader::RTTI, &Resources::CD3D11VertexShaderLoader::RTTI);
@@ -165,13 +163,13 @@ bool CIPGApplication::Open()
 	{
 		Render::CTextureDesc TexDesc;
 		TexDesc.Type = Render::Texture_2D;
-		TexDesc.Width = 128;
-		TexDesc.Height = 128;
+		TexDesc.Width = 256;
+		TexDesc.Height = 256;
 		//TexDesc.Depth = 128;
 		TexDesc.ArraySize = 1;
-		TexDesc.MipLevels = 0;
+		TexDesc.MipLevels = 1;
 		TexDesc.MSAAQuality = Render::MSAA_None;
-		TexDesc.Format = Render::PixelFmt_DXT1;
+		TexDesc.Format = Render::PixelFmt_B8G8R8A8; //PixelFmt_DXT1;
 		Render::PTexture Tex = GPU->CreateTexture(TexDesc, Render::Access_GPU_Read /*| Render::Access_CPU_Write*/, NULL);
 		n_assert(Tex.IsValidPtr());
 
@@ -497,25 +495,29 @@ bool CIPGApplication::AdvanceFrame()
 ///////////////////////
 
 	//!!!TMP DBG!
-	if (SCIdx >= 0)
+	if (GPU->BeginFrame())
 	{
-		Render::PRenderTarget RT = GPU->GetSwapChainRenderTarget(SCIdx);
-		if (RT.IsValidPtr() && RT->IsValid())
+		if (SCIdx >= 0)
 		{
-			GPU->SetRenderTarget(0, RT);
-			GPU->ClearRenderTarget(*RT, vector4(0.1f, 0.7f, 0.1f, 1.f));
-			UISrv->Render();
-			GPU->Present(SCIdx);
+			Render::PRenderTarget RT = GPU->GetSwapChainRenderTarget(SCIdx);
+			if (RT.IsValidPtr() && RT->IsValid())
+			{
+				GPU->SetRenderTarget(0, RT);
+				GPU->ClearRenderTarget(*RT, vector4(0.1f, 0.7f, 0.1f, 1.f));
+				UISrv->Render();
+				GPU->Present(SCIdx);
+			}
 		}
-	}
-	if (SCIdx2 >= 0)
-	{
-		Render::PRenderTarget RT = GPU->GetSwapChainRenderTarget(SCIdx2);
-		if (RT.IsValidPtr() && RT->IsValid())
+		if (SCIdx2 >= 0)
 		{
-			GPU->SetRenderTarget(0, RT);
-			GPU->PresentBlankScreen(SCIdx2, vector4(0.7f, 0.1f, 0.7f, 1.f));
+			Render::PRenderTarget RT = GPU->GetSwapChainRenderTarget(SCIdx2);
+			if (RT.IsValidPtr() && RT->IsValid())
+			{
+				GPU->SetRenderTarget(0, RT);
+				GPU->PresentBlankScreen(SCIdx2, vector4(0.7f, 0.1f, 0.7f, 1.f));
+			}
 		}
+		GPU->EndFrame();
 	}
 
 	return FSM.Advance();
