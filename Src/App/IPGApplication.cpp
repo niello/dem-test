@@ -495,29 +495,29 @@ bool CIPGApplication::AdvanceFrame()
 ///////////////////////
 
 	//!!!TMP DBG!
-	if (GPU->BeginFrame())
+	if (SCIdx >= 0)
 	{
-		if (SCIdx >= 0)
+		Render::PRenderTarget RT = GPU->GetSwapChainRenderTarget(SCIdx);
+		if (RT.IsValidPtr() && RT->IsValid())
 		{
-			Render::PRenderTarget RT = GPU->GetSwapChainRenderTarget(SCIdx);
-			if (RT.IsValidPtr() && RT->IsValid())
+			GPU->SetRenderTarget(0, RT);
+			if (GPU->BeginFrame())
 			{
-				GPU->SetRenderTarget(0, RT);
 				GPU->ClearRenderTarget(*RT, vector4(0.1f, 0.7f, 0.1f, 1.f));
 				UISrv->Render();
+				GPU->EndFrame();
 				GPU->Present(SCIdx);
 			}
 		}
-		if (SCIdx2 >= 0)
+	}
+	if (SCIdx2 >= 0)
+	{
+		Render::PRenderTarget RT = GPU->GetSwapChainRenderTarget(SCIdx2);
+		if (RT.IsValidPtr() && RT->IsValid())
 		{
-			Render::PRenderTarget RT = GPU->GetSwapChainRenderTarget(SCIdx2);
-			if (RT.IsValidPtr() && RT->IsValid())
-			{
-				GPU->SetRenderTarget(0, RT);
-				GPU->PresentBlankScreen(SCIdx2, vector4(0.7f, 0.1f, 0.7f, 1.f));
-			}
+			GPU->SetRenderTarget(0, RT);
+			GPU->PresentBlankScreen(SCIdx2, vector4(0.7f, 0.1f, 0.7f, 1.f));
 		}
-		GPU->EndFrame();
 	}
 
 	return FSM.Advance();

@@ -20,7 +20,9 @@ PSSceneIn VSMain(VSSceneIn In)
 {
 	PSSceneIn Out = (PSSceneIn)0.0;
 
-	Out.Pos = mul(float4(In.Pos, 1), WorldMatrix);
+	float4 InPos = float4(In.Pos, 1);
+	InPos.xy -= 0.5f;
+	Out.Pos = mul(InPos, WorldMatrix);
 	Out.Pos = mul(Out.Pos, ProjectionMatrix);
 	Out.Tex = In.Tex;
 	Out.Colour.rgba = In.Colour.bgra;
