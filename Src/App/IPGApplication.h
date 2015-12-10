@@ -10,7 +10,7 @@
 
 //???!!!forward declarations?
 #include <Core/CoreServer.h>
-#include <Time/TimeServer.h>
+//#include <Time/TimeServer.h>
 #include <Debug/DebugServer.h>
 #include <IO/IOServer.h>
 #include <Data/DataServer.h>
@@ -55,7 +55,7 @@ private:
 
 	Ptr<Events::CEventServer>			EventServer;
 
-	Ptr<Time::CTimeServer>				TimeServer;
+	//Ptr<Time::CTimeServer>				TimeServer;
 	Ptr<Debug::CDebugServer>			DebugServer;
 	Ptr<Debug::CDebugDraw>				DD;
 	Ptr<Physics::CPhysicsServer>		PhysicsServer;

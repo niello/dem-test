@@ -27,8 +27,8 @@ class CMoveItemsWindow: public CUIWindow
 {
 private:
 
-	WORD	ItemsTotalCount;
-	WORD	ItemsContainerCount;
+	U16		ItemsTotalCount;
+	U16		ItemsContainerCount;
 	bool	IgnoreSpinnerValueEvent;
 	bool	DialogResult;
 	CStrID	ItemID;

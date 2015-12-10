@@ -83,7 +83,7 @@ bool CMoveItemsWindow::OnShow(Events::CEventDispatcher* pDispatcher, const Event
 	pInv = pActor->GetProperty<CPropInventory>(),
 	pContInv = pContEnt->GetProperty<CPropInventory>();
 
-	WORD ItemsInventoryCount = 0;
+	U16 ItemsInventoryCount = 0;
 	ItemsContainerCount = 0;
 
 	CItemStack* pItemStack = pInv->FindItemStack(ItemID);
@@ -144,7 +144,7 @@ bool CMoveItemsWindow::OnButtonOkClick(const CEGUI::EventArgs& e)
 	n_assert(pContInv);
 	n_assert(pInv);
 
-	WORD ContainerCount = (WORD)pContSpn->getCurrentValue();
+	U16 ContainerCount = (U16)pContSpn->getCurrentValue();
 
 	if (ContainerCount != ItemsContainerCount)
 	{
@@ -178,7 +178,7 @@ bool CMoveItemsWindow::OnContainerSpinnerValueChanged(const CEGUI::EventArgs& e)
 {
 	if (IgnoreSpinnerValueEvent) OK;
 
-	WORD Value = (WORD)pContSpn->getCurrentValue();
+	U16 Value = (U16)pContSpn->getCurrentValue();
 	IgnoreSpinnerValueEvent = true;
 	pInvSpn->setCurrentValue(ItemsTotalCount - Value);
 	IgnoreSpinnerValueEvent = false;
@@ -191,7 +191,7 @@ bool CMoveItemsWindow::OnInventorySpinnerValueChanged(const CEGUI::EventArgs& e)
 {
 	if (IgnoreSpinnerValueEvent) OK;
 
-	WORD Value = (WORD)pInvSpn->getCurrentValue();
+	U16 Value = (U16)pInvSpn->getCurrentValue();
 	IgnoreSpinnerValueEvent = true;
 	pContSpn->setCurrentValue(ItemsTotalCount - Value);
 	IgnoreSpinnerValueEvent = false;

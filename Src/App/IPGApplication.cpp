@@ -51,6 +51,10 @@ bool CIPGApplication::Open()
 	if (!ProjDir.IsValid()) ProjDir = IOSrv->GetAssign("Home");
 	IOSrv->SetAssign("Proj", ProjDir);
 
+	//!!!DBG TMP!
+	//Check refcount
+	Data::CData Data = Data::PParams(n_new(Data::CParams));
+
 	CString AppData;
 	AppData.Format("AppData:%s/%s", GetVendorName(), GetAppName());
 	IOSrv->SetAssign("AppData", IOSrv->ResolveAssigns(AppData));
@@ -67,7 +71,7 @@ bool CIPGApplication::Open()
 		for (int i = 0; i < PathList->GetCount(); ++i)
 			IOSrv->SetAssign(PathList->Get(i).GetName().CStr(), IOSrv->ResolveAssigns(PathList->Get<CString>(i)));
 
-	// Store reference just in case. It is a dispatcher and ma be assigned to a smart ptr somewhere.
+	// Store reference just in case. It is a dispatcher and may be assigned to a smart ptr somewhere.
 	EventServer = n_new(Events::CEventServer);
 
 	n_new(Time::CTimeServer);
@@ -109,7 +113,7 @@ bool CIPGApplication::Open()
 
 	// Rendering
 
-	const bool UseD3D9 = true;
+	const bool UseD3D9 = false;
 	const char* pCEGUIVS;
 	const char* pCEGUIPS;
 	if (UseD3D9)
@@ -117,7 +121,6 @@ bool CIPGApplication::Open()
 		Render::PD3D9DriverFactory Fct = n_new(Render::CD3D9DriverFactory);
 		Fct->Open(MainWindow);
 		VideoDrvFct = Fct;
-		//!!!register mesh & texture loaders!
 
 		ResourceMgr->RegisterDefaultLoader("vsh", &Render::CShader::RTTI, &Resources::CD3D9ShaderLoader::RTTI);
 		ResourceMgr->RegisterDefaultLoader("psh", &Render::CShader::RTTI, &Resources::CD3D9ShaderLoader::RTTI);
@@ -130,17 +133,15 @@ bool CIPGApplication::Open()
 		Render::PD3D11DriverFactory Fct = n_new(Render::CD3D11DriverFactory);
 		Fct->Open();
 		VideoDrvFct = Fct;
-		//!!!register mesh & texture loaders!
 
-		//!!!set CD3D11Shader type!
+		//???rsrc storage - not singleton? may register one global, one D3D9 and one D3D11 resource storage,
+		//and manage resource location in a central manager. How to load both versions if the same resource transparently?
 		ResourceMgr->RegisterDefaultLoader("vsh", &Render::CShader::RTTI, &Resources::CD3D11VertexShaderLoader::RTTI);
 		ResourceMgr->RegisterDefaultLoader("psh", &Render::CShader::RTTI, &Resources::CD3D11PixelShaderLoader::RTTI);
 
 		pCEGUIVS = "Shaders:Bin/4.vsh";
 		pCEGUIPS = "Shaders:Bin/5.psh";
 	}
-	//???or loaders are universal and use abstract GPUDriver as a factory?
-	//???or register parallel loaders for D3D9 and D3D11, but there is no practical reason!
 
 	GPU = VideoDrvFct->CreateGPUDriver(Render::Adapter_Primary, Render::GPU_Hardware);
 	n_assert(GPU.IsValidPtr());
@@ -160,149 +161,28 @@ bool CIPGApplication::Open()
 
 	SCIdx = GPU->CreateSwapChain(BBDesc, SCDesc, MainWindow);
 
-	{
-		Render::CTextureDesc TexDesc;
-		TexDesc.Type = Render::Texture_2D;
-		TexDesc.Width = 256;
-		TexDesc.Height = 256;
-		//TexDesc.Depth = 128;
-		TexDesc.ArraySize = 1;
-		TexDesc.MipLevels = 1;
-		TexDesc.MSAAQuality = Render::MSAA_None;
-		TexDesc.Format = Render::PixelFmt_B8G8R8A8; //PixelFmt_DXT1;
-		Render::PTexture Tex = GPU->CreateTexture(TexDesc, Render::Access_GPU_Read /*| Render::Access_CPU_Write*/, NULL);
-		n_assert(Tex.IsValidPtr());
-
-		//!!!profile align16 copying vs non-aligned!
-		char* pData = (char*)n_malloc_aligned(4 * 1024 * 1024, 16);
-		char* pData2 = (char*)n_malloc_aligned(4 * 1024 * 1024, 16);
-		memset(pData, 0x40, 4 * 1024 * 1024 * sizeof(char));
-		memset(pData2, 0x00, 4 * 1024 * 1024 * sizeof(char));
-		Render::CImageData Data;
-		Data.pData = pData;
-		Data.RowPitch = Tex->GetRowPitch();
-		n_assert(GPU->WriteToResource(*Tex, Data));
-		Data.pData = pData2;
-		n_assert(GPU->ReadFromResource(Data, *Tex));
-		n_free_aligned(pData);
-		n_free_aligned(pData2);
-	}
-
-	{
-		Render::CVertexComponent Components[] = {
-				{ Render::VCSem_Position, NULL, 0, Render::VCFmt_Float32_3, 0, DEM_VERTEX_COMPONENT_OFFSET_DEFAULT },
-				{ Render::VCSem_Color, NULL, 0, Render::VCFmt_UInt8_4_Norm, 0, DEM_VERTEX_COMPONENT_OFFSET_DEFAULT },
-				{ Render::VCSem_TexCoord, NULL, 0, Render::VCFmt_Float32_2, 0, DEM_VERTEX_COMPONENT_OFFSET_DEFAULT } };
-
-		Render::PVertexLayout VertexLayout = GPU->CreateVertexLayout(Components, sizeof_array(Components));
-		n_assert(VertexLayout.IsValidPtr());
-
-		Render::PVertexBuffer VB = GPU->CreateVertexBuffer(*VertexLayout, 16, Render::Access_GPU_Read);
-		n_assert(VB.IsValidPtr());
-
-		Render::PIndexBuffer IB = GPU->CreateIndexBuffer(Render::Index_32, 64, Render::Access_GPU_Read | Render::Access_CPU_Write);
-		n_assert(IB.IsValidPtr());
-
-		char Data[65536];
-		memset(Data, 0x40, sizeof(Data));
-		n_assert(GPU->WriteToResource(*VB, Data));
-		n_assert(GPU->WriteToResource(*IB, Data));
-	}
-
-	//{
-	//	Render::PConstantBuffer CB = GPU->CreateConstantBuffer(*n_new(Render::CD3D11Shader), CStrID::Empty, 0, NULL);
-	//}
-
-	{
-		//!!!load shaders! can create PShader objects manually, not from file/URI!
-
-		Render::CRenderStateDesc RSDesc;
-		Render::CRenderStateDesc::CRTBlend& RTBlendDesc = RSDesc.RTBlend[0];
-		RSDesc.SetDefaults();
-		RSDesc.VertexShader = NULL;
-		RSDesc.PixelShader = NULL;
-		RSDesc.Flags.Set(Render::CRenderStateDesc::Blend_RTBlendEnable << 0);
-		RSDesc.Flags.Clear(Render::CRenderStateDesc::DS_DepthEnable |
-						   Render::CRenderStateDesc::DS_DepthWriteEnable |
-						   Render::CRenderStateDesc::Rasterizer_DepthClipEnable |
-						   Render::CRenderStateDesc::Rasterizer_Wireframe |
-						   Render::CRenderStateDesc::Rasterizer_CullFront |
-						   Render::CRenderStateDesc::Rasterizer_CullBack |
-						   Render::CRenderStateDesc::Blend_AlphaToCoverage |
-						   Render::CRenderStateDesc::Blend_Independent);
-
-		// Normal blend
-		RTBlendDesc.SrcBlendArgAlpha = Render::BlendArg_InvDestAlpha;
-		RTBlendDesc.DestBlendArgAlpha = Render::BlendArg_One;
-		RTBlendDesc.SrcBlendArg = Render::BlendArg_SrcAlpha;
-		RTBlendDesc.DestBlendArg = Render::BlendArg_InvSrcAlpha;
-
-		// Unclipped
-		RSDesc.Flags.Clear(Render::CRenderStateDesc::Rasterizer_ScissorEnable);
-
-		Render::PRenderState NormalUnclipped = GPU->CreateRenderState(RSDesc);
-		n_assert(NormalUnclipped.IsValidPtr());
-
-		// Clipped
-		RSDesc.Flags.Set(Render::CRenderStateDesc::Rasterizer_ScissorEnable);
-
-		Render::PRenderState NormalClipped = GPU->CreateRenderState(RSDesc);
-		n_assert(NormalClipped.IsValidPtr());
-
-		// Premultiplied alpha blend
-		RTBlendDesc.SrcBlendArgAlpha = Render::BlendArg_One;
-		RTBlendDesc.DestBlendArgAlpha = Render::BlendArg_InvSrcAlpha;
-		RTBlendDesc.SrcBlendArg = Render::BlendArg_One;
-		RTBlendDesc.DestBlendArg = Render::BlendArg_InvSrcAlpha;
-
-		Render::PRenderState PremultipliedClipped = GPU->CreateRenderState(RSDesc);
-		n_assert(PremultipliedClipped.IsValidPtr());
-
-		// Unclipped
-		RSDesc.Flags.Clear(Render::CRenderStateDesc::Rasterizer_ScissorEnable);
-
-		Render::PRenderState PremultipliedUnclipped = GPU->CreateRenderState(RSDesc);
-		n_assert(PremultipliedUnclipped.IsValidPtr());
-	}
-
 ////////////////////////////
 //!!!DBG TMP!
 	SCIdx2 = GPU->CreateSwapChain(BBDesc, SCDesc, Wnd2);
 	n_assert(GPU->SwapChainExists(SCIdx2));
 ////////////////////////////
 
-	////DBG TMP check asm for fabs
-	//volatile int xxx = n_fequal(0.533f, 0.53346f, 0.001f);
-
 	{
 		const Render::CRenderTargetDesc& RealRTDesc = GPU->GetSwapChainRenderTarget(SCIdx)->GetDesc();
-		//if (xxx && RealRTDesc.Width > 0)
-		//{
-			Render::CRenderTargetDesc DSDesc;
-			DSDesc.Format = Render::PixelFmt_DefaultDepthBuffer;
-			DSDesc.MSAAQuality = Render::MSAA_None;
-			DSDesc.UseAsShaderInput = false;
-			DSDesc.MipLevels = 0;
-			DSDesc.Width = RealRTDesc.Width;
-			DSDesc.Height = RealRTDesc.Height;
+		Render::CRenderTargetDesc DSDesc;
+		DSDesc.Format = Render::PixelFmt_DefaultDepthBuffer;
+		DSDesc.MSAAQuality = Render::MSAA_None;
+		DSDesc.UseAsShaderInput = false;
+		DSDesc.MipLevels = 0;
+		DSDesc.Width = RealRTDesc.Width;
+		DSDesc.Height = RealRTDesc.Height;
 
-			Render::PDepthStencilBuffer DSBuf = GPU->CreateDepthStencilBuffer(DSDesc);
-			n_assert(DSBuf.IsValidPtr());
-		//}
+		Render::PDepthStencilBuffer DSBuf = GPU->CreateDepthStencilBuffer(DSDesc);
+		n_assert(DSBuf.IsValidPtr());
 	}
 
-	//Render::PFrameShader DefaultFrameShader = n_new(Render::CFrameShader);
-	//n_assert(DefaultFrameShader->Init(*DataSrv->LoadPRM("Shaders:Default.prm")));
-	//RenderServer->AddFrameShader(CStrID("Default"), DefaultFrameShader);
-	//RenderServer->SetScreenFrameShaderID(CStrID("Default"));
-
-	InputServer = n_new(Input::CInputServer);
-	InputServer->Open();
-
-	VideoServer = n_new(Video::CVideoServer);
-	VideoServer->Open();
-
-	//!!!DBG TMP!
+	//!!!DBG TMP! frame management subject. CEGUI remembers curr viewport, so it must be set.
+	//also we must notify clients like CEGUI when RT size changes!
 	if (SCIdx >= 0)
 	{
 		Render::PRenderTarget RT = GPU->GetSwapChainRenderTarget(SCIdx);
@@ -311,6 +191,15 @@ bool CIPGApplication::Open()
 			GPU->SetRenderTarget(0, RT);
 		}
 	}
+
+//	n_new(Frame::CFrameServer);
+	//!!!register view per swap chain! scenes, GUI contexts!
+
+	InputServer = n_new(Input::CInputServer);
+	InputServer->Open();
+
+	VideoServer = n_new(Video::CVideoServer);
+	VideoServer->Open();
 
 	//!!!can use different GUI contexts, one per swap chain!
 	//!!!need to compile properly named non-effect shaders!
@@ -472,7 +361,7 @@ bool CIPGApplication::AdvanceFrame()
 //!!!DBG TMP!
 	if (!Wnd2->IsOpen())
 	{
-		Wnd2->SetWindowClass(*(Sys::COSWindowClassWin32*)EngineWindowClass.GetUnsafe()); //!!!bad design!
+		Wnd2->SetWindowClass(*(Sys::COSWindowClassWin32*)EngineWindowClass.GetUnsafe()); //!!!bad design! use handle?
 		Wnd2->SetTitle("Window 2");
 		Wnd2->SetRect(Data::CRect(900, 50, 150, 200));
 		Wnd2->Open();
@@ -572,6 +461,8 @@ void CIPGApplication::Close()
 
 	if (InputServer.IsValidPtr() && InputServer->IsOpen()) InputServer->Close();
 	InputServer = NULL;
+
+//	n_delete(FrameSrv);
 
 	//if (LoaderServer.IsValid() && LoaderServer->IsOpen()) LoaderServer->Close();
 	//LoaderServer = NULL;

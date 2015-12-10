@@ -129,7 +129,7 @@ void CContainerWindow::FillList(CPropInventory* pInventory, CEGUI::Listbox* pLis
 		if (IgnoreEquippedItems && !Stack.GetNotEquippedCount()) continue;
 		Volume += Stack.GetTpl()->Volume * Stack.GetCount(); //???????
 
-		WORD Count = IgnoreEquippedItems ? Stack.GetNotEquippedCount() : Stack.GetCount();
+		U16 Count = IgnoreEquippedItems ? Stack.GetNotEquippedCount() : Stack.GetCount();
 
 		CString Name(Stack.GetTpl()->UIName.CStr());
 		if (Name.IsEmpty()) Name = Stack.GetItemID().CStr();

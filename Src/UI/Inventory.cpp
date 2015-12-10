@@ -101,7 +101,7 @@ void CInventory::Update()
 		CItemStack* pStack = pEquip->Slots.ValueAt(i).pStack;
 		if (pStack)
 		{
-			LPCSTR Name = pStack->GetTpl()->UIName.CStr();
+			const char* Name = pStack->GetTpl()->UIName.CStr();
 			Text += (Name) ? Name : pStack->GetItemID().CStr();
 		}
 		CEGUI::ListboxTextItem* NewItem =
