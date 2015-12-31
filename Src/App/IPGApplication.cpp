@@ -1,9 +1,5 @@
 #include "IPGApplication.h"
 
-#include <System/OSWindowClass.h>
-#include "AppStateMenu.h"
-#include "AppStateLoading.h"
-#include "AppStateGame.h"
 #include <Game/EntityLoaderCommon.h>
 #include <Game/EntityLoaderStatic.h>
 #include <Scene/PropSceneNode.h> //???!!!move all props from Prop:: to Game::?
@@ -13,10 +9,6 @@
 #include <Scripting/PropScriptable.h>
 #include <Animation/PropAnimation.h>
 #include <UI/PropUIControl.h>
-#include <Render/D3D11/D3D11DriverFactory.h>
-#include <Render/D3D11/D3D11ShaderLoaders.h>
-#include <Render/D3D9/D3D9DriverFactory.h>
-#include <Render/D3D9/D3D9ShaderLoaders.h>
 #include <Render/GPUDriver.h>
 #include <Render/Shader.h>
 #include <Render/Texture.h>
@@ -24,17 +16,33 @@
 #include <Render/DepthStencilBuffer.h>
 #include <Render/SwapChain.h>
 #include <Render/RenderStateDesc.h>
+#include <Frame/RenderPath.h>
+#include <Frame/RenderPathLoader.h>
+#include <Frame/View.h>
 #include <Resources/ResourceManager.h>
+#include <Resources/Resource.h>
 #include <Physics/PropPhysics.h>
 #include <Physics/PropCharacterController.h>
 #include <Dlg/PropTalking.h>
 #include <Items/Prop/PropEquipment.h>
 #include <Items/Prop/PropItem.h>
 #include <IO/IOServer.h>
+#include <IO/PathUtils.h>
 #include <SI/SI_L1.h>
 #include <SI/SI_L2.h>
 #include <SI/SI_L3.h>
+
+#include "AppStateMenu.h"
+#include "AppStateLoading.h"
+#include "AppStateGame.h"
+#include <Render/D3D11/D3D11DriverFactory.h>
+#include <Render/D3D11/D3D11ShaderLoaders.h>
+#include <Render/D3D9/D3D9DriverFactory.h>
+#include <Render/D3D9/D3D9ShaderLoaders.h>
+#include <System/OSWindowClass.h>
+
 #include <time.h> //???!!!wrap needed func in Time::?
+
 
 namespace App
 {
@@ -193,7 +201,30 @@ bool CIPGApplication::Open()
 	}
 
 //	n_new(Frame::CFrameServer);
-	//!!!register view per swap chain! scenes, GUI contexts!
+
+	ResourceMgr->RegisterDefaultLoader("hrd", &Frame::CRenderPath::RTTI, &Resources::CRenderPathLoader::RTTI);
+	ResourceMgr->RegisterDefaultLoader("prm", &Frame::CRenderPath::RTTI, &Resources::CRenderPathLoader::RTTI);
+
+	const char* pRenderPathURI = "Shaders:D3D11Forward.hrd";
+	Resources::PResource RRP = ResourceMgr->RegisterResource(pRenderPathURI);
+	if (!RRP->IsLoaded())
+	{
+		Resources::PResourceLoader Loader = RRP->GetLoader();
+		if (Loader.IsNullPtr())
+			Loader = ResourceMgr->CreateDefaultLoaderFor<Frame::CRenderPath>(PathUtils::GetExtension(pRenderPathURI));
+		ResourceMgr->LoadResourceSync(*RRP, *Loader);
+		n_assert(RRP->IsLoaded());
+	}
+
+	//!!!create scene views on level loading! this view is for menu, but even it must not be created here!
+	if (SCIdx >= 0)
+	{
+		Frame::CView* pView = n_new(Frame::CView); //???!!!where to deallocate? refcounted? own by frame server?
+		pView->RenderPath = (Frame::CRenderPath*)RRP->GetObject();
+		pView->RTs.SetSize(1);
+		pView->RTs[0] = GPU->GetSwapChainRenderTarget(SCIdx);
+		//???set GPUDrv?
+	}
 
 	InputServer = n_new(Input::CInputServer);
 	InputServer->Open();

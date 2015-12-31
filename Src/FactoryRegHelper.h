@@ -28,13 +28,14 @@
 #include <AI/Movement/Actions/ActionSteerToPosition.h>
 #include <AI/Planning/WorldStateSourceScript.h>
 
-// RENDERERS =======================================
+// RENDERING =======================================
 
 //#include <Render/Renderers/ModelRenderer.h>
 //#include <Render/Renderers/TerrainRenderer.h>
 //#include <Render/Renderers/DebugGeomRenderer.h>
 //#include <Render/Renderers/DebugTextRenderer.h>
 //#include <UI/UIRenderer.h>
+#include <UI/RenderPhaseGUI.h>
 
 // OTHER ===========================================
 
@@ -52,6 +53,7 @@ void ForceFactoryRegistration()
 	//Render::CDebugGeomRenderer::ForceFactoryRegistration();
 	//Render::CDebugTextRenderer::ForceFactoryRegistration();
 	//Render::CUIRenderer::ForceFactoryRegistration();
+	Frame::CRenderPhaseGUI::ForceFactoryRegistration();
 
 	AI::CActionTplIdle::ForceFactoryRegistration();
 	AI::CActionTplWander::ForceFactoryRegistration();

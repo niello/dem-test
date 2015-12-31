@@ -1,0 +1,5 @@
+"C:\Program Files (x86)\CEGUI\CEED-0.8.0\ceed-migrate" --sourceType "CEGUI layout 3" --targetType "CEGUI layout 4" layout "layouts/MainMenu.layout" "layouts/MainMenu08.layout"
+"C:\Program Files (x86)\CEGUI\CEED-0.8.0\ceed-migrate" --sourceType "CEGUI layout 3" --targetType "CEGUI layout 4" layout "layouts/Console.layout" "layouts/Console08.layout"
+"C:\Program Files (x86)\CEGUI\CEED-0.8.0\ceed-migrate" --sourceType "CEGUI layout 3" --targetType "CEGUI layout 4" layout "layouts/IngameScreen.layout" "layouts/IngameScreen08.layout"
+"C:\Program Files (x86)\CEGUI\CEED-0.8.0\ceed-migrate" --sourceType "CEGUI layout 3" --targetType "CEGUI layout 4" layout "layouts/LoadingScreen.layout" "layouts/LoadingScreen08.layout"
+"C:\Program Files (x86)\CEGUI\CEED-0.8.0\ceed-migrate" --sourceType "CEGUI layout 3" --targetType "CEGUI layout 4" layout "layouts/Watcher.layout" "layouts/Watcher08.layout"

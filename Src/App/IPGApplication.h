@@ -26,8 +26,12 @@
 #include <Render/DisplayMode.h>
 #include <Render/VideoDriverFactory.h>
 #include <Video/VideoServer.h>
+//!!!move platform-specific code to separate module!
 #ifdef RegisterClass
 #undef RegisterClass
+#endif
+#ifdef GetObject
+#undef GetObject
 #endif
 
 namespace Sys
