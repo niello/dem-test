@@ -25,7 +25,9 @@ CAppStateLoading::CAppStateLoading(CStrID StateID): CStateHandler(StateID)
 	//!!!tmp, need to revisit window management!
 	LoadingScreen = n_new(UI::CLoadingScreen);
 	LoadingScreen->Load("LoadingScreen.layout");
-	UISrv->RegisterScreen(CStrID("LoadingScreen"), LoadingScreen);
+
+	NOT_IMPLEMENTED;
+	//UISrv->RegisterScreen(CStrID("LoadingScreen"), LoadingScreen);
 }
 //---------------------------------------------------------------------
 
@@ -46,9 +48,10 @@ void CAppStateLoading::OnStateEnter(CStrID PrevState, PParams Params)
 
 	GameSrv->PauseGame(true);
 
-	UISrv->SetRootScreen(LoadingScreen);
-	UISrv->ShowGUI();
-	UISrv->HideMouseCursor();
+	NOT_IMPLEMENTED;
+	//UISrv->SetRootScreen(LoadingScreen);
+	//UISrv->ShowGUI();
+	//UISrv->HideMouseCursor();
 
 	//!!!DBG HACK for sync loading!
 	OnFrame();
@@ -139,8 +142,9 @@ void CAppStateLoading::OnStateEnter(CStrID PrevState, PParams Params)
 
 void CAppStateLoading::OnStateLeave(CStrID NextState)
 {
-	UISrv->HideGUI();
-	UISrv->ShowMouseCursor();
+	NOT_IMPLEMENTED;
+	//UISrv->HideGUI();
+	//UISrv->ShowMouseCursor();
 	GameSrv->PauseGame(false);
 }
 //---------------------------------------------------------------------

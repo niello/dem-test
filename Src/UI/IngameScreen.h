@@ -19,7 +19,7 @@ class CInventory;
 class CMoveItemsWindow;
 class CTipWindow;
 
-class CIngameScreen: public CUIWindow //???CUIWindow or CScreen derivative? CScreen owns CDict<CStrID, CUIWindow>
+class CIngameScreen: public CUIWindow
 {
 	__DeclareClassNoFactory;
 

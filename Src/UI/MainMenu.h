@@ -16,7 +16,7 @@ namespace CEGUI
 namespace UI
 {
 
-class CMainMenu: public CUIWindow //???CUIWindow or CScreen derivative? CScreen owns CDict<CStrID, CUIWindow>
+class CMainMenu: public CUIWindow
 {
 	__DeclareClassNoFactory;
 

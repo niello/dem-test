@@ -45,6 +45,11 @@ namespace Render
 	class CVideoDriverFactory;
 }
 
+namespace UI
+{
+	typedef Ptr<class CUIContext> PUIContext;
+}
+
 namespace App
 {
 #define IPGApp App::CIPGApplication::Instance()
@@ -71,7 +76,6 @@ private:
 
 	Sys::POSWindowClass					EngineWindowClass;
 	Ptr<Render::CVideoDriverFactory>	VideoDrvFct;
-	Render::PGPUDriver					GPU;
 
 	Ptr<RPG::CWorldManager>				WorldManager;
 	Ptr<Story::CQuestManager>			QuestManager;
@@ -84,10 +88,14 @@ private:
 public:
 
 	CAppFSM								FSM;
+
+	Render::PGPUDriver					GPU;
 	Sys::POSWindow						MainWindow;
+	int									MainSwapChainIndex; //???or get by window?
+	UI::PUIContext						MainUIContext;
 
 	//!!!DBG TMP!
-	Sys::POSWindow Wnd2; int SCIdx, SCIdx2;
+	Sys::POSWindow Wnd2; int SCIdx2;
 
 	CIPGApplication() { __ConstructSingleton; }
 	~CIPGApplication() { __DestructSingleton; }

@@ -7,7 +7,7 @@
 #include <Quests/QuestManager.h>
 #include <Factions/FactionManager.h>
 #include <Debug/DebugServer.h>
-#include <UI/UIServer.h>
+#include <UI/UIContext.h>
 #include <UI/IngameScreen.h>
 #include <Events/EventServer.h>
 #include <Time/TimeServer.h>
@@ -42,11 +42,6 @@ CAppStateGame::CAppStateGame(CStrID StateID):
 	CameraMoveZ(0.f),
 	CameraRotate(false)
 {
-	//!!!tmp, need to revisit window management!
-	IngameScreen = n_new(UI::CIngameScreen);
-	IngameScreen->Load("IngameScreen.layout");
-	UISrv->RegisterScreen(CStrID("IngameScreen"), IngameScreen);
-
 	PROFILER_INIT(profCompleteFrame, "CompleteFrame");
 	PROFILER_INIT(profRender, "Render_FrameTime");
 }
@@ -62,8 +57,13 @@ void CAppStateGame::OnStateEnter(CStrID PrevState, Data::PParams Params)
 	InputSrv->EnableContext(CStrID("Game"));
 
 	// Here we load HUD
-	UISrv->SetRootScreen(IngameScreen);
-	UISrv->ShowGUI();
+	if (IngameScreen.IsNullPtr())
+	{
+		IngameScreen = n_new(UI::CIngameScreen);
+		IngameScreen->Load("IngameScreen.layout");
+	}
+	IPGApp->MainUIContext->SetRootWindow(IngameScreen);
+	IPGApp->MainUIContext->ShowGUI();
 
 n_assert(false);
 	//if (RenderSrv->BeginFrame())
@@ -254,12 +254,13 @@ bool CAppStateGame::OnMouseMoveRaw(Events::CEventDispatcher* pDispatcher, const 
 	}
 	else if (pCamMgr->GetCameraNode())
 	{
-		if (UISrv->IsMouseOverGUI())
-		{
-			CameraMoveX = 0.f;
-			CameraMoveZ = 0.f;
-		}
-		else
+		NOT_IMPLEMENTED;
+		//if (UISrv->IsMouseOverGUI())
+		//{
+		//	CameraMoveX = 0.f;
+		//	CameraMoveZ = 0.f;
+		//}
+		//else
 		{
 			float XRel, YRel;
 			InputSrv->GetMousePosRel(XRel, YRel);

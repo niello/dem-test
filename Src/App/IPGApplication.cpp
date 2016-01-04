@@ -18,16 +18,13 @@
 #include <Render/RenderStateDesc.h>
 #include <Frame/RenderPath.h>
 #include <Frame/RenderPathLoader.h>
-#include <Frame/View.h>
 #include <Resources/ResourceManager.h>
-#include <Resources/Resource.h>
 #include <Physics/PropPhysics.h>
 #include <Physics/PropCharacterController.h>
 #include <Dlg/PropTalking.h>
 #include <Items/Prop/PropEquipment.h>
 #include <Items/Prop/PropItem.h>
 #include <IO/IOServer.h>
-#include <IO/PathUtils.h>
 #include <SI/SI_L1.h>
 #include <SI/SI_L2.h>
 #include <SI/SI_L3.h>
@@ -116,7 +113,7 @@ bool CIPGApplication::Open()
 	Wnd2->SetTitle("Window 2");
 	Wnd2->SetRect(Data::CRect(900, 50, 150, 200));
 	Wnd2->Open();
-	SCIdx = -1; SCIdx2 = -1;
+	SCIdx2 = -1;
 ///////////////////////
 
 	// Rendering
@@ -167,7 +164,7 @@ bool CIPGApplication::Open()
 	SCDesc.SwapMode = Render::SwapMode_CopyDiscard;
 	SCDesc.Flags = Render::SwapChain_AutoAdjustSize | Render::SwapChain_VSync;
 
-	SCIdx = GPU->CreateSwapChain(BBDesc, SCDesc, MainWindow);
+	MainSwapChainIndex = GPU->CreateSwapChain(BBDesc, SCDesc, MainWindow);
 
 ////////////////////////////
 //!!!DBG TMP!
@@ -176,7 +173,7 @@ bool CIPGApplication::Open()
 ////////////////////////////
 
 	{
-		const Render::CRenderTargetDesc& RealRTDesc = GPU->GetSwapChainRenderTarget(SCIdx)->GetDesc();
+		const Render::CRenderTargetDesc& RealRTDesc = GPU->GetSwapChainRenderTarget(MainSwapChainIndex)->GetDesc();
 		Render::CRenderTargetDesc DSDesc;
 		DSDesc.Format = Render::PixelFmt_DefaultDepthBuffer;
 		DSDesc.MSAAQuality = Render::MSAA_None;
@@ -189,42 +186,8 @@ bool CIPGApplication::Open()
 		n_assert(DSBuf.IsValidPtr());
 	}
 
-	//!!!DBG TMP! frame management subject. CEGUI remembers curr viewport, so it must be set.
-	//also we must notify clients like CEGUI when RT size changes!
-	if (SCIdx >= 0)
-	{
-		Render::PRenderTarget RT = GPU->GetSwapChainRenderTarget(SCIdx);
-		if (RT.IsValidPtr() && RT->IsValid())
-		{
-			GPU->SetRenderTarget(0, RT);
-		}
-	}
-
-//	n_new(Frame::CFrameServer);
-
 	ResourceMgr->RegisterDefaultLoader("hrd", &Frame::CRenderPath::RTTI, &Resources::CRenderPathLoader::RTTI);
 	ResourceMgr->RegisterDefaultLoader("prm", &Frame::CRenderPath::RTTI, &Resources::CRenderPathLoader::RTTI);
-
-	const char* pRenderPathURI = "Shaders:D3D11Forward.hrd";
-	Resources::PResource RRP = ResourceMgr->RegisterResource(pRenderPathURI);
-	if (!RRP->IsLoaded())
-	{
-		Resources::PResourceLoader Loader = RRP->GetLoader();
-		if (Loader.IsNullPtr())
-			Loader = ResourceMgr->CreateDefaultLoaderFor<Frame::CRenderPath>(PathUtils::GetExtension(pRenderPathURI));
-		ResourceMgr->LoadResourceSync(*RRP, *Loader);
-		n_assert(RRP->IsLoaded());
-	}
-
-	//!!!create scene views on level loading! this view is for menu, but even it must not be created here!
-	if (SCIdx >= 0)
-	{
-		Frame::CView* pView = n_new(Frame::CView); //???!!!where to deallocate? refcounted? own by frame server?
-		pView->RenderPath = (Frame::CRenderPath*)RRP->GetObject();
-		pView->RTs.SetSize(1);
-		pView->RTs[0] = GPU->GetSwapChainRenderTarget(SCIdx);
-		//???set GPUDrv?
-	}
 
 	InputServer = n_new(Input::CInputServer);
 	InputServer->Open();
@@ -232,9 +195,12 @@ bool CIPGApplication::Open()
 	VideoServer = n_new(Video::CVideoServer);
 	VideoServer->Open();
 
-	//!!!can use different GUI contexts, one per swap chain!
+	//!!!FIXME! stupid dependency of CEGUI on viewport settings
+	GPU->SetRenderTarget(0, GPU->GetSwapChainRenderTarget(MainSwapChainIndex));
+
 	//!!!need to compile properly named non-effect shaders!
-	UIServer = n_new(UI::CUIServer)(*GPU, SCIdx, pCEGUIVS, pCEGUIPS);
+	//???redesign not to create default context with new CEGUI?
+	UIServer = n_new(UI::CUIServer)(*GPU, MainSwapChainIndex, pCEGUIVS, pCEGUIPS);
 	DbgSrv->AllowUI(true);
 
 	n_new(Scripting::CScriptServer);
@@ -267,8 +233,10 @@ bool CIPGApplication::Open()
 		UISrv->LoadFont("DejaVuSans-14.font");
 		UISrv->LoadFont("CourierNew-10.font");
 		UISrv->LoadScheme("TaharezLook.scheme");
-		UISrv->SetDefaultMouseCursor("TaharezLook/MouseArrow");
 	}
+
+	MainUIContext = UISrv->GetDefaultContext();
+	n_assert(MainUIContext.IsValidPtr());
 
 	Sys::Log("InitGameSystem() ...\n");
 
@@ -415,21 +383,6 @@ bool CIPGApplication::AdvanceFrame()
 ///////////////////////
 
 	//!!!TMP DBG!
-	if (SCIdx >= 0)
-	{
-		Render::PRenderTarget RT = GPU->GetSwapChainRenderTarget(SCIdx);
-		if (RT.IsValidPtr() && RT->IsValid())
-		{
-			GPU->SetRenderTarget(0, RT);
-			if (GPU->BeginFrame())
-			{
-				GPU->ClearRenderTarget(*RT, vector4(0.1f, 0.7f, 0.1f, 1.f));
-				UISrv->Render();
-				GPU->EndFrame();
-				GPU->Present(SCIdx);
-			}
-		}
-	}
 	if (SCIdx2 >= 0)
 	{
 		Render::PRenderTarget RT = GPU->GetSwapChainRenderTarget(SCIdx2);
@@ -467,6 +420,7 @@ void CIPGApplication::Close()
 	PhysicsServer = NULL;
 
 	DbgSrv->AllowUI(false);
+	MainUIContext = NULL;
 	UIServer = NULL;
 
 	if (VideoServer.IsValidPtr() && VideoServer->IsOpen()) VideoServer->Close();

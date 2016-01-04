@@ -3,6 +3,7 @@
 #define __IPG_APP_STATE_MENU_H__
 
 #include <App/StateHandler.h>
+#include <Frame/View.h>
 
 // Main menu handler
 
@@ -14,6 +15,8 @@ class CAppStateMenu: public CStateHandler
 	__DeclareClassNoFactory;
 
 protected:
+
+	Frame::CView	MenuView;
 
 public:
 

@@ -67,7 +67,8 @@ bool CActionListPopup::OnShow(Events::CEventDispatcher* pDispatcher, const Event
 
 	if (((CEGUI::PopupMenu*)pWnd)->getItemCount())
 	{
-		SetPosition(UISrv->GetMousePositionU());
+		CEGUI::Vector2f Pos = pWnd->getGUIContext().getMouseCursor().getPosition();
+		SetPosition(CEGUI::UVector2(CEGUI::UDim(0.f, Pos.d_x), CEGUI::UDim(0.f, Pos.d_y)));
 		Show();
 	}
 	else Hide();
@@ -97,7 +98,7 @@ bool CActionListPopup::OnClickOutsideRect(const CEGUI::EventArgs& e)
 {
 	//!!!check is outside rect! subscribe & process event correctly!
 	//!!!NOW DIRTY HACK!
-	CEGUI::Vector2f p = UISrv->GetMousePosition();
+	CEGUI::Vector2f p = pWnd->getGUIContext().getMouseCursor().getPosition();
 	p.d_x += 2.f;
 	p.d_y += 2.f;
 	if (!pWnd->isHit(p, true))
