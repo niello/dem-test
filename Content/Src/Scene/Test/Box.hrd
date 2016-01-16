@@ -1,7 +1,7 @@
 Attrs
 [
 	{
-		Class = "Model"
+		Class = "Frame::CModel"
 		
 		Material = 'Test/Material'
 		Vars

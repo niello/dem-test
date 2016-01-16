@@ -1,18 +1,24 @@
-<GUILayout version="4">
-    <Window name="LoadingScreen" type="DefaultWindow">
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4" >
+    <Window type="DefaultWindow" name="LoadingScreen" >
         <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
-        <Window name="BG" type="TaharezLook/StaticImage">
-            <Property name="Font" value="DejaVuSans-14" />
+        <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        <Window type="TaharezLook/StaticImage" name="BG" >
+            <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
             <Property name="Text" value="LOADING..." />
-            <Property name="Area" value="{{0.0226563,0},{0.0319885,0},{0.979688,0},{0.954899,0}}" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
         </Window>
-        <Window name="Text" type="TaharezLook/StaticText">
-            <Property name="Font" value="DejaVuSans-14" />
+        <Window type="TaharezLook/StaticText" name="Text" >
+            <Property name="Area" value="{{0.375,0},{0.375,0},{0.625,0},{0.625,0}}" />
             <Property name="Text" value="LOADING..." />
-            <Property name="HorzExtent" value="105" />
-            <Property name="VertExtent" value="19.6254" />
-            <Property name="HorzFormatting" value="HorzCentred" />
-            <Property name="Area" value="{{0.382031,0},{0.356196,0},{0.632031,0},{0.606196,0}}" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+            <Property name="HorzFormatting" value="CentreAligned" />
+            <Property name="BackgroundEnabled" value="false" />
+            <Property name="HorzScrollPageSize" value="243.2" />
+            <Property name="VertScrollPageSize" value="179.2" />
+            <Property name="HorzScrollDocumentSize" value="96" />
+            <Property name="VertScrollDocumentSize" value="19.8618" />
         </Window>
     </Window>
 </GUILayout>

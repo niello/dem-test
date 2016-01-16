@@ -2,7 +2,7 @@ Translation = (-0.009451, 0.114683, -0.001121)
 Attrs
 [
 	{
-		Class = "Model"
+		Class = "Frame::CModel"
 		Material = 'Vgt/Bush01'
 		Mesh = 'Vgt/Bush01'
 		BatchType = 'ATest'

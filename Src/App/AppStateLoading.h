@@ -3,7 +3,7 @@
 #define __IPG_APP_STATE_LOADING_H__
 
 #include <App/StateHandler.h>
-#include <Debug/Profiler.h>
+#include <Frame/View.h>
 
 // Handles state during the level loading
 
@@ -22,12 +22,13 @@ class CAppStateLoading: public CStateHandler
 protected:
 
 	Ptr<UI::CLoadingScreen> LoadingScreen;
+	Frame::CView			View; //???main App view instead of per-state?! one window anyway!
 
 	void DeleteUnreferencedResources();
 
 public:
 
-	CAppStateLoading(CStrID StateID);
+	CAppStateLoading(CStrID StateID): CStateHandler(StateID) {}
 
 	virtual void	OnStateEnter(CStrID PrevState, Data::PParams Params = NULL);
 	virtual void	OnStateLeave(CStrID NextState);

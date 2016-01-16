@@ -1,3 +1,7 @@
+#pragma once
+#ifndef __IPG_APPLICATION_H__
+#define __IPG_APPLICATION_H__
+
 #include <App/AppFSM.h>
 
 #include <System/OSWindow.h>
@@ -120,3 +124,5 @@ inline const char* CIPGApplication::GetAppVersion() const
 //---------------------------------------------------------------------
 
 }
+
+#endif

@@ -16,8 +16,11 @@
 #include <Render/DepthStencilBuffer.h>
 #include <Render/SwapChain.h>
 #include <Render/RenderStateDesc.h>
+#include <Render/Mesh.h>
+#include <Render/MeshLoaderNVX2.h>
 #include <Frame/RenderPath.h>
 #include <Frame/RenderPathLoader.h>
+#include <Physics/CollisionShapeLoader.h>
 #include <Resources/ResourceManager.h>
 #include <Physics/PropPhysics.h>
 #include <Physics/PropCharacterController.h>
@@ -118,7 +121,7 @@ bool CIPGApplication::Open()
 
 	// Rendering
 
-	const bool UseD3D9 = false;
+	const bool UseD3D9 = true;
 	const char* pCEGUIVS;
 	const char* pCEGUIPS;
 	if (UseD3D9)
@@ -166,28 +169,32 @@ bool CIPGApplication::Open()
 
 	MainSwapChainIndex = GPU->CreateSwapChain(BBDesc, SCDesc, MainWindow);
 
+	const Render::CRenderTargetDesc& RealBackBufDesc = GPU->GetSwapChainRenderTarget(MainSwapChainIndex)->GetDesc();
+
+	{
+		Render::CRenderTargetDesc DSDesc;
+		DSDesc.Format = Render::PixelFmt_DefaultDepthBuffer;
+		DSDesc.MSAAQuality = Render::MSAA_None;
+		DSDesc.UseAsShaderInput = false;
+		DSDesc.MipLevels = 0;
+		DSDesc.Width = RealBackBufDesc.Width;
+		DSDesc.Height = RealBackBufDesc.Height;
+
+		Render::PDepthStencilBuffer DSBuf = GPU->CreateDepthStencilBuffer(DSDesc);
+		n_assert(DSBuf.IsValidPtr());
+	}
+
 ////////////////////////////
 //!!!DBG TMP!
 	SCIdx2 = GPU->CreateSwapChain(BBDesc, SCDesc, Wnd2);
 	n_assert(GPU->SwapChainExists(SCIdx2));
 ////////////////////////////
 
-	{
-		const Render::CRenderTargetDesc& RealRTDesc = GPU->GetSwapChainRenderTarget(MainSwapChainIndex)->GetDesc();
-		Render::CRenderTargetDesc DSDesc;
-		DSDesc.Format = Render::PixelFmt_DefaultDepthBuffer;
-		DSDesc.MSAAQuality = Render::MSAA_None;
-		DSDesc.UseAsShaderInput = false;
-		DSDesc.MipLevels = 0;
-		DSDesc.Width = RealRTDesc.Width;
-		DSDesc.Height = RealRTDesc.Height;
-
-		Render::PDepthStencilBuffer DSBuf = GPU->CreateDepthStencilBuffer(DSDesc);
-		n_assert(DSBuf.IsValidPtr());
-	}
-
 	ResourceMgr->RegisterDefaultLoader("hrd", &Frame::CRenderPath::RTTI, &Resources::CRenderPathLoader::RTTI);
 	ResourceMgr->RegisterDefaultLoader("prm", &Frame::CRenderPath::RTTI, &Resources::CRenderPathLoader::RTTI);
+	ResourceMgr->RegisterDefaultLoader("hrd", &Physics::CCollisionShape::RTTI, &Resources::CCollisionShapeLoader::RTTI);
+	ResourceMgr->RegisterDefaultLoader("prm", &Physics::CCollisionShape::RTTI, &Resources::CCollisionShapeLoader::RTTI);
+	ResourceMgr->RegisterDefaultLoader("nvx2", &Render::CMesh::RTTI, &Resources::CMeshLoaderNVX2::RTTI);
 
 	InputServer = n_new(Input::CInputServer);
 	InputServer->Open();
@@ -195,12 +202,9 @@ bool CIPGApplication::Open()
 	VideoServer = n_new(Video::CVideoServer);
 	VideoServer->Open();
 
-	//!!!FIXME! stupid dependency of CEGUI on viewport settings
-	GPU->SetRenderTarget(0, GPU->GetSwapChainRenderTarget(MainSwapChainIndex));
-
 	//!!!need to compile properly named non-effect shaders!
 	//???redesign not to create default context with new CEGUI?
-	UIServer = n_new(UI::CUIServer)(*GPU, MainSwapChainIndex, pCEGUIVS, pCEGUIPS);
+	UIServer = n_new(UI::CUIServer)(*GPU, MainSwapChainIndex, (float)RealBackBufDesc.Width, (float)RealBackBufDesc.Height, pCEGUIVS, pCEGUIPS);
 	DbgSrv->AllowUI(true);
 
 	n_new(Scripting::CScriptServer);
@@ -323,7 +327,7 @@ bool CIPGApplication::Open()
 	Sys::Log("Setup L3 SI - OK\n");
 
 	FSM.AddStateHandler(n_new(CAppStateMenu(CStrID("Menu"))));
-	//FSM.AddStateHandler(n_new(CAppStateLoading(CStrID("Loading"))));
+	FSM.AddStateHandler(n_new(CAppStateLoading(CStrID("Loading"))));
 	//FSM.AddStateHandler(n_new(CAppStateGame(CStrID("Game"))));
 	
 	Sys::Log("Seting state: Menu...\n");

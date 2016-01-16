@@ -44,13 +44,13 @@ void CAppStateMenu::OnStateEnter(CStrID PrevState, Data::PParams Params)
 		IPGApp->MainUIContext->SetRootWindow(MainMenu);
 		IPGApp->MainUIContext->ShowGUI();
 		IPGApp->MainUIContext->SetDefaultMouseCursor("TaharezLook/MouseArrow");
+		IPGApp->MainUIContext->SubscribeOnInput(IPGApp->MainWindow.GetUnsafe(), 100);
 
 		MenuView.GPU = IPGApp->GPU;
 		MenuView.RenderPath = (Frame::CRenderPath*)RRP->GetObject();
 		MenuView.RTs.SetSize(1);
 		MenuView.RTs[0] = IPGApp->GPU->GetSwapChainRenderTarget(IPGApp->MainSwapChainIndex);
 		MenuView.UIContext = IPGApp->MainUIContext;
-		//???set GPUDrv?
 	}
 }
 //---------------------------------------------------------------------
@@ -59,13 +59,14 @@ void CAppStateMenu::OnStateLeave(CStrID NextState)
 {
 	if (MenuView.UIContext.IsValidPtr())
 	{
+		MenuView.UIContext->UnsubscribeFromInput();
 		MenuView.UIContext->HideGUI();
 		MenuView.UIContext->SetRootWindow(NULL);
+		MenuView.UIContext = NULL;
 	}
 
 	MenuView.RenderPath = NULL;
 	MenuView.RTs.SetSize(0);
-	MenuView.UIContext = NULL;
 }
 //---------------------------------------------------------------------
 

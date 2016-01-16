@@ -1,7 +1,7 @@
 Attrs
 [
 	{
-		Class = "Model"
+		Class = "Frame::CModel"
 
 		Material = 'Test/Material'
 		Vars
@@ -19,7 +19,7 @@ Attrs
 		BatchType = 'Solid'
 	},
 	{
-		Class = "Model"
+		Class = "Frame::CModel"
 
 		Material = 'Test/Material'
 		Vars

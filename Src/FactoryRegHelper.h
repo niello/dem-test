@@ -35,6 +35,8 @@
 //#include <Render/Renderers/DebugGeomRenderer.h>
 //#include <Render/Renderers/DebugTextRenderer.h>
 //#include <UI/UIRenderer.h>
+#include <Frame/Light.h>
+#include <Frame/Terrain.h>
 #include <UI/RenderPhaseGUI.h>
 
 // OTHER ===========================================
@@ -53,6 +55,8 @@ void ForceFactoryRegistration()
 	//Render::CDebugGeomRenderer::ForceFactoryRegistration();
 	//Render::CDebugTextRenderer::ForceFactoryRegistration();
 	//Render::CUIRenderer::ForceFactoryRegistration();
+	Frame::CLight::ForceFactoryRegistration();
+	Frame::CTerrain::ForceFactoryRegistration();
 	Frame::CRenderPhaseGUI::ForceFactoryRegistration();
 
 	AI::CActionTplIdle::ForceFactoryRegistration();

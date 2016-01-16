@@ -3,7 +3,11 @@
 #include <App/AppStates.h>
 #include <Game/GameServer.h>
 #include <UI/LoadingScreen.h>
-#include <UI/UIServer.h>
+#include <UI/UIContext.h>
+#include <Render/GPUDriver.h>
+#include <Frame/RenderPath.h>
+#include <Resources/ResourceManager.h>
+#include <Resources/Resource.h>
 #include <Data/DataServer.h>
 #include <Data/DataArray.h>
 #include <Debug/DebugServer.h>
@@ -12,24 +16,12 @@
 //#include <Audio/AudioServer.h>
 #include <Video/VideoServer.h>
 #include <Physics/PhysicsServer.h>
+#include <IO/PathUtils.h>
 #include <App/IPGApplication.h>
 
 namespace App
 {
 __ImplementClassNoFactory(App::CAppStateLoading, App::CStateHandler);
-
-using namespace Data;
-
-CAppStateLoading::CAppStateLoading(CStrID StateID): CStateHandler(StateID)
-{
-	//!!!tmp, need to revisit window management!
-	LoadingScreen = n_new(UI::CLoadingScreen);
-	LoadingScreen->Load("LoadingScreen.layout");
-
-	NOT_IMPLEMENTED;
-	//UISrv->RegisterScreen(CStrID("LoadingScreen"), LoadingScreen);
-}
-//---------------------------------------------------------------------
 
 void CAppStateLoading::DeleteUnreferencedResources()
 {
@@ -42,16 +34,38 @@ n_assert(false);
 }
 //---------------------------------------------------------------------
 
-void CAppStateLoading::OnStateEnter(CStrID PrevState, PParams Params)
+void CAppStateLoading::OnStateEnter(CStrID PrevState, Data::PParams Params)
 {
 	TimeSrv->Trigger();
-
 	GameSrv->PauseGame(true);
 
-	NOT_IMPLEMENTED;
-	//UISrv->SetRootScreen(LoadingScreen);
-	//UISrv->ShowGUI();
-	//UISrv->HideMouseCursor();
+	const char* pRenderPathURI = "Shaders:D3D11Forward.hrd";
+	Resources::PResource RRP = ResourceMgr->RegisterResource(pRenderPathURI);
+	if (!RRP->IsLoaded())
+	{
+		Resources::PResourceLoader Loader = RRP->GetLoader();
+		if (Loader.IsNullPtr())
+			Loader = ResourceMgr->CreateDefaultLoaderFor<Frame::CRenderPath>(PathUtils::GetExtension(pRenderPathURI));
+		ResourceMgr->LoadResourceSync(*RRP, *Loader);
+		n_assert(RRP->IsLoaded());
+	}
+
+	if (IPGApp->GPU->SwapChainExists(IPGApp->MainSwapChainIndex))
+	{
+		Ptr<UI::CLoadingScreen> LoadingScreen = n_new(UI::CLoadingScreen);
+		LoadingScreen->Load("LoadingScreen.layout");
+
+		IPGApp->MainUIContext->SetRootWindow(LoadingScreen);
+		IPGApp->MainUIContext->ShowGUI();
+		IPGApp->MainUIContext->HideMouseCursor();
+
+		View.GPU = IPGApp->GPU;
+		View.RenderPath = (Frame::CRenderPath*)RRP->GetObject();
+		View.RTs.SetSize(1);
+		View.RTs[0] = IPGApp->GPU->GetSwapChainRenderTarget(IPGApp->MainSwapChainIndex);
+		View.UIContext = IPGApp->MainUIContext;
+	}
+
 
 	//!!!DBG HACK for sync loading!
 	OnFrame();
@@ -73,7 +87,7 @@ void CAppStateLoading::OnStateEnter(CStrID PrevState, PParams Params)
 			CStrID LevelID = Params->Get<CStrID>(CStrID("LevelID"));
 			const CString& FileName = Params->Get<CString>(CStrID("FileName"));
 			n_assert(FileName.IsValid());
-			PParams Desc = DataSrv->LoadPRM(FileName);
+			Data::PParams Desc = DataSrv->LoadPRM(FileName);
 			n_assert(Desc.IsValidPtr());
 			GameSrv->LoadLevel(LevelID, *Desc);
 			break;
@@ -142,9 +156,17 @@ void CAppStateLoading::OnStateEnter(CStrID PrevState, PParams Params)
 
 void CAppStateLoading::OnStateLeave(CStrID NextState)
 {
-	NOT_IMPLEMENTED;
-	//UISrv->HideGUI();
-	//UISrv->ShowMouseCursor();
+	if (View.UIContext.IsValidPtr())
+	{
+		View.UIContext->HideGUI();
+		View.UIContext->ShowMouseCursor();
+		View.UIContext->SetRootWindow(NULL);
+		View.UIContext = NULL;
+	}
+
+	View.RenderPath = NULL;
+	View.RTs.SetSize(0);
+
 	GameSrv->PauseGame(false);
 }
 //---------------------------------------------------------------------
@@ -160,14 +182,22 @@ CStrID CAppStateLoading::OnFrame()
 	VideoSrv->Trigger();
 //	AudioSrv->Trigger();
 
-n_assert(false);
-	//if (RenderSrv->BeginFrame())
-	//{
-	//	RenderSrv->Clear(Render::Clear_All, 0xff000000, 1.f, 0); 
-	//	UISrv->Render();
-	//	RenderSrv->EndFrame();
-	//	RenderSrv->Present(); //!!!must be called as late as possible after EndFrame!
-	//}
+	Render::CGPUDriver* pGPU = View.GPU;
+	int SwapChainIdx = IPGApp->MainSwapChainIndex;
+	if (View.RenderPath.IsValidPtr() && pGPU->SwapChainExists(SwapChainIdx))
+	{
+		//???begin-end to a render path? anyway RP renders the whole view (RT/SwapChain)!
+		//!!!rp/view doesn't know anything about present, so present manually!
+		if (pGPU->BeginFrame())
+		{
+			//???!!!store RP outside the view?! logically view doesn't own RP
+			//!!!use return value!
+			View.RenderPath->Render(View);
+
+			pGPU->EndFrame();
+			pGPU->Present(SwapChainIdx);
+		}
+	}
 
 	CoreSrv->Trigger();
 
