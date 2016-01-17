@@ -130,8 +130,10 @@ bool CIPGApplication::Open()
 		Fct->Open(MainWindow);
 		VideoDrvFct = Fct;
 
-		ResourceMgr->RegisterDefaultLoader("vsh", &Render::CShader::RTTI, &Resources::CD3D9ShaderLoader::RTTI);
-		ResourceMgr->RegisterDefaultLoader("psh", &Render::CShader::RTTI, &Resources::CD3D9ShaderLoader::RTTI);
+		//!!!GPU intentionally not set in loader for testing!
+		Resources::PD3D9ShaderLoader ShaderLoader = n_new(Resources::CD3D9ShaderLoader);
+		ResourceMgr->RegisterDefaultLoader("vsh", &Render::CShader::RTTI, ShaderLoader.GetUnsafe());
+		ResourceMgr->RegisterDefaultLoader("psh", &Render::CShader::RTTI, ShaderLoader.GetUnsafe());
 
 		pCEGUIVS = "Shaders:Bin/1.vsh";
 		pCEGUIPS = "Shaders:Bin/2.psh";
@@ -142,10 +144,13 @@ bool CIPGApplication::Open()
 		Fct->Open();
 		VideoDrvFct = Fct;
 
+		//!!!GPU intentionally not set in loader for testing!
 		//???rsrc storage - not singleton? may register one global, one D3D9 and one D3D11 resource storage,
-		//and manage resource location in a central manager. How to load both versions if the same resource transparently?
-		ResourceMgr->RegisterDefaultLoader("vsh", &Render::CShader::RTTI, &Resources::CD3D11VertexShaderLoader::RTTI);
-		ResourceMgr->RegisterDefaultLoader("psh", &Render::CShader::RTTI, &Resources::CD3D11PixelShaderLoader::RTTI);
+		//and manage resource location in a central manager. How to load both versions of the same resource transparently?
+		Resources::PD3D11VertexShaderLoader VShaderLoader = n_new(Resources::CD3D11VertexShaderLoader);
+		ResourceMgr->RegisterDefaultLoader("vsh", &Render::CShader::RTTI, VShaderLoader.GetUnsafe());
+		Resources::PD3D11PixelShaderLoader PShaderLoader = n_new(Resources::CD3D11PixelShaderLoader);
+		ResourceMgr->RegisterDefaultLoader("psh", &Render::CShader::RTTI, PShaderLoader.GetUnsafe());
 
 		pCEGUIVS = "Shaders:Bin/4.vsh";
 		pCEGUIPS = "Shaders:Bin/5.psh";
@@ -190,11 +195,17 @@ bool CIPGApplication::Open()
 	n_assert(GPU->SwapChainExists(SCIdx2));
 ////////////////////////////
 
-	ResourceMgr->RegisterDefaultLoader("hrd", &Frame::CRenderPath::RTTI, &Resources::CRenderPathLoader::RTTI);
-	ResourceMgr->RegisterDefaultLoader("prm", &Frame::CRenderPath::RTTI, &Resources::CRenderPathLoader::RTTI);
-	ResourceMgr->RegisterDefaultLoader("hrd", &Physics::CCollisionShape::RTTI, &Resources::CCollisionShapeLoader::RTTI);
-	ResourceMgr->RegisterDefaultLoader("prm", &Physics::CCollisionShape::RTTI, &Resources::CCollisionShapeLoader::RTTI);
-	ResourceMgr->RegisterDefaultLoader("nvx2", &Render::CMesh::RTTI, &Resources::CMeshLoaderNVX2::RTTI);
+	Resources::PRenderPathLoader RPLoader = n_new(Resources::CRenderPathLoader);
+	ResourceMgr->RegisterDefaultLoader("hrd", &Frame::CRenderPath::RTTI, RPLoader);
+	ResourceMgr->RegisterDefaultLoader("prm", &Frame::CRenderPath::RTTI, RPLoader);
+
+	Resources::PCollisionShapeLoader CollShapeLoader = n_new(Resources::CCollisionShapeLoader);
+	ResourceMgr->RegisterDefaultLoader("hrd", &Physics::CCollisionShape::RTTI, CollShapeLoader);
+	ResourceMgr->RegisterDefaultLoader("prm", &Physics::CCollisionShape::RTTI, CollShapeLoader);
+
+	Resources::PMeshLoaderNVX2 MeshLoaderNVX2 = n_new(Resources::CMeshLoaderNVX2);
+	MeshLoaderNVX2->GPU = GPU;
+	ResourceMgr->RegisterDefaultLoader("nvx2", &Render::CMesh::RTTI, MeshLoaderNVX2, false);
 
 	InputServer = n_new(Input::CInputServer);
 	InputServer->Open();
