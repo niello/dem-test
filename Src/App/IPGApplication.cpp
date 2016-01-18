@@ -18,6 +18,8 @@
 #include <Render/RenderStateDesc.h>
 #include <Render/Mesh.h>
 #include <Render/MeshLoaderNVX2.h>
+#include <Render/SkinInfo.h>
+#include <Render/SkinInfoLoaderSKN.h>
 #include <Frame/RenderPath.h>
 #include <Frame/RenderPathLoader.h>
 #include <Physics/CollisionShapeLoader.h>
@@ -206,6 +208,9 @@ bool CIPGApplication::Open()
 	Resources::PMeshLoaderNVX2 MeshLoaderNVX2 = n_new(Resources::CMeshLoaderNVX2);
 	MeshLoaderNVX2->GPU = GPU;
 	ResourceMgr->RegisterDefaultLoader("nvx2", &Render::CMesh::RTTI, MeshLoaderNVX2, false);
+
+	Resources::PSkinInfoLoaderSKN SkinInfoLoaderSKN = n_new(Resources::CSkinInfoLoaderSKN);
+	ResourceMgr->RegisterDefaultLoader("skn", &Render::CSkinInfo::RTTI, SkinInfoLoaderSKN, false);
 
 	InputServer = n_new(Input::CInputServer);
 	InputServer->Open();

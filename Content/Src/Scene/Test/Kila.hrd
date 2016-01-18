@@ -81,6 +81,7 @@ Attrs
 		Class = "Frame::CSkin"
 
 		SkinInfo = 'Test/Kila'
+		AutocreateBones = false		// Generates bone nodes automatically, attaching the skeleton root as a current node child
 	}
 ]
 
@@ -89,398 +90,111 @@ Children
 {
 	Root
 	{
-		Attrs
-		[
-			{
-				Class = "Bone"
-				BoneIndex = 0
-				BoneType = "Root"
-				PoseT = (0.000000, 0.941381, 0.004000)
-			}
-		]
 		Children
 		{
 			LowerSpine
 			{
-				Attrs
-				[
-					{
-						Class = "Bone"
-						BoneIndex = 1
-						PoseT = (0.000000, 0.095440, 0.022559)
-					}
-				]
 				Children
 				{
 					MiddleSpine
 					{
-						Attrs
-						[
-							{
-								Class = "Bone"
-								BoneIndex = 2
-								PoseT = (0.000000, 0.107588, -0.006941)
-							}
-						]
 						Children
 						{
 							UpperSpine
 							{
-								Attrs
-								[
-									{
-										Class = "Bone"
-										BoneIndex = 3
-										PoseT = (0.000000, 0.085029, -0.029503)
-									}
-								]
 								Children
 								{
 									Neck
 									{
-										Attrs
-										[
-											{
-												Class = "Bone"
-												BoneIndex = 4
-												PoseT = (0.000000, 0.081558, -0.007104)
-											}
-										]
 										Children
 										{
 											Head
 											{
-												Attrs
-												[
-													{
-														Class = "Bone"
-														BoneIndex = 5
-														PoseT = (0.000000, 0.086764, 0.007393)
-														PoseR = (-0.002911, 0.000000, 0.000000, 0.999996)
-													}
-												]
 												Children
 												{
 													L_Eye
 													{
-														Attrs
-														[
-															{
-																Class = "Bone"
-																BoneIndex = 6
-																PoseT = (0.026775, 0.050047, 0.042480)
-																BoneType = "Term"
-															}
-														]
 													}
 													R_Eye
 													{
-														Attrs
-														[
-															{
-																Class = "Bone"
-																BoneIndex = 7
-																PoseT = (-0.026775, 0.050047, 0.042480)
-																BoneType = "Term"
-															}
-														]
 													}
 													Hair_E
 													{
-														Attrs
-														[
-															{
-																Class = "Bone"
-																BoneIndex = 8
-																PoseT = (0.071220, 0.045130, -0.021372)
-																BoneType = "Term"
-															}
-														]
 													}
 													Hair_D
 													{
-														Attrs
-														[
-															{
-																Class = "Bone"
-																BoneIndex = 9
-																PoseT = (0.043000, 0.091077, -0.058132)
-																BoneType = "Term"
-															}
-														]
 													}
 													Hair_C
 													{
-														Attrs
-														[
-															{
-																Class = "Bone"
-																BoneIndex = 10
-																PoseT = (-0.042773, 0.091077, -0.058132)
-																BoneType = "Term"
-															}
-														]
 													}
 													Hair_B
 													{
-														Attrs
-														[
-															{
-																Class = "Bone"
-																BoneIndex = 11
-																PoseT = (-0.068440, 0.089571, 0.003943)
-																BoneType = "Term"
-															}
-														]
 													}
 													Hair_A
 													{
-														Attrs
-														[
-															{
-																Class = "Bone"
-																BoneIndex = 12
-																PoseT = (-0.057049, 0.088009, 0.068300)
-																BoneType = "Term"
-															}
-														]
 													}
 													L_Cheek
 													{
-														Attrs
-														[
-															{
-																Class = "Bone"
-																BoneIndex = 13
-																PoseT = (0.036704, 0.031635, 0.065595)
-																BoneType = "Term"
-															}
-														]
 													}
 													L_InnerBrow
 													{
-														Attrs
-														[
-															{
-																Class = "Bone"
-																BoneIndex = 14
-																PoseT = (0.020544, 0.060161, 0.071112)
-																BoneType = "Term"
-															}
-														]
 													}
 													L_OuterBrow
 													{
-														Attrs
-														[
-															{
-																Class = "Bone"
-																BoneIndex = 15
-																PoseT = (0.039868, 0.062593, 0.064957)
-																BoneType = "Term"
-															}
-														]
 													}
 													L_UpperLid
 													{
-														Attrs
-														[
-															{
-																Class = "Bone"
-																BoneIndex = 16
-																PoseT = (0.026775, 0.050047, 0.042480)
-																BoneType = "Term"
-															}
-														]
 													}
 													L_LowerLid
 													{
-														Attrs
-														[
-															{
-																Class = "Bone"
-																BoneIndex = 17
-																PoseT = (0.026775, 0.050047, 0.042480)
-																BoneType = "Term"
-															}
-														]
 													}
 													Jaw
 													{
-														Attrs
-														[
-															{
-																Class = "Bone"
-																BoneIndex = 18
-																PoseT = (0.000000, 0.011000, 0.023168)
-																PoseR = (-0.348525, -0.348525, -0.615248, 0.615248)
-															}
-														]
 														Children
 														{
 															TongueBase
 															{
-																Attrs
-																[
-																	{
-																		Class = "Bone"
-																		BoneIndex = 19
-																		PoseT = (0.016797, 0.000000, -0.009299)
-																		PoseR = (0.000000, -0.274858, 0.000000, 0.961485)
-																	}
-																]
 																Children
 																{
 																	TongueMiddle
 																	{
-																		Attrs
-																		[
-																			{
-																				Class = "Bone"
-																				BoneIndex = 20
-																				PoseT = (0.021164, 0.000000, 0.000000)
-																				PoseR = (0.000000, 0.073473, 0.000000, 0.997297)
-																				BoneType = "Term"
-																			}
-																		]
 																	}
 																}
 															}
 															R_LowerLip
 															{
-																Attrs
-																[
-																	{
-																		Class = "Bone"
-																		BoneIndex = 21
-																		PoseT = (0.054976, -0.006992, 0.009579)
-																		PoseR = (0.348525, 0.348525, 0.615248, 0.615248)
-																		BoneType = "Term"
-																	}
-																]
 															}
 															L_LowerLip
 															{
-																Attrs
-																[
-																	{
-																		Class = "Bone"
-																		BoneIndex = 22
-																		PoseT = (0.054975, 0.006992, 0.009579)
-																		PoseR = (0.348525, 0.348525, 0.615248, 0.615248)
-																		BoneType = "Term"
-																	}
-																]
 															}
 														}
 													}
 													L_UpperLip
 													{
-														Attrs
-														[
-															{
-																Class = "Bone"
-																BoneIndex = 23
-																PoseT = (0.006992, 0.006926, 0.077416)
-																BoneType = "Term"
-															}
-														]
 													}
 													L_OuterLip
 													{
-														Attrs
-														[
-															{
-																Class = "Bone"
-																BoneIndex = 24
-																PoseT = (0.017146, 0.000056, 0.068654)
-																BoneType = "Term"
-															}
-														]
 													}
 													R_Cheek
 													{
-														Attrs
-														[
-															{
-																Class = "Bone"
-																BoneIndex = 25
-																PoseT = (-0.036704, 0.031639, 0.065595)
-																BoneType = "Term"
-															}
-														]
 													}
 													R_InnerBrow
 													{
-														Attrs
-														[
-															{
-																Class = "Bone"
-																BoneIndex = 26
-																PoseT = (-0.020544, 0.060157, 0.071112)
-																BoneType = "Term"
-															}
-														]
 													}
 													R_OuterBrow
 													{
-														Attrs
-														[
-															{
-																Class = "Bone"
-																BoneIndex = 27
-																PoseT = (-0.039868, 0.062593, 0.064957)
-																BoneType = "Term"
-															}
-														]
 													}
 													R_UpperLid
 													{
-														Attrs
-														[
-															{
-																Class = "Bone"
-																BoneIndex = 28
-																PoseT = (-0.026775, 0.050043, 0.042480)
-																BoneType = "Term"
-															}
-														]
 													}
 													R_LowerLid
 													{
-														Attrs
-														[
-															{
-																Class = "Bone"
-																BoneIndex = 29
-																PoseT = (-0.026775, 0.050043, 0.042480)
-																BoneType = "Term"
-															}
-														]
 													}
 													R_UpperLip
 													{
-														Attrs
-														[
-															{
-																Class = "Bone"
-																BoneIndex = 30
-																PoseT = (-0.006992, 0.006929, 0.077416)
-																BoneType = "Term"
-															}
-														]
 													}
 													R_OuterLip
 													{
-														Attrs
-														[
-															{
-																Class = "Bone"
-																BoneIndex = 31
-																PoseT = (-0.017146, 0.000060, 0.068654)
-																BoneType = "Term"
-															}
-														]
 													}
 												}
 											}
@@ -488,93 +202,30 @@ Children
 									}
 									L_Clavicle
 									{
-										Attrs
-										[
-											{
-												Class = "Bone"
-												BoneIndex = 32
-												PoseT = (0.027842, 0.060071, 0.043414)
-												PoseR = (0.010048, 0.307993, -0.030889, 0.950834)
-											}
-										]
 										Children
 										{
 											L_Shoulder
 											{
-												Attrs
-												[
-													{
-														Class = "Bone"
-														BoneIndex = 33
-														PoseT = (0.139247, 0.000000, 0.000000)
-														PoseR = (0.154673, -0.211869, -0.373437, 0.889793)
-													}
-												]
 												Children
 												{
 													L_Elbow
 													{
-														Attrs
-														[
-															{
-																Class = "Bone"
-																BoneIndex = 34
-																PoseT = (0.195423, 0.000000, 0.000000)
-																PoseR = (0.009376, -0.232474, 0.039195, 0.971767)
-															}
-														]
 														Children
 														{
 															L_Wrist
 															{
-																Attrs
-																[
-																	{
-																		Class = "Bone"
-																		BoneIndex = 35
-																		PoseT = (0.203911, 0.000000, 0.000000)
-																	}
-																]
 																Children
 																{
 																	L_Thumb_A
 																	{
-																		Attrs
-																		[
-																			{
-																				Class = "Bone"
-																				BoneIndex = 36
-																				PoseT = (0.034048, -0.003258, 0.030715)
-																				PoseR = (0.344565, -0.237768, -0.051875, 0.906670)
-																			}
-																		]
 																		Children
 																		{
 																			L_Thumb_B
 																			{
-																				Attrs
-																				[
-																					{
-																						Class = "Bone"
-																						BoneIndex = 37
-																						PoseT = (0.024341, 0.000000, 0.000000)
-																						PoseR = (-0.003397, 0.082398, 0.003061, 0.996589)
-																					}
-																				]
 																				Children
 																				{
 																					L_Thumb_C
 																					{
-																						Attrs
-																						[
-																							{
-																								Class = "Bone"
-																								BoneIndex = 38
-																								PoseT = (0.017064, 0.000000, 0.000000)
-																								PoseR = (0.005993, 0.048243, -0.119231, 0.991676)
-																								BoneType = "Term"
-																							}
-																						]
 																					}
 																				}
 																			}
@@ -582,42 +233,14 @@ Children
 																	}
 																	L_Index_A
 																	{
-																		Attrs
-																		[
-																			{
-																				Class = "Bone"
-																				BoneIndex = 39
-																				PoseT = (0.069408, 0.004163, 0.020398)
-																				PoseR = (-0.003904, -0.047569, -0.081710, 0.995513)
-																			}
-																		]
 																		Children
 																		{
 																			L_Index_B
 																			{
-																				Attrs
-																				[
-																					{
-																						Class = "Bone"
-																						BoneIndex = 40
-																						PoseT = (0.028767, 0.000000, 0.000000)
-																						PoseR = (-0.001823, -0.012039, -0.149710, 0.988655)
-																					}
-																				]
 																				Children
 																				{
 																					L_Index_C
 																					{
-																						Attrs
-																						[
-																							{
-																								Class = "Bone"
-																								BoneIndex = 41
-																								PoseT = (0.021529, 0.000000, 0.000000)
-																								PoseR = (-0.000710, -0.006099, -0.115625, 0.993274)
-																								BoneType = "Term"
-																							}
-																						]
 																					}
 																				}
 																			}
@@ -625,42 +248,14 @@ Children
 																	}
 																	L_Middle_A
 																	{
-																		Attrs
-																		[
-																			{
-																				Class = "Bone"
-																				BoneIndex = 42
-																				PoseT = (0.070902, 0.004854, 0.004358)
-																				PoseR = (-0.001171, -0.013024, -0.089525, 0.995899)
-																			}
-																		]
 																		Children
 																		{
 																			L_Middle_B
 																			{
-																				Attrs
-																				[
-																					{
-																						Class = "Bone"
-																						BoneIndex = 43
-																						PoseT = (0.034220, 0.000000, 0.000000)
-																						PoseR = (-0.003049, -0.026042, -0.116256, 0.992873)
-																					}
-																				]
 																				Children
 																				{
 																					L_Middle_C
 																					{
-																						Attrs
-																						[
-																							{
-																								Class = "Bone"
-																								BoneIndex = 44
-																								PoseT = (0.023039, 0.000000, 0.000000)
-																								PoseR = (0.000727, 0.007290, -0.099196, 0.995041)
-																								BoneType = "Term"
-																							}
-																						]
 																					}
 																				}
 																			}
@@ -668,42 +263,14 @@ Children
 																	}
 																	L_Ring_A
 																	{
-																		Attrs
-																		[
-																			{
-																				Class = "Bone"
-																				BoneIndex = 45
-																				PoseT = (0.066567, 0.002980, -0.010202)
-																				PoseR = (0.002644, 0.031720, -0.083013, 0.996040)
-																			}
-																		]
 																		Children
 																		{
 																			L_Ring_B
 																			{
-																				Attrs
-																				[
-																					{
-																						Class = "Bone"
-																						BoneIndex = 46
-																						PoseT = (0.033284, 0.000000, 0.000000)
-																						PoseR = (-0.005902, -0.034155, -0.170173, 0.984804)
-																					}
-																				]
 																				Children
 																				{
 																					L_Ring_C
 																					{
-																						Attrs
-																						[
-																							{
-																								Class = "Bone"
-																								BoneIndex = 47
-																								PoseT = (0.021568, 0.000000, 0.000000)
-																								PoseR = (-0.000155, -0.002052, -0.075258, 0.997162)
-																								BoneType = "Term"
-																							}
-																						]
 																					}
 																				}
 																			}
@@ -711,42 +278,14 @@ Children
 																	}
 																	L_Pinkie_A
 																	{
-																		Attrs
-																		[
-																			{
-																				Class = "Bone"
-																				BoneIndex = 48
-																				PoseT = (0.062608, 0.002126, -0.024878)
-																				PoseR = (0.009704, 0.079266, -0.121129, 0.989419)
-																			}
-																		]
 																		Children
 																		{
 																			L_Pinkie_B
 																			{
-																				Attrs
-																				[
-																					{
-																						Class = "Bone"
-																						BoneIndex = 49
-																						PoseT = (0.023513, 0.000000, 0.000000)
-																						PoseR = (-0.001546, -0.016963, -0.090744, 0.995729)
-																					}
-																				]
 																				Children
 																				{
 																					L_Pinkie_C
 																					{
-																						Attrs
-																						[
-																							{
-																								Class = "Bone"
-																								BoneIndex = 50
-																								PoseT = (0.018042, 0.000000, 0.000000)
-																								PoseR = (-0.003029, -0.027354, -0.110004, 0.993550)
-																								BoneType = "Term"
-																							}
-																						]
 																					}
 																				}
 																			}
@@ -762,93 +301,30 @@ Children
 									}
 									R_Clavicle
 									{
-										Attrs
-										[
-											{
-												Class = "Bone"
-												BoneIndex = 51
-												PoseT = (-0.027842, 0.060071, 0.043414)
-												PoseR = (-0.307992, -0.010048, 0.950834, -0.030891)
-											}
-										]
 										Children
 										{
 											R_Shoulder
 											{
-												Attrs
-												[
-													{
-														Class = "Bone"
-														BoneIndex = 52
-														PoseT = (0.139247, 0.000000, 0.000000)
-														PoseR = (-0.154673, -0.211869, 0.373436, 0.889794)
-													}
-												]
 												Children
 												{
 													R_Elbow
 													{
-														Attrs
-														[
-															{
-																Class = "Bone"
-																BoneIndex = 53
-																PoseT = (0.195422, 0.000000, 0.000000)
-																PoseR = (-0.009377, -0.232474, -0.039195, 0.971767)
-															}
-														]
 														Children
 														{
 															R_Wrist
 															{
-																Attrs
-																[
-																	{
-																		Class = "Bone"
-																		BoneIndex = 54
-																		PoseT = (0.203911, 0.000000, 0.000000)
-																	}
-																]
 																Children
 																{
 																	R_Thumb_A
 																	{
-																		Attrs
-																		[
-																			{
-																				Class = "Bone"
-																				BoneIndex = 55
-																				PoseT = (0.034048, 0.003258, 0.030715)
-																				PoseR = (-0.344568, -0.237763, 0.051869, 0.906671)
-																			}
-																		]
 																		Children
 																		{
 																			R_Thumb_B
 																			{
-																				Attrs
-																				[
-																					{
-																						Class = "Bone"
-																						BoneIndex = 56
-																						PoseT = (0.024342, 0.000000, 0.000000)
-																						PoseR = (0.003397, 0.082394, -0.003063, 0.996589)
-																					}
-																				]
 																				Children
 																				{
 																					R_Thumb_C
 																					{
-																						Attrs
-																						[
-																							{
-																								Class = "Bone"
-																								BoneIndex = 57
-																								PoseT = (0.017064, 0.000000, 0.000000)
-																								PoseR = (-0.005993, 0.048238, 0.119238, 0.991675)
-																								BoneType = "Term"
-																							}
-																						]
 																					}
 																				}
 																			}
@@ -856,42 +332,14 @@ Children
 																	}
 																	R_Index_A
 																	{
-																		Attrs
-																		[
-																			{
-																				Class = "Bone"
-																				BoneIndex = 58
-																				PoseT = (0.069408, -0.004163, 0.020397)
-																				PoseR = (0.003904, -0.047570, 0.081699, 0.995513)
-																			}
-																		]
 																		Children
 																		{
 																			R_Index_B
 																			{
-																				Attrs
-																				[
-																					{
-																						Class = "Bone"
-																						BoneIndex = 59
-																						PoseT = (0.028766, 0.000000, 0.000000)
-																						PoseR = (0.001823, -0.012037, 0.149727, 0.988652)
-																					}
-																				]
 																				Children
 																				{
 																					R_Index_C
 																					{
-																						Attrs
-																						[
-																							{
-																								Class = "Bone"
-																								BoneIndex = 60
-																								PoseT = (0.021529, 0.000000, 0.000000)
-																								PoseR = (0.000710, -0.006098, 0.115619, 0.993275)
-																								BoneType = "Term"
-																							}
-																						]
 																					}
 																				}
 																			}
@@ -899,42 +347,14 @@ Children
 																	}
 																	R_Middle_A
 																	{
-																		Attrs
-																		[
-																			{
-																				Class = "Bone"
-																				BoneIndex = 61
-																				PoseT = (0.070902, -0.004854, 0.004358)
-																				PoseR = (0.001171, -0.013028, 0.089523, 0.995899)
-																			}
-																		]
 																		Children
 																		{
 																			R_Middle_B
 																			{
-																				Attrs
-																				[
-																					{
-																						Class = "Bone"
-																						BoneIndex = 62
-																						PoseT = (0.034219, 0.000000, 0.000000)
-																						PoseR = (0.003049, -0.026036, 0.116260, 0.992873)
-																					}
-																				]
 																				Children
 																				{
 																					R_Middle_C
 																					{
-																						Attrs
-																						[
-																							{
-																								Class = "Bone"
-																								BoneIndex = 63
-																								PoseT = (0.023039, 0.000000, 0.000000)
-																								PoseR = (-0.000727, 0.007293, 0.099178, 0.995043)
-																								BoneType = "Term"
-																							}
-																						]
 																					}
 																				}
 																			}
@@ -942,42 +362,14 @@ Children
 																	}
 																	R_Ring_A
 																	{
-																		Attrs
-																		[
-																			{
-																				Class = "Bone"
-																				BoneIndex = 64
-																				PoseT = (0.066566, -0.002981, -0.010202)
-																				PoseR = (-0.002644, 0.031722, 0.083018, 0.996040)
-																			}
-																		]
 																		Children
 																		{
 																			R_Ring_B
 																			{
-																				Attrs
-																				[
-																					{
-																						Class = "Bone"
-																						BoneIndex = 65
-																						PoseT = (0.033285, 0.000000, 0.000000)
-																						PoseR = (0.005902, -0.034156, 0.170160, 0.984807)
-																					}
-																				]
 																				Children
 																				{
 																					R_Ring_C
 																					{
-																						Attrs
-																						[
-																							{
-																								Class = "Bone"
-																								BoneIndex = 66
-																								PoseT = (0.021568, 0.000000, 0.000000)
-																								PoseR = (0.000155, -0.002052, 0.075262, 0.997162)
-																								BoneType = "Term"
-																							}
-																						]
 																					}
 																				}
 																			}
@@ -985,42 +377,14 @@ Children
 																	}
 																	R_Pinkie_A
 																	{
-																		Attrs
-																		[
-																			{
-																				Class = "Bone"
-																				BoneIndex = 67
-																				PoseT = (0.062608, -0.002125, -0.024878)
-																				PoseR = (-0.009705, 0.079278, 0.121125, 0.989419)
-																			}
-																		]
 																		Children
 																		{
 																			R_Pinkie_B
 																			{
-																				Attrs
-																				[
-																					{
-																						Class = "Bone"
-																						BoneIndex = 68
-																						PoseT = (0.023512, 0.000000, 0.000000)
-																						PoseR = (0.001548, -0.016984, 0.090741, 0.995728)
-																					}
-																				]
 																				Children
 																				{
 																					R_Pinkie_C
 																					{
-																						Attrs
-																						[
-																							{
-																								Class = "Bone"
-																								BoneIndex = 69
-																								PoseT = (0.018042, 0.000000, 0.000000)
-																								PoseR = (0.003028, -0.027349, 0.110006, 0.993550)
-																								BoneType = "Term"
-																							}
-																						]
 																					}
 																				}
 																			}
@@ -1036,27 +400,9 @@ Children
 									}
 									L_Breast
 									{
-										Attrs
-										[
-											{
-												Class = "Bone"
-												BoneIndex = 70
-												PoseT = (0.078340, -0.027996, 0.127846)
-												BoneType = "Term"
-											}
-										]
 									}
 									R_Breast
 									{
-										Attrs
-										[
-											{
-												Class = "Bone"
-												BoneIndex = 71
-												PoseT = (-0.078768, -0.027996, 0.127846)
-												BoneType = "Term"
-											}
-										]
 									}
 								}
 							}
@@ -1066,55 +412,18 @@ Children
 			}
 			L_Thigh
 			{
-				Attrs
-				[
-					{
-						Class = "Bone"
-						BoneIndex = 72
-						PoseT = (0.069317, -0.030776, -0.002403)
-						PoseR = (-0.076710, 0.052382, -0.660031, 0.745473)
-					}
-				]
 				Children
 				{
 					L_Knee
 					{
-						Attrs
-						[
-							{
-								Class = "Bone"
-								BoneIndex = 73
-								PoseT = (0.391973, 0.000000, 0.000000)
-								PoseR = (0.000037, 0.042399, -0.000868, 0.999100)
-							}
-						]
 						Children
 						{
 							L_Ankle
 							{
-								Attrs
-								[
-									{
-										Class = "Bone"
-										BoneIndex = 74
-										PoseT = (0.454110, 0.000000, 0.000000)
-										PoseR = (0.048675, -0.083852, 0.663339, 0.742011)
-									}
-								]
 								Children
 								{
 									L_Toe
 									{
-										Attrs
-										[
-											{
-												Class = "Bone"
-												BoneIndex = 75
-												PoseT = (0.018175, -0.048367, 0.088043)
-												PoseR = (0.000000, -0.639619, 0.000000, 0.768692)
-												BoneType = "Term"
-											}
-										]
 									}
 								}
 							}
@@ -1124,55 +433,18 @@ Children
 			}
 			R_Thigh
 			{
-				Attrs
-				[
-					{
-						Class = "Bone"
-						BoneIndex = 76
-						PoseT = (-0.069317, -0.030776, -0.002403)
-						PoseR = (0.052380, -0.076707, -0.745473, 0.660032)
-					}
-				]
 				Children
 				{
 					R_Knee
 					{
-						Attrs
-						[
-							{
-								Class = "Bone"
-								BoneIndex = 77
-								PoseT = (0.391973, 0.000000, 0.000000)
-								PoseR = (-0.000037, 0.042398, 0.000869, 0.999100)
-							}
-						]
 						Children
 						{
 							R_Ankle
 							{
-								Attrs
-								[
-									{
-										Class = "Bone"
-										BoneIndex = 78
-										PoseT = (0.454109, 0.000000, 0.000000)
-										PoseR = (-0.083849, 0.048673, 0.742011, 0.663340)
-									}
-								]
 								Children
 								{
 									R_Toe
 									{
-										Attrs
-										[
-											{
-												Class = "Bone"
-												BoneIndex = 79
-												PoseT = (-0.018175, -0.048367, 0.088042)
-												PoseR = (0.000000, -0.768696, 0.000000, 0.639614)
-												BoneType = "Term"
-											}
-										]
 									}
 								}
 							}
