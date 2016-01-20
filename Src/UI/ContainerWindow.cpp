@@ -123,7 +123,7 @@ void CContainerWindow::FillList(CPropInventory* pInventory, CEGUI::Listbox* pLis
 	const CArray<CItemStack>& Items = pInventory->GetItems();
 	
 	float Volume = 0.f;
-	for (int i = 0; i < Items.GetCount(); i++)
+	for (UPTR i = 0; i < Items.GetCount(); i++)
 	{
 		CItemStack& Stack = Items[i];
 		if (IgnoreEquippedItems && !Stack.GetNotEquippedCount()) continue;

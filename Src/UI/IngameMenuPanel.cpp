@@ -33,7 +33,7 @@ bool CIngameMenuPanel::OnInventoryBtnClick(const CEGUI::EventArgs& e)
 	if (GameSrv->GetActiveLevel())
 	{
 		const CArray<CStrID>& Sel = GameSrv->GetActiveLevel()->GetSelection();
-		for (int i = 0; i < Sel.GetCount(); ++i)
+		for (UPTR i = 0; i < Sel.GetCount(); ++i)
 		{
 			pEnt = EntityMgr->GetEntity(Sel[i]);
 			if (pEnt && pEnt->HasProperty<Prop::CPropInventory>()) break;

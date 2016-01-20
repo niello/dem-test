@@ -129,7 +129,7 @@ void CAppStateLoading::OnStateEnter(CStrID PrevState, Data::PParams Params)
 			bool IsPartyTravel = Params->Get<bool>(CStrID("IsPartyTravel"));
 
 			CArray<CStrID> TravellerIDs(IDs->GetCount(), 0);
-			for (int i = 0; i < IDs->GetCount(); ++i)
+			for (UPTR i = 0; i < IDs->GetCount(); ++i)
 				TravellerIDs.Add(GetStrID(IDs->Get(i)));
 
 			if (WorldMgr->MakeTransition(TravellerIDs, LevelID, MarkerID, IsFarTravel))
@@ -140,7 +140,7 @@ void CAppStateLoading::OnStateEnter(CStrID PrevState, Data::PParams Params)
 				{
 					Game::CGameLevel* pLevel = GameSrv->GetLevel(LevelID);
 					pLevel->ClearSelection();
-					for (int i = 0; i < TravellerIDs.GetCount(); ++i) //???test and add only patry members to selection?
+					for (UPTR i = 0; i < TravellerIDs.GetCount(); ++i) //???test and add only patry members to selection?
 						pLevel->AddToSelection(TravellerIDs[i]);
 					GameSrv->SetActiveLevel(LevelID);
 				}

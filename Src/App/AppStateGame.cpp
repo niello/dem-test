@@ -360,7 +360,7 @@ bool CAppStateGame::OnWorldTransitionRequested(Events::CEventDispatcher* pDispat
 
 	RPG::CFaction* pParty = FactionMgr->GetFaction(CStrID("Party"));
 	bool IsPartyTravel = false;
-	for (int i = 0; i < IDs->GetCount(); ++i)
+	for (UPTR i = 0; i < IDs->GetCount(); ++i)
 	{
 		Data::CData& Elm = IDs->Get(i);
 		CStrID EntityID;
@@ -379,7 +379,7 @@ bool CAppStateGame::OnWorldTransitionRequested(Events::CEventDispatcher* pDispat
 	if (!IsFarTravel && GameSrv->IsLevelLoaded(LevelID))
 	{
 		CArray<CStrID> TravellerIDs(IDs->GetCount(), 0);
-		for (int i = 0; i < IDs->GetCount(); ++i)
+		for (UPTR i = 0; i < IDs->GetCount(); ++i)
 			TravellerIDs.Add(IDs->Get<CStrID>(i));
 
 		CStrID MarkerID = GetStrID(*P, CStrID("MarkerID"));
@@ -388,7 +388,7 @@ bool CAppStateGame::OnWorldTransitionRequested(Events::CEventDispatcher* pDispat
 		{
 			Game::CGameLevel* pLevel = GameSrv->GetLevel(LevelID);
 			pLevel->ClearSelection();
-			for (int i = 0; i < TravellerIDs.GetCount(); ++i) //???test and add only patry members to selection?
+			for (UPTR i = 0; i < TravellerIDs.GetCount(); ++i) //???test and add only patry members to selection?
 				pLevel->AddToSelection(TravellerIDs[i]); //!!!can add to selection only entities selected before transition!
 			GameSrv->SetActiveLevel(LevelID);
 		}

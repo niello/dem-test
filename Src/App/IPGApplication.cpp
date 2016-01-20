@@ -20,6 +20,10 @@
 #include <Render/MeshLoaderNVX2.h>
 #include <Render/SkinInfo.h>
 #include <Render/SkinInfoLoaderSKN.h>
+#include <Animation/KeyframeClip.h>
+#include <Animation/KeyframeClipLoaderKFA.h>
+#include <Animation/MocapClip.h>
+#include <Animation/MocapClipLoaderNAX2.h>
 #include <Frame/RenderPath.h>
 #include <Frame/RenderPathLoader.h>
 #include <Physics/CollisionShapeLoader.h>
@@ -78,7 +82,7 @@ bool CIPGApplication::Open()
 
 	Data::PParams PathList = DataSrv->LoadHRD("Proj:PathList.hrd", false);
 	if (PathList.IsValidPtr())
-		for (int i = 0; i < PathList->GetCount(); ++i)
+		for (UPTR i = 0; i < PathList->GetCount(); ++i)
 			IOSrv->SetAssign(PathList->Get(i).GetName().CStr(), IOSrv->ResolveAssigns(PathList->Get<CString>(i)));
 
 	// Store reference just in case. It is a dispatcher and may be assigned to a smart ptr somewhere.
@@ -210,7 +214,13 @@ bool CIPGApplication::Open()
 	ResourceMgr->RegisterDefaultLoader("nvx2", &Render::CMesh::RTTI, MeshLoaderNVX2, false);
 
 	Resources::PSkinInfoLoaderSKN SkinInfoLoaderSKN = n_new(Resources::CSkinInfoLoaderSKN);
-	ResourceMgr->RegisterDefaultLoader("skn", &Render::CSkinInfo::RTTI, SkinInfoLoaderSKN, false);
+	ResourceMgr->RegisterDefaultLoader("skn", &Render::CSkinInfo::RTTI, SkinInfoLoaderSKN);
+
+	Resources::PKeyframeClipLoaderKFA KeyframeClipLoaderKFA = n_new(Resources::CKeyframeClipLoaderKFA);
+	ResourceMgr->RegisterDefaultLoader("kfa", &Anim::CAnimClip::RTTI, KeyframeClipLoaderKFA);
+
+	Resources::PMocapClipLoaderNAX2 MocapClipLoaderNAX2 = n_new(Resources::CMocapClipLoaderNAX2);
+	ResourceMgr->RegisterDefaultLoader("nax2", &Anim::CAnimClip::RTTI, MocapClipLoaderNAX2, true);
 
 	InputServer = n_new(Input::CInputServer);
 	InputServer->Open();
@@ -218,7 +228,7 @@ bool CIPGApplication::Open()
 	VideoServer = n_new(Video::CVideoServer);
 	VideoServer->Open();
 
-	//!!!need to compile properly named non-effect shaders!
+	//!!!need to compile properly named non-effect shaders! parse (CE)GUI settings HRD!
 	//???redesign not to create default context with new CEGUI?
 	UIServer = n_new(UI::CUIServer)(*GPU, MainSwapChainIndex, (float)RealBackBufDesc.Width, (float)RealBackBufDesc.Height, pCEGUIVS, pCEGUIPS);
 	DbgSrv->AllowUI(true);
@@ -272,7 +282,7 @@ bool CIPGApplication::Open()
 	Data::PParams ActTpls = DataSrv->LoadPRM("AI:AIActionTpls.prm");
 	if (ActTpls.IsValidPtr())
 	{
-		for (int i = 0; i < ActTpls->GetCount(); ++i)
+		for (UPTR i = 0; i < ActTpls->GetCount(); ++i)
 		{
 			const Data::CParam& Prm = ActTpls->Get(i);
 			AISrv->GetPlanner().RegisterActionTpl(Prm.GetName().CStr(), Prm.GetValue<Data::PParams>());
@@ -283,7 +293,7 @@ bool CIPGApplication::Open()
 	// Smart object action templates
 	Data::PParams SOActTpls = DataSrv->LoadPRM("AI:AISOActionTpls.prm");
 	if (SOActTpls.IsValidPtr())
-		for (int i = 0; i < SOActTpls->GetCount(); ++i)
+		for (UPTR i = 0; i < SOActTpls->GetCount(); ++i)
 		{
 			const Data::CParam& Prm = SOActTpls->Get(i);
 			AISrv->AddSmartAction(Prm.GetName(), *Prm.GetValue<Data::PParams>());

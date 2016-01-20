@@ -113,7 +113,7 @@ bool CDialogueWindow::OnKeyUp(const CEGUI::EventArgs& e)
 
 	if (pCtx->pCurrNode->LinkMode == Story::CDlgNode::Link_Select &&
 		KeyArgs.scancode >= CEGUI::Key::One &&
-		KeyArgs.scancode < (CEGUI::Key::One + pCtx->ValidLinkIndices.GetCount()))
+		KeyArgs.scancode < (CEGUI::Key::One + (IPTR)pCtx->ValidLinkIndices.GetCount()))
 	{
 		SelectAnswer(*pCtx, KeyArgs.scancode - CEGUI::Key::One);
 		OK;
@@ -205,13 +205,13 @@ bool CDialogueWindow::OnDlgNodeEnter(Events::CEventDispatcher* pDispatcher, cons
 	Show();
 	pWnd->activate(); //???activate button when it is visible?
 
-	int ValidLinkCount = pCtx->ValidLinkIndices.GetCount();
+	UPTR ValidLinkCount = pCtx->ValidLinkIndices.GetCount();
 	if (pCtx->pCurrNode->LinkMode == Story::CDlgNode::Link_Select && ValidLinkCount > 0)
 	{
 		pContinueBtn->setVisible(false);
 		//???remove cegui event conn here?
 
-		for (int i = 0; i < ValidLinkCount; ++i)
+		for (UPTR i = 0; i < ValidLinkCount; ++i)
 		{
 			Story::CDlgNode::CLink& Link = pCtx->pCurrNode->Links[pCtx->ValidLinkIndices[i]];
 

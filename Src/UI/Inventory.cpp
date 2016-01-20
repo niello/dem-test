@@ -74,7 +74,7 @@ void CInventory::Update()
 {
 	pInvList->resetList();
 	const CArray<CItemStack>& InvItems = pEquip->GetItems();
-	for (int i = 0; i < InvItems.GetCount(); i++)
+	for (UPTR i = 0; i < InvItems.GetCount(); i++)
 	{
 		CItemStack& Stack = InvItems[i];
 		
@@ -94,7 +94,7 @@ void CInventory::Update()
 	}
 
 	pEquipList->resetList();
-	for (int i = 0; i < pEquip->Slots.GetCount(); i++)
+	for (UPTR i = 0; i < pEquip->Slots.GetCount(); i++)
 	{
 		CString Text(pEquip->Slots.KeyAt(i).CStr());
 		Text += ": ";
