@@ -72,9 +72,9 @@ bool CDialogueWindow::OnAnswerClicked(const CEGUI::EventArgs& e)
 		//!!!subscribe CEGUI event only on answer (select) nodes instead!
 		if (pCtx->pCurrNode->LinkMode == Story::CDlgNode::Link_Select)
 		{
-			int ValidLinkCount = pCtx->ValidLinkIndices.GetCount();
-			int Idx = (int)pTextArea->getItemIndex(pItem) - (int)pTextArea->getItemCount() + ValidLinkCount;
-			if (Idx >= 0 && Idx < ValidLinkCount) SelectAnswer(*pCtx, Idx);
+			UPTR ValidLinkCount = pCtx->ValidLinkIndices.GetCount();
+			UPTR Idx = pTextArea->getItemIndex(pItem) + ValidLinkCount - pTextArea->getItemCount();
+			if (Idx < ValidLinkCount) SelectAnswer(*pCtx, Idx);
 		}
 	}
 	OK;
@@ -127,7 +127,7 @@ bool CDialogueWindow::OnKeyUp(const CEGUI::EventArgs& e)
 }
 //---------------------------------------------------------------------
 
-void CDialogueWindow::SelectAnswer(Story::CDlgContext& Ctx, int Idx)
+void CDialogueWindow::SelectAnswer(Story::CDlgContext& Ctx, UPTR Idx)
 {
 	Ctx.SelectValidLink(Idx);
 

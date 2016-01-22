@@ -178,7 +178,7 @@ n_assert(false);
 	CoreSrv->Trigger();
 
 	//!!!can move or clone to render server!
-	static DWORD FPSFrameCount = 0;
+	static UPTR FPSFrameCount = 0;
 	static float FPSTimeAccum = 0.f;
 	++FPSFrameCount;
 	FPSTimeAccum += (float)TimeSrv->GetFrameTime();

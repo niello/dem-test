@@ -38,7 +38,7 @@ protected:
 	CEGUI::Event::Connection	ConnTextAreaMM;
 	CEGUI::Event::Connection	ConnKeyUp;
 
-	void SelectAnswer(Story::CDlgContext& Ctx, int Idx);
+	void SelectAnswer(Story::CDlgContext& Ctx, UPTR Idx);
 
 	// UI to DlgMgr event handlers
 	bool OnContinueBtnClicked(const CEGUI::EventArgs& e);
