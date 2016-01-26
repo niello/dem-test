@@ -127,7 +127,7 @@ bool CIPGApplication::Open()
 
 	// Rendering
 
-	const bool UseD3D9 = true;
+	const bool UseD3D9 = false;
 	const char* pCEGUIVS;
 	const char* pCEGUIPS;
 	if (UseD3D9)
@@ -354,7 +354,7 @@ bool CIPGApplication::Open()
 
 	FSM.AddStateHandler(n_new(CAppStateMenu(CStrID("Menu"))));
 	FSM.AddStateHandler(n_new(CAppStateLoading(CStrID("Loading"))));
-	//FSM.AddStateHandler(n_new(CAppStateGame(CStrID("Game"))));
+	FSM.AddStateHandler(n_new(CAppStateGame(CStrID("Game"))));
 	
 	Sys::Log("Seting state: Menu...\n");
 	

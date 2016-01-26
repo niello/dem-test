@@ -19,8 +19,6 @@ namespace UI
 {
 __ImplementClassNoFactory(UI::CIngameScreen, UI::CUIWindow);
 
-using namespace Events;
-
 CIngameScreen::CIngameScreen()
 {
 }
@@ -45,31 +43,31 @@ void CIngameScreen::Init(CEGUI::Window* pWindow)
 	ActionPopup->Hide();
 
 	IngameMenuPanel = n_new(CIngameMenuPanel);
-	IngameMenuPanel->Init(pWnd->getChild((WndName + "/IngameMenuPanel").CStr()));
+	IngameMenuPanel->Init(pWnd->getChild("IngameMenuPanel"));
 
 	Inventory = n_new(CInventory);
-	Inventory->Init(pWnd->getChild((WndName + "/Inventory").CStr()));
+	Inventory->Init(pWnd->getChild("Inventory"));
 
 	ContainerWindow = n_new(CContainerWindow);
-	ContainerWindow->Init(pWnd->getChild((WndName + "/ContainerWindow").CStr()));
+	ContainerWindow->Init(pWnd->getChild("ContainerWindow"));
 	ContainerWindow->Hide();
 
 	MoveItemsWindow = n_new(CMoveItemsWindow);
-	MoveItemsWindow->Init(pWnd->getChild((WndName + "/MovingItemsWindow").CStr())); //!!!rename!
+	MoveItemsWindow->Init(pWnd->getChild("MovingItemsWindow")); //!!!rename!
 	MoveItemsWindow->Hide();
 
 	DlgWindow = n_new(CDialogueWindow);
-	DlgWindow->Init(pWnd->getChild((WndName + "/DialogueWindow").CStr()));
+	DlgWindow->Init(pWnd->getChild("DialogueWindow"));
 	DlgWindow->Hide(); //???here or inside Init()?
 	
 	IAOTip = CreateTipWindow(1);
 
 	//!!!tmp!
-	CEGUI::Window* pConsoleWnd = pWnd->getChild((WndName + "/Console").CStr());
-	Console = (CEGUI::Listbox*)pConsoleWnd->getChild((WndName + "/Console/TextArea").CStr());
+	CEGUI::Window* pConsoleWnd = pWnd->getChild("Console");
+	Console = (CEGUI::Listbox*)pConsoleWnd->getChild("TextArea");
 	n_assert(Console);
 
-	CEGUI::PushButton* pBtn = (CEGUI::PushButton*)pWnd->getChild((WndName + "/BtnDbgExit").CStr());
+	CEGUI::PushButton* pBtn = (CEGUI::PushButton*)pWnd->getChild("BtnDbgExit");
 	pBtn->subscribeEvent(CEGUI::PushButton::EventClicked,
 		CEGUI::Event::Subscriber(&CIngameScreen::OnDbgExitBtnClick, this));
 
@@ -140,13 +138,14 @@ bool CIngameScreen::OnDbgExitBtnClick(const CEGUI::EventArgs& e)
 }
 //---------------------------------------------------------------------
 
-bool CIngameScreen::ShowIAOTip(CEventDispatcher* pDispatcher, const CEventBase& Event)
+bool CIngameScreen::ShowIAOTip(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
-	return ShowTip((const CEvent&)Event, IAOTip, TipAlignTop);
+	Data::PParams P = ((const Events::CEvent&)Event).Params;
+	return ShowTip(P->Get<CStrID>(CStrID("EntityID")), IAOTip, P->Get<CString>(CStrID("Text")), TipAlignTop);
 }
 //---------------------------------------------------------------------
 
-bool CIngameScreen::HideIAOTip(CEventDispatcher* pDispatcher, const CEventBase& Event)
+bool CIngameScreen::HideIAOTip(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
 	IAOTip->Hide();
 	////???keep open until ActionListPopup is present? (remember bool IsTipVisible and OnPopupClose apply)?
@@ -155,24 +154,24 @@ bool CIngameScreen::HideIAOTip(CEventDispatcher* pDispatcher, const CEventBase& 
 }
 //---------------------------------------------------------------------
 
-bool CIngameScreen::ShowPhrase(CEventDispatcher* pDispatcher, const CEventBase& Event)
+bool CIngameScreen::ShowPhrase(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
-	const CEvent& e = (const CEvent&)Event;
+	Data::PParams P = ((const Events::CEvent&)Event).Params;
 
 	// The static text widget types allows the frame and background to be disabled via simple
 	// properties, though might be a little heavy-weight for simple labels (c) CEGUI forums
-	CStrID EntityID = e.Params->Get<CStrID>(CStrID("EntityID"));
+	CStrID EntityID = P->Get<CStrID>(CStrID("EntityID"));
 	Ptr<CTipWindow> PhraseTip = GetOrCreatePhraseTip(EntityID);
 	PhraseTip->GetWnd()->setProperty("FrameEnabled", "false");
 	PhraseTip->GetWnd()->setProperty("BackgroundEnabled", "false");
 	
-	return ShowTip(e, PhraseTip, TipAlignTop);
+	return ShowTip(EntityID, PhraseTip, P->Get<CString>(CStrID("Text")), TipAlignTop);
 }
 //---------------------------------------------------------------------
 
-bool CIngameScreen::HidePhrase(CEventDispatcher* pDispatcher, const CEventBase& Event)
+bool CIngameScreen::HidePhrase(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
-	Data::PParams P = ((const CEvent&)Event).Params;
+	Data::PParams P = ((const Events::CEvent&)Event).Params;
 
 	CStrID EntityID = P->Get<CStrID>(CStrID("EntityID"));
 	Ptr<CTipWindow> PhraseTip = GetPhraseTip(EntityID);
@@ -182,11 +181,8 @@ bool CIngameScreen::HidePhrase(CEventDispatcher* pDispatcher, const CEventBase& 
 }
 //---------------------------------------------------------------------
 
-bool CIngameScreen::ShowTip(const CEvent& Event, CTipWindow* pTipWnd, ETipAlignment Alignment)
+bool CIngameScreen::ShowTip(CStrID EntityID, CTipWindow* pTipWnd, const CString& Text, ETipAlignment Alignment)
 {
-	const CString& Text = Event.Params->Get<CString>(CStrID("Text"));
-	CStrID EntityID = Event.Params->Get<CStrID>(CStrID("EntityID"));
-
 	const CEGUI::Font* f = pTipWnd->GetWnd()->getFont();
 	pTipWnd->GetWnd()->setSize(CEGUI::USize(CEGUI::UDim(0.f, f->getTextExtent((CEGUI::utf8*)Text.CStr()) + 20.f),
 											CEGUI::UDim(0.f, f->getFontHeight() + 14.f)));
@@ -197,9 +193,9 @@ bool CIngameScreen::ShowTip(const CEvent& Event, CTipWindow* pTipWnd, ETipAlignm
 }
 //---------------------------------------------------------------------
 
-bool CIngameScreen::OnQuestStatusChanged(CEventDispatcher* pDispatcher, const CEventBase& Event)
+bool CIngameScreen::OnQuestStatusChanged(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
-	Data::PParams P = ((const CEvent&)Event).Params;
+	Data::PParams P = ((const Events::CEvent&)Event).Params;
 
 	Story::CQuest::EStatus Status = (Story::CQuest::EStatus)P->Get<int>(CStrID("Status"));
 
@@ -229,9 +225,9 @@ bool CIngameScreen::OnQuestStatusChanged(CEventDispatcher* pDispatcher, const CE
 }
 //---------------------------------------------------------------------
 
-bool CIngameScreen::OnObjectDescRequested(CEventDispatcher* pDispatcher, const CEventBase& Event)
+bool CIngameScreen::OnObjectDescRequested(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
-	const CString& UIDesc = ((const CEvent&)Event).Params->Get<CString>(CStrID("UIDesc"));
+	const CString& UIDesc = ((const Events::CEvent&)Event).Params->Get<CString>(CStrID("UIDesc"));
 	CEGUI::FormattedListboxTextItem* NewItem =
 		n_new(CEGUI::FormattedListboxTextItem((CEGUI::utf8*)UIDesc.CStr(), CEGUI::HTF_WORDWRAP_LEFT_ALIGNED));//!!!, 0, 0, true);
 	NewItem->setTextColours(CEGUI::Colour(0xffd0d0d0));
@@ -241,9 +237,9 @@ bool CIngameScreen::OnObjectDescRequested(CEventDispatcher* pDispatcher, const C
 }
 //---------------------------------------------------------------------
 
-bool CIngameScreen::OnIAOActionStart(CEventDispatcher* pDispatcher, const CEventBase& Event)
+bool CIngameScreen::OnIAOActionStart(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
-	Data::PParams P = ((const CEvent&)Event).Params;
+	Data::PParams P = ((const Events::CEvent&)Event).Params;
 	if (P->Get<CStrID>(CStrID("Action")) == "OpenContainer")
 	{
 		//???call method instead?
@@ -253,9 +249,9 @@ bool CIngameScreen::OnIAOActionStart(CEventDispatcher* pDispatcher, const CEvent
 }
 //---------------------------------------------------------------------
 
-bool CIngameScreen::OnIAOActionAbort(CEventDispatcher* pDispatcher, const CEventBase& Event)
+bool CIngameScreen::OnIAOActionAbort(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
-	Data::PParams P = ((const CEvent&)Event).Params;
+	Data::PParams P = ((const Events::CEvent&)Event).Params;
 	if (P->Get<CStrID>(CStrID("Action")) == "OpenContainer")
 	{
 		//???call method instead?

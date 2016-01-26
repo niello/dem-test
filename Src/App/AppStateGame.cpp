@@ -7,14 +7,19 @@
 #include <Quests/QuestManager.h>
 #include <Factions/FactionManager.h>
 #include <Debug/DebugServer.h>
-#include <UI/UIContext.h>
 #include <UI/IngameScreen.h>
+#include <UI/UIContext.h>
+#include <Render/GPUDriver.h>
+#include <Frame/RenderPath.h>
+#include <Resources/ResourceManager.h>
+#include <Resources/Resource.h>
 #include <Events/EventServer.h>
 #include <Time/TimeServer.h>
 #include <IO/IOServer.h>
 #include <Game/GameServer.h>
 #include <Game/GameLevel.h>
 #include <Scene/Events/SetTransform.h>
+#include <Scene/SceneNode.h>
 #include <UI/PropUIControl.h>
 //#include <Audio/AudioServer.h>
 #include <Physics/PhysicsServer.h>
@@ -26,6 +31,7 @@
 #include <Input/Events/MouseBtnUp.h>
 #include <Input/Events/MouseDoubleClick.h>
 #include <Data/DataArray.h>
+#include <IO/PathUtils.h>
 #include <App/IPGApplication.h>
 
 namespace App
@@ -56,21 +62,130 @@ void CAppStateGame::OnStateEnter(CStrID PrevState, Data::PParams Params)
 
 	InputSrv->EnableContext(CStrID("Game"));
 
-	// Here we load HUD
-	if (IngameScreen.IsNullPtr())
+	const char* pRenderPathURI = "Shaders:D3D11Forward.hrd";
+	Resources::PResource RRP = ResourceMgr->RegisterResource(pRenderPathURI);
+	if (!RRP->IsLoaded())
 	{
-		IngameScreen = n_new(UI::CIngameScreen);
-		IngameScreen->Load("IngameScreen.layout");
+		Resources::PResourceLoader Loader = RRP->GetLoader();
+		if (Loader.IsNullPtr())
+			Loader = ResourceMgr->CreateDefaultLoaderFor<Frame::CRenderPath>(PathUtils::GetExtension(pRenderPathURI));
+		ResourceMgr->LoadResourceSync(*RRP, *Loader);
+		n_assert(RRP->IsLoaded());
 	}
-	IPGApp->MainUIContext->SetRootWindow(IngameScreen);
-	IPGApp->MainUIContext->ShowGUI();
 
-n_assert(false);
-	//if (RenderSrv->BeginFrame())
-	//{
-	//	RenderSrv->Clear(Render::Clear_Color, 0xff000000, 1.f, 0);
-	//	RenderSrv->EndFrame();
-	//}
+	// Load views, create additional windows if required, load cameras
+
+	// If there are no views for any level:
+	if (IPGApp->GPU->SwapChainExists(IPGApp->MainSwapChainIndex))
+	{
+		CStrID PartyLeaderID = FactionMgr->GetFaction(CStrID("Party"))->GetLeader();
+		Game::CGameLevel* pActiveLevel = EntityMgr->GetEntity(PartyLeaderID)->GetLevel();
+		Frame::CView* pView = pActiveLevel->CreateView();
+				
+		Ptr<UI::CIngameScreen> IngameScreen = n_new(UI::CIngameScreen);
+		IngameScreen->Load("IngameScreen.layout");
+
+		IPGApp->MainUIContext->SetRootWindow(IngameScreen);
+		IPGApp->MainUIContext->ShowGUI();
+
+		Render::PRenderTarget MainRT = IPGApp->GPU->GetSwapChainRenderTarget(IPGApp->MainSwapChainIndex);
+
+		pView->GPU = IPGApp->GPU;
+		pView->RenderPath = (Frame::CRenderPath*)RRP->GetObject();
+		pView->RTs.SetSize(1);
+		pView->RTs[0] = MainRT;
+		pView->UIContext = IPGApp->MainUIContext;
+
+		// create default camera for that level
+		// if no default camera defined, create app-default camera looking at the character selected
+	}
+
+			/*
+		//!!!if CameraManager is always present, may add there method CreateMainCamera() or smth like that
+		//and just call it here, or create main camera in a camera mgr constructor!
+		CameraManager = n_new(Scene::CCameraManager);
+
+		Scene::CSceneNode* pCameraNode = SceneRoot->CreateChild(CStrID("_DefaultCamera"));
+		MainCamera = n_new(Frame::CCamera);
+		pCameraNode->AddAttribute(*MainCamera);
+		MainCamera->SetWidth(800.f); //!!!(float)RenderSrv->GetBackBufferWidth());
+		MainCamera->SetHeight(600.f); //!!!(float)RenderSrv->GetBackBufferHeight());
+
+		Data::PParams CameraDesc;
+		if (SubDesc->Get(CameraDesc, CStrID("Camera")))
+		{
+			bool IsThirdPerson = CameraDesc->Get(CStrID("ThirdPerson"), true);
+			n_assert(IsThirdPerson); // Until a first person camera is implemented
+
+			if (IsThirdPerson)
+			{
+				CameraManager->InitThirdPersonCamera(*MainCamera->GetNode());
+				Scene::CNodeControllerThirdPerson* pCtlr = (Scene::CNodeControllerThirdPerson*)CameraManager->GetCameraController();
+				if (pCtlr)
+				{
+					pCtlr->SetVerticalAngleLimits(n_deg2rad(CameraDesc->Get(CStrID("MinVAngle"), 0.0f)), n_deg2rad(CameraDesc->Get(CStrID("MaxVAngle"), 89.999f)));
+					pCtlr->SetDistanceLimits(CameraDesc->Get(CStrID("MinDistance"), 0.0f), CameraDesc->Get(CStrID("MaxDistance"), 10000.0f));
+					pCtlr->SetCOI(CameraDesc->Get(CStrID("COI"), vector3::Zero));
+					pCtlr->SetAngles(n_deg2rad(CameraDesc->Get(CStrID("VAngle"), 0.0f)), n_deg2rad(CameraDesc->Get(CStrID("HAngle"), 0.0f)));
+					pCtlr->SetDistance(CameraDesc->Get(CStrID("Distance"), 20.0f));
+				}
+			}
+		}
+
+	// Save camera state //!!!save in game server for all views in a common desc!
+	if (CameraManager.IsValidPtr())
+	{
+		Data::PParams SGScene = n_new(Data::CParams);
+
+		bool IsThirdPerson = CameraManager->IsCameraThirdPerson();
+		n_assert(IsThirdPerson); // Until a first person camera is implemented
+
+		Data::PParams CurrCameraDesc = n_new(Data::CParams);
+		CurrCameraDesc->Set(CStrID("ThirdPerson"), IsThirdPerson);
+
+		if (IsThirdPerson)
+		{
+			Scene::CNodeControllerThirdPerson* pCtlr = (Scene::CNodeControllerThirdPerson*)CameraManager->GetCameraController();
+			if (pCtlr)
+			{
+				CurrCameraDesc->Set(CStrID("MinVAngle"), n_rad2deg(pCtlr->GetVerticalAngleMin()));
+				CurrCameraDesc->Set(CStrID("MaxVAngle"), n_rad2deg(pCtlr->GetVerticalAngleMax()));
+				CurrCameraDesc->Set(CStrID("MinDistance"), pCtlr->GetDistanceMin());
+				CurrCameraDesc->Set(CStrID("MaxDistance"), pCtlr->GetDistanceMax());
+				CurrCameraDesc->Set(CStrID("COI"), pCtlr->GetCOI());
+				CurrCameraDesc->Set(CStrID("HAngle"), n_rad2deg(pCtlr->GetAngles().Phi));
+				CurrCameraDesc->Set(CStrID("VAngle"), n_rad2deg(pCtlr->GetAngles().Theta));
+				CurrCameraDesc->Set(CStrID("Distance"), pCtlr->GetDistance());
+			}
+		}
+
+		Data::PParams InitialScene;
+		Data::PParams InitialCamera;
+		if (pInitialDesc &&
+			pInitialDesc->Get(InitialScene, CStrID("Scene")) &&
+			InitialScene->Get(InitialCamera, CStrID("Camera")))
+		{
+			Data::PParams SGCamera = n_new(Data::CParams);
+			InitialCamera->GetDiff(*SGCamera, *CurrCameraDesc);
+			if (SGCamera->GetCount()) SGScene->Set(CStrID("Camera"), SGCamera);
+		}
+		else SGScene->Set(CStrID("Camera"), CurrCameraDesc);
+
+		if (SGScene->GetCount()) OutDesc.Set(CStrID("Scene"), SGScene);
+	}
+
+	if (AutoAdjustCameraAspect && MainCamera.IsValidPtr() && EvID == CStrID("OnRenderDeviceReset"))
+	{
+		//MainCamera->SetWidth((float)RenderSrv->GetBackBufferWidth());
+		//MainCamera->SetHeight((float)RenderSrv->GetBackBufferHeight());
+	}
+			*/
+
+	if (IPGApp->GPU->BeginFrame())
+	{
+		IPGApp->GPU->Clear(Render::Clear_Color, vector4::Zero, 1.f, 0);
+		IPGApp->GPU->EndFrame();
+	}
 
 	SUBSCRIBE_INPUT_EVENT(MouseMoveRaw, CAppStateGame, OnMouseMoveRaw, Input::InputPriority_Raw);
 	SUBSCRIBE_INPUT_EVENT(MouseWheel, CAppStateGame, OnMouseWheel, Input::InputPriority_Raw);
@@ -130,13 +245,12 @@ CStrID CAppStateGame::OnFrame()
 	VideoSrv->Trigger();
 //	AudioSrv->Trigger();
 
-	if (GameSrv->GetActiveLevel())
-	{
-		if (RenderDbgAI) GameSrv->GetActiveLevel()->GetAI()->RenderDebug();
-		if (RenderDbgEntities) GameSrv->GetActiveLevel()->RenderDebug();
+		//if (RenderDbgAI) GameSrv->GetActiveLevel()->GetAI()->RenderDebug();
+		//if (RenderDbgEntities) GameSrv->GetActiveLevel()->RenderDebug();
 		//???if (RenderDbgGfx) GameSrv->RenderCurrentLevelSceneDebug();?
 		//???if (RenderDbgPhysics) GameSrv->RenderCurrentLevelPhysicsDebug();
 
+		/*
 		//???to the camera manager? send CameraMoveX and CameraMoveZ there. Can send vector3 CameraMove.
 		Scene::CCameraManager* pCamMgr = GameSrv->GetActiveLevel()->GetCameraMgr();
 		if (pCamMgr)
@@ -161,7 +275,7 @@ CStrID CAppStateGame::OnFrame()
 				}
 			}
 		}
-	}
+		*/
 
 	PROFILER_START(profRender);
 
@@ -202,7 +316,8 @@ bool CAppStateGame::IssueActorCommand(bool Run, bool ClearQueue)
 	Game::CEntity* pTargetEntity = GameSrv->GetEntityUnderMouse();
 	Prop::CPropUIControl* pCtl = pTargetEntity ? pTargetEntity->GetProperty<Prop::CPropUIControl>() : NULL;
 
-	CStrID ID = FactionMgr->GetFaction(CStrID("Party"))->GetGroupLeader(GameSrv->GetActiveLevel()->GetSelection());
+	NOT_IMPLEMENTED;
+	CStrID ID = CStrID::Empty; //FactionMgr->GetFaction(CStrID("Party"))->GetGroupLeader(GameSrv->GetActiveLevel()->GetSelection());
 	Game::CEntity* pActorEntity = EntityMgr->GetEntity(ID);
 	Prop::CPropActorBrain* pActor = pActorEntity ? pActorEntity->GetProperty<Prop::CPropActorBrain>() : NULL;
 
@@ -238,6 +353,7 @@ bool CAppStateGame::IssueActorCommand(bool Run, bool ClearQueue)
 
 bool CAppStateGame::OnMouseMoveRaw(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
+	/*
 	Scene::CCameraManager* pCamMgr = GameSrv->GetActiveLevel()->GetCameraMgr();
 	if (!pCamMgr || !pCamMgr->IsCameraThirdPerson()) FAIL;
 
@@ -272,18 +388,20 @@ bool CAppStateGame::OnMouseMoveRaw(Events::CEventDispatcher* pDispatcher, const 
 			else CameraMoveZ = 0.f;
 		}
 	}
-
+	*/
 	FAIL;
 }
 //---------------------------------------------------------------------
 
 bool CAppStateGame::OnMouseWheel(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
+	/*
 	Scene::CCameraManager* pCamMgr = GameSrv->GetActiveLevel()->GetCameraMgr();
 	if (!pCamMgr || !pCamMgr->IsCameraThirdPerson()) FAIL;
 	Scene::CNodeControllerThirdPerson* pCtlr = (Scene::CNodeControllerThirdPerson*)pCamMgr->GetCameraController();
 	if (!pCtlr) FAIL;
 	pCtlr->Zoom((float)(-((const Event::MouseWheel&)Event).Delta) * pCamMgr->ZoomSpeed);
+	*/
 	OK;
 }
 //---------------------------------------------------------------------
@@ -310,7 +428,8 @@ bool CAppStateGame::OnMouseBtnDown(Events::CEventDispatcher* pDispatcher, const 
 		}
 		case Input::MBRight:
 		{
-			CStrID ID = FactionMgr->GetFaction(CStrID("Party"))->GetGroupLeader(GameSrv->GetActiveLevel()->GetSelection());
+			NOT_IMPLEMENTED;
+			CStrID ID = CStrID::Empty; //FactionMgr->GetFaction(CStrID("Party"))->GetGroupLeader(GameSrv->GetActiveLevel()->GetSelection());
 			Game::CEntity* pActorEntity = EntityMgr->GetEntity(ID);
 			if (!pActorEntity) FAIL;
 			Game::CEntity* pTargetEntity = GameSrv->GetEntityUnderMouse();
@@ -388,9 +507,18 @@ bool CAppStateGame::OnWorldTransitionRequested(Events::CEventDispatcher* pDispat
 		{
 			Game::CGameLevel* pLevel = GameSrv->GetLevel(LevelID);
 			pLevel->ClearSelection();
-			for (UPTR i = 0; i < TravellerIDs.GetCount(); ++i) //???test and add only patry members to selection?
-				pLevel->AddToSelection(TravellerIDs[i]); //!!!can add to selection only entities selected before transition!
-			GameSrv->SetActiveLevel(LevelID);
+			RPG::CFaction* pParty = FactionMgr->GetFaction(CStrID("Party"));
+			if (pParty)
+			{
+				for (UPTR i = 0; i < TravellerIDs.GetCount(); ++i)
+				{
+					CStrID TravellerID = TravellerIDs[i];
+					if (pParty->IsMember(TravellerID))
+						pLevel->AddToSelection(TravellerID); //!!!can add to selection only entities selected before transition!
+				}
+			}
+			NOT_IMPLEMENTED;
+			//GameSrv->SetActiveLevel(LevelID);
 		}
 	}
 	else
@@ -475,15 +603,16 @@ bool CAppStateGame::OnToggleRenderDbgEntities(Events::CEventDispatcher* pDispatc
 
 bool CAppStateGame::OnTeleportSelected(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
-	if (!GameSrv->GetActiveLevel()->GetSelectedCount()) OK;
+	NOT_IMPLEMENTED;
+	//if (!GameSrv->GetActiveLevel()->GetSelectedCount()) OK;
 
-	CStrID ID =	GameSrv->GetActiveLevel()->GetSelection()[0];
-	Game::CEntity* pEnt = EntityMgr->GetEntity(ID);
-	if (!pEnt) OK;
+	//CStrID ID =	GameSrv->GetActiveLevel()->GetSelection()[0];
+	//Game::CEntity* pEnt = EntityMgr->GetEntity(ID);
+	//if (!pEnt) OK;
 
-	matrix44 Tfm = pEnt->GetAttr<matrix44>(CStrID("Transform"));
-	Tfm.Translation() = GameSrv->GetMousePos3D();
-	pEnt->FireEvent(Event::SetTransform(Tfm));
+	//matrix44 Tfm = pEnt->GetAttr<matrix44>(CStrID("Transform"));
+	//Tfm.Translation() = GameSrv->GetMousePos3D();
+	//pEnt->FireEvent(Event::SetTransform(Tfm));
 
 	OK;
 }

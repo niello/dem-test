@@ -25,11 +25,11 @@ void CDialogueWindow::Init(CEGUI::Window* pWindow)
 
 	CString WndName(pWindow->getName().c_str());
 
-	pContinueBtn = (CEGUI::PushButton*)pWnd->getChild((WndName + "/MainButton").CStr());
+	pContinueBtn = (CEGUI::PushButton*)pWnd->getChild("MainButton");
 	pContinueBtn->subscribeEvent(CEGUI::PushButton::EventClicked,
 		CEGUI::Event::Subscriber(&CDialogueWindow::OnContinueBtnClicked, this));
 
-	pTextArea = (CEGUI::Listbox*)pWnd->getChild((WndName + "/TextArea").CStr());
+	pTextArea = (CEGUI::Listbox*)pWnd->getChild("TextArea");
 	pTextArea->setShowVertScrollbar(true);
 	pTextArea->setMultiselectEnabled(false);
 

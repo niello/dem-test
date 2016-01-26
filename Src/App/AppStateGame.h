@@ -8,11 +8,6 @@
 
 // The game state handler runs the game loop.
 
-namespace UI
-{
-	class CIngameScreen;
-}
-
 namespace App
 {
 
@@ -31,8 +26,6 @@ protected:
 	float	CameraMoveX;
 	float	CameraMoveZ;
 	bool	CameraRotate;
-
-	Ptr<UI::CIngameScreen> IngameScreen;
 
 	PROFILER_DECLARE(profCompleteFrame);
 	PROFILER_DECLARE(profRender);

@@ -21,7 +21,6 @@ namespace CEGUI
 
 namespace UI
 {
-using namespace Prop;
 
 class CMoveItemsWindow: public CUIWindow
 {
@@ -44,15 +43,15 @@ protected:
 	
 	CEGUI::Event::Connection pConnectionOnWindowParentHide;
 
-	CEGUI::Spinner*		pContSpn;
-	CEGUI::Spinner*		pInvSpn;
-	CEGUI::PushButton*	pBtnOk;
-	CEGUI::Window*		pOwnerWnd;
+	CEGUI::Spinner*			pContSpn;
+	CEGUI::Spinner*			pInvSpn;
+	CEGUI::PushButton*		pBtnOk;
+	CEGUI::Window*			pOwnerWnd;
 
 	// Contents of container
-	CPropInventory*		pContInv;
+	Prop::CPropInventory*	pContInv;
 	// Contents of player's inventory
-	CPropInventory*		pInv;
+	Prop::CPropInventory*	pInv;
 
 	DECLARE_EVENT_HANDLER(ShowMoveItemsWindow, OnShow);
 

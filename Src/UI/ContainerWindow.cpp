@@ -15,8 +15,6 @@
 
 namespace UI
 {
-using namespace Game;
-using namespace Prop;
 
 void CContainerWindow::Init(CEGUI::Window* pWindow)
 {
@@ -24,20 +22,20 @@ void CContainerWindow::Init(CEGUI::Window* pWindow)
 		
 	CString WndName(pWindow->getName().c_str());
 	
-	pGiveBtn = (CEGUI::PushButton*)pWnd->getChild((WndName + "/GiveBtn").CStr());
+	pGiveBtn = (CEGUI::PushButton*)pWnd->getChild("GiveBtn");
 	pGiveBtn->subscribeEvent(CEGUI::PushButton::EventClicked,
 		CEGUI::Event::Subscriber(&CContainerWindow::OnGiveBtnClick, this));
 
-	pTakeBtn = (CEGUI::PushButton*)pWnd->getChild((WndName + "/TakeBtn").CStr());
+	pTakeBtn = (CEGUI::PushButton*)pWnd->getChild("TakeBtn");
 	pTakeBtn->subscribeEvent(CEGUI::PushButton::EventClicked,
 		CEGUI::Event::Subscriber(&CContainerWindow::OnTakeBtnClick, this));
 
-	pInvList = (CEGUI::Listbox*)pWnd->getChild((WndName + "/InvList").CStr());
+	pInvList = (CEGUI::Listbox*)pWnd->getChild("InvList");
 
-	pContList = (CEGUI::Listbox*)pWnd->getChild((WndName + "/ContList").CStr());
+	pContList = (CEGUI::Listbox*)pWnd->getChild("ContList");
 
-	pInvWVInfo = pWnd->getChild((WndName + "/InvWVInfo").CStr());
-	pContWVInfo = pWnd->getChild((WndName + "/ContWVInfo").CStr());
+	pInvWVInfo = pWnd->getChild("InvWVInfo");
+	pContWVInfo = pWnd->getChild("ContWVInfo");
 
 	pWnd->subscribeEvent(CEGUI::FrameWindow::EventCloseClicked,
 		CEGUI::Event::Subscriber(&CContainerWindow::OnCloseClick, this));
@@ -53,16 +51,16 @@ bool CContainerWindow::OnShow(Events::CEventDispatcher* pDispatcher, const Event
 
 	const Data::CParam& Prm = P->Get(CStrID("SO"));
 	CStrID EntID = Prm.IsA<CStrID>() ? Prm.GetValue<CStrID>() : CStrID(Prm.GetValue<CString>().CStr());
-	PEntity pContEnt = EntityMgr->GetEntity(EntID);
+	Game::PEntity pContEnt = EntityMgr->GetEntity(EntID);
 	n_assert2(pContEnt.IsValidPtr(), "Show container window: container not found.");
 
 	const Data::CParam& Prm2 = P->Get(CStrID("Actor"));
 	EntID = Prm2.IsA<CStrID>() ? Prm2.GetValue<CStrID>() : CStrID(Prm2.GetValue<CString>().CStr());
-	PEntity pActor = EntityMgr->GetEntity(EntID);
+	Game::PEntity pActor = EntityMgr->GetEntity(EntID);
 	n_assert2(pActor, "Show container window: actor not found.");
 
-	pContainerInv = pContEnt->GetProperty<CPropInventory>();
-	pPlrInv = pActor->GetProperty<CPropInventory>();
+	pContainerInv = pContEnt->GetProperty<Prop::CPropInventory>();
+	pPlrInv = pActor->GetProperty<Prop::CPropInventory>();
 
 	ReloadLists();
 	Show();
@@ -117,15 +115,15 @@ void CContainerWindow::ClearLists()
 }
 //---------------------------------------------------------------------
 
-void CContainerWindow::FillList(CPropInventory* pInventory, CEGUI::Listbox* pListBox,
+void CContainerWindow::FillList(Prop::CPropInventory* pInventory, CEGUI::Listbox* pListBox,
 								CEGUI::Window* pWVInfo, bool IgnoreEquippedItems)
 {
-	const CArray<CItemStack>& Items = pInventory->GetItems();
+	const CArray<Items::CItemStack>& Items = pInventory->GetItems();
 	
 	float Volume = 0.f;
-	for (UPTR i = 0; i < Items.GetCount(); i++)
+	for (UPTR i = 0; i < Items.GetCount(); ++i)
 	{
-		CItemStack& Stack = Items[i];
+		Items::CItemStack& Stack = Items[i];
 		if (IgnoreEquippedItems && !Stack.GetNotEquippedCount()) continue;
 		Volume += Stack.GetTpl()->Volume * Stack.GetCount(); //???????
 
@@ -151,15 +149,15 @@ void CContainerWindow::FillList(CPropInventory* pInventory, CEGUI::Listbox* pLis
 //---------------------------------------------------------------------
 
 bool CContainerWindow::MoveSelectedItem(CEGUI::Listbox* pFromListBox,
-										CPropInventory* pFromInventory,
-										CPropInventory* pToInventory,
+										Prop::CPropInventory* pFromInventory,
+										Prop::CPropInventory* pToInventory,
 										bool FromInventoryToContainer)
 {
 	CEGUI::ListboxItem* pMovedListItem = pFromListBox->getFirstSelectedItem();
 	if (!pMovedListItem) FAIL;
 
-	CItem* pMovedItem = (CItem*)pMovedListItem->getUserData();
-	CItemStack* pMovedStack = pFromInventory->FindItemStack(pMovedItem);
+	Items::CItem* pMovedItem = (Items::CItem*)pMovedListItem->getUserData();
+	Items::CItemStack* pMovedStack = pFromInventory->FindItemStack(pMovedItem);
 	if (!pMovedStack) FAIL;
 
 	if (pMovedStack->GetNotEquippedCount() > 1)

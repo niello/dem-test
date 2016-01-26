@@ -7,11 +7,6 @@
 
 // Handles state during the level loading
 
-namespace UI
-{
-	class CLoadingScreen;
-}
-
 namespace App
 {
 
@@ -21,7 +16,7 @@ class CAppStateLoading: public CStateHandler
 
 protected:
 
-	Ptr<UI::CLoadingScreen> LoadingScreen;
+	Data::PParams			StateParams;
 	Frame::CView			View; //???main App view instead of per-state?! one window anyway!
 
 	void DeleteUnreferencedResources();

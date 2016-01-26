@@ -14,8 +14,6 @@
 
 namespace UI
 {
-using namespace Events;
-using namespace Game;
 
 void CMoveItemsWindow::Init(CEGUI::Window* pWindow)
 {
@@ -29,9 +27,9 @@ void CMoveItemsWindow::Init(CEGUI::Window* pWindow)
 
 	CString WndName(pWindow->getName().c_str());
 
-	pContSpn = (CEGUI::Spinner*)pWnd->getChild(CString(WndName + "/ContainerSpinner").CStr());
-	pInvSpn = (CEGUI::Spinner*)pWnd->getChild(CString(WndName + "/InventorySpinner").CStr());
-	pBtnOk = (CEGUI::PushButton*)pWnd->getChild(CString(WndName + "/OkButton").CStr());
+	pContSpn = (CEGUI::Spinner*)pWnd->getChild("ContainerSpinner");
+	pInvSpn = (CEGUI::Spinner*)pWnd->getChild("InventorySpinner");
+	pBtnOk = (CEGUI::PushButton*)pWnd->getChild("OkButton");
 
 	pContSpn->setMinimumValue(0);
 	pInvSpn->setMinimumValue(0);
@@ -57,12 +55,12 @@ bool CMoveItemsWindow::OnShow(Events::CEventDispatcher* pDispatcher, const Event
 {
 	DialogResult = false;
 
-	Data::PParams P = ((const CEvent&)Event).Params;
+	Data::PParams P = ((const Events::CEvent&)Event).Params;
 
-	PEntity pContEnt = EntityMgr->GetEntity(P->Get<CStrID>(CStrID("ContainerID")));
+	Game::PEntity pContEnt = EntityMgr->GetEntity(P->Get<CStrID>(CStrID("ContainerID")));
 	n_assert2(pContEnt.IsValidPtr(), "Show container window: container not found.");
 
-	PEntity pActor = EntityMgr->GetEntity(P->Get<CStrID>(CStrID("InventoryID")));
+	Game::PEntity pActor = EntityMgr->GetEntity(P->Get<CStrID>(CStrID("InventoryID")));
 	n_assert2(pActor, "Show container window: actor not found.");
 	
 	ItemID = P->Get<CStrID>(CStrID("ItemID"));
@@ -80,13 +78,13 @@ bool CMoveItemsWindow::OnShow(Events::CEventDispatcher* pDispatcher, const Event
 			CEGUI::Event::Subscriber(&CMoveItemsWindow::OnOwnerHide, this));
 	}
 
-	pInv = pActor->GetProperty<CPropInventory>(),
-	pContInv = pContEnt->GetProperty<CPropInventory>();
+	pInv = pActor->GetProperty<Prop::CPropInventory>(),
+	pContInv = pContEnt->GetProperty<Prop::CPropInventory>();
 
 	U16 ItemsInventoryCount = 0;
 	ItemsContainerCount = 0;
 
-	CItemStack* pItemStack = pInv->FindItemStack(ItemID);
+	Items::CItemStack* pItemStack = pInv->FindItemStack(ItemID);
 	if (pItemStack) ItemsInventoryCount = pItemStack->GetNotEquippedCount();
 
 	pItemStack = pContInv->FindItemStack(ItemID);

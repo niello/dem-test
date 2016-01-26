@@ -22,20 +22,19 @@ namespace CEGUI
 
 namespace UI
 {
-using namespace Prop;
 
 class CInventory: public CUIWindow
 {
 protected:
 
-	CEGUI::Listbox*		pInvList;
-	CEGUI::Listbox*		pEquipList;
-	CEGUI::PushButton*	pEquipBtn;
-	CEGUI::PushButton*	pUnequipBtn;
-	CEGUI::Window*		pWVInfo;
+	CEGUI::Listbox*			pInvList;
+	CEGUI::Listbox*			pEquipList;
+	CEGUI::PushButton*		pEquipBtn;
+	CEGUI::PushButton*		pUnequipBtn;
+	CEGUI::Window*			pWVInfo;
 	//CEGUI::PushButton*	pCloseBtn;
 
-	CPropEquipment*		pEquip;
+	Prop::CPropEquipment*	pEquip;
 
 	void Update();
 

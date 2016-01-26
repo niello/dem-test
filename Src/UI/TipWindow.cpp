@@ -45,10 +45,12 @@ void CTipWindow::SetVisible(bool Visible)
 
 void CTipWindow::UpdateBinding()
 {
+	NOT_IMPLEMENTED;
+
 	n_assert(EntityID.IsValid() && pWnd);
 
 	// Request active level instead of entitie's level, because UI works for active level
-	Game::CGameLevel* pLevel = GameSrv->GetActiveLevel();
+	Game::CGameLevel* pLevel = NULL;//GameSrv->GetActiveLevel();
 	Game::CEntity* pEntity = EntityMgr->GetEntity(EntityID, true);
 	if (!pLevel || !pEntity || pEntity->GetLevel() != pLevel)
 	{

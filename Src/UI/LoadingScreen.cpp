@@ -4,8 +4,6 @@ namespace UI
 {
 __ImplementClassNoFactory(UI::CLoadingScreen, UI::CUIWindow);
 
-using namespace Events;
-
 CLoadingScreen::CLoadingScreen()
 {
 }

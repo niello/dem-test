@@ -21,8 +21,6 @@ namespace Prop
 namespace UI
 {
 
-using namespace Prop;
-
 class CActionListPopup: public CUIWindow
 {
 protected:
@@ -30,8 +28,8 @@ protected:
 	//???description (static tooltip-like hint with action info)
 
 	//???or smart ptrs?
-	Game::CEntity*	pActorEnt;
-	CPropUIControl*	pCtl;
+	Game::CEntity*			pActorEnt;
+	Prop::CPropUIControl*	pCtl;
 
 	bool OnBtnClicked(const CEGUI::EventArgs& e);
 	bool OnClickOutsideRect(const CEGUI::EventArgs& e); //auto-close popup

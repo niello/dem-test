@@ -43,14 +43,14 @@ bool CActionListPopup::OnShow(Events::CEventDispatcher* pDispatcher, const Event
 	Clear(); //???here or when hidden? need to process re-request when visible
 
 	pActorEnt = (Game::CEntity*)P->Get<PVOID>(CStrID("ActorEntityPtr"));
-	pCtl = (CPropUIControl*)P->Get<PVOID>(CStrID("CtlPtr"));
+	pCtl = (Prop::CPropUIControl*)P->Get<PVOID>(CStrID("CtlPtr"));
 
 	if (!pCtl) OK; // Later this may be a case for formation & movement menu
 
-	const CArray<CPropUIControl::CAction>& Actions = pCtl->GetActions();
+	const CArray<Prop::CPropUIControl::CAction>& Actions = pCtl->GetActions();
 
 	// Actions are sorted by Enabled flag and then by priority
-	for (CArray<CPropUIControl::CAction>::CIterator It = Actions.Begin(); It != Actions.End(); It++)
+	for (CArray<Prop::CPropUIControl::CAction>::CIterator It = Actions.Begin(); It != Actions.End(); ++It)
 		if (It->Visible)
 		{
 			CEGUI::Window* pItem = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/MenuItem");

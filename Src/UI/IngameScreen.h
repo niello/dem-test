@@ -52,7 +52,7 @@ protected:
 	Ptr<CTipWindow>	CreateTipWindow(int TipID);
 	Ptr<CTipWindow> GetOrCreatePhraseTip(CStrID EntityID);
 	Ptr<CTipWindow> GetPhraseTip(CStrID EntityID);
-	static bool		ShowTip(const Events::CEvent& Event, CTipWindow* pTipWnd, ETipAlignment Alignment);
+	static bool		ShowTip(CStrID EntityID, CTipWindow* pTipWnd, const CString& Text, ETipAlignment Alignment);
 
 public:
 
@@ -67,9 +67,9 @@ public:
 
 inline Ptr<CTipWindow> CIngameScreen::GetPhraseTip(CStrID EntityID)
 {
-	for (CArray<Ptr<CTipWindow>>::CIterator it = PhraseTips.Begin(); it != PhraseTips.End(); ++it)
-		if ((*it)->GetEntityID() == EntityID)
-			return *it;
+	for (CArray<Ptr<CTipWindow>>::CIterator It = PhraseTips.Begin(); It != PhraseTips.End(); ++It)
+		if ((*It)->GetEntityID() == EntityID)
+			return *It;
 	return NULL;
 }
 //---------------------------------------------------------------------

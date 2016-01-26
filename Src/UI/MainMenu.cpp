@@ -9,8 +9,6 @@ namespace UI
 {
 __ImplementClassNoFactory(UI::CMainMenu, UI::CUIWindow);
 
-using namespace Events;
-
 CMainMenu::CMainMenu()
 {
 }

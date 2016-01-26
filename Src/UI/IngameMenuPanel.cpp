@@ -21,7 +21,7 @@ void CIngameMenuPanel::Init(CEGUI::Window* pWindow)
 
 	CString WndName(pWindow->getName().c_str());
 
-	pInventoryBtn = (CEGUI::PushButton*)pWnd->getChild((WndName + "/InvBtn").CStr());
+	pInventoryBtn = (CEGUI::PushButton*)pWnd->getChild("InvBtn");
 	pInventoryBtn->subscribeEvent(CEGUI::PushButton::EventClicked,
 		CEGUI::Event::Subscriber(&CIngameMenuPanel::OnInventoryBtnClick, this));
 }
@@ -29,17 +29,18 @@ void CIngameMenuPanel::Init(CEGUI::Window* pWindow)
 
 bool CIngameMenuPanel::OnInventoryBtnClick(const CEGUI::EventArgs& e)
 {
+	NOT_IMPLEMENTED;
 	Game::CEntity* pEnt = NULL;
-	if (GameSrv->GetActiveLevel())
-	{
-		const CArray<CStrID>& Sel = GameSrv->GetActiveLevel()->GetSelection();
-		for (UPTR i = 0; i < Sel.GetCount(); ++i)
-		{
-			pEnt = EntityMgr->GetEntity(Sel[i]);
-			if (pEnt && pEnt->HasProperty<Prop::CPropInventory>()) break;
-			else pEnt = NULL;
-		}
-	}
+	//if (GameSrv->GetActiveLevel())
+	//{
+	//	const CArray<CStrID>& Sel = GameSrv->GetActiveLevel()->GetSelection();
+	//	for (UPTR i = 0; i < Sel.GetCount(); ++i)
+	//	{
+	//		pEnt = EntityMgr->GetEntity(Sel[i]);
+	//		if (pEnt && pEnt->HasProperty<Prop::CPropInventory>()) break;
+	//		else pEnt = NULL;
+	//	}
+	//}
 
 	if (pEnt)
 	{

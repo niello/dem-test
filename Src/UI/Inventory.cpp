@@ -15,17 +15,10 @@
 
 namespace UI
 {
-using namespace Events;
-using namespace Game;
 
 CInventory::CInventory()
 {
 }
-//---------------------------------------------------------------------
-
-/*CInventory::~CInventory()
-{
-}*/
 //---------------------------------------------------------------------
 
 void CInventory::Init(CEGUI::Window* pWindow)
@@ -37,23 +30,23 @@ void CInventory::Init(CEGUI::Window* pWindow)
 
 	CString WndName(pWindow->getName().c_str());
 
-	pInvList = (CEGUI::Listbox*)pWnd->getChild((WndName + "/InvList").CStr());
+	pInvList = (CEGUI::Listbox*)pWnd->getChild("InvList");
 	pInvList->setShowVertScrollbar(true);
 	pInvList->setMultiselectEnabled(false);
 
-	pEquipList = (CEGUI::Listbox*)pWnd->getChild((WndName + "/EquipList").CStr());
+	pEquipList = (CEGUI::Listbox*)pWnd->getChild("EquipList");
 	pEquipList->setShowVertScrollbar(true);
 	pEquipList->setMultiselectEnabled(false);
 
-	pEquipBtn = (CEGUI::PushButton*)pWnd->getChild((WndName + "/EquipBtn").CStr());
+	pEquipBtn = (CEGUI::PushButton*)pWnd->getChild("EquipBtn");
 	pEquipBtn->subscribeEvent(CEGUI::PushButton::EventClicked,
 		CEGUI::Event::Subscriber(&CInventory::OnEquipBtnClick, this));
 
-	pUnequipBtn = (CEGUI::PushButton*)pWnd->getChild((WndName + "/UnequipBtn").CStr());
+	pUnequipBtn = (CEGUI::PushButton*)pWnd->getChild("UnequipBtn");
 	pUnequipBtn->subscribeEvent(CEGUI::PushButton::EventClicked,
 		CEGUI::Event::Subscriber(&CInventory::OnUnequipBtnClick, this));
 
-	pWVInfo = pWnd->getChild((WndName + "/WVInfo").CStr());
+	pWVInfo = pWnd->getChild("WVInfo");
 
 	//!!!not here - bug below!
 	//ConnKeyUp = pWnd->subscribeEvent(CEGUI::Window::EventKeyUp,
@@ -73,10 +66,10 @@ void CInventory::Init(CEGUI::Window* pWindow)
 void CInventory::Update()
 {
 	pInvList->resetList();
-	const CArray<CItemStack>& InvItems = pEquip->GetItems();
-	for (UPTR i = 0; i < InvItems.GetCount(); i++)
+	const CArray<Items::CItemStack>& InvItems = pEquip->GetItems();
+	for (UPTR i = 0; i < InvItems.GetCount(); ++i)
 	{
-		CItemStack& Stack = InvItems[i];
+		Items::CItemStack& Stack = InvItems[i];
 		
 		if (!Stack.GetNotEquippedCount()) continue;
 
@@ -94,11 +87,11 @@ void CInventory::Update()
 	}
 
 	pEquipList->resetList();
-	for (UPTR i = 0; i < pEquip->Slots.GetCount(); i++)
+	for (UPTR i = 0; i < pEquip->Slots.GetCount(); ++i)
 	{
 		CString Text(pEquip->Slots.KeyAt(i).CStr());
 		Text += ": ";
-		CItemStack* pStack = pEquip->Slots.ValueAt(i).pStack;
+		Items::CItemStack* pStack = pEquip->Slots.ValueAt(i).pStack;
 		if (pStack)
 		{
 			const char* Name = pStack->GetTpl()->UIName.CStr();
@@ -131,7 +124,7 @@ bool CInventory::OnEquipBtnClick(const CEGUI::EventArgs& e)
 {
 	CEGUI::ListboxItem* pInvItem = pInvList->getFirstSelectedItem();
 	CEGUI::ListboxItem* pEquipItem = pEquipList->getFirstSelectedItem();
-	if (pInvItem && pEquipItem && pEquip->Equip(CStrID(pEquipItem->getUserData()), (CItemStack*)pInvItem->getUserData()))
+	if (pInvItem && pEquipItem && pEquip->Equip(CStrID(pEquipItem->getUserData()), (Items::CItemStack*)pInvItem->getUserData()))
 		Update();
 	OK;
 }
@@ -149,11 +142,11 @@ bool CInventory::OnUnequipBtnClick(const CEGUI::EventArgs& e)
 }
 //---------------------------------------------------------------------
 
-bool CInventory::OnShow(CEventDispatcher* pDispatcher, const CEventBase& Event)
+bool CInventory::OnShow(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
-	const CEvent& e = (const CEvent&)Event;
+	const Events::CEvent& e = (const Events::CEvent&)Event;
 
-	PEntity pOwnerEnt = EntityMgr->GetEntity(e.Params->Get<CStrID>(CStrID("EntityID")));
+	Game::PEntity pOwnerEnt = EntityMgr->GetEntity(e.Params->Get<CStrID>(CStrID("EntityID")));
 	
 	if (pOwnerEnt.IsNullPtr())
 	{
@@ -165,7 +158,7 @@ bool CInventory::OnShow(CEventDispatcher* pDispatcher, const CEventBase& Event)
 
 	//!!!???param bool Show or always show by this event & hide by close key now?
 
-	pEquip = pOwnerEnt->GetProperty<CPropEquipment>();
+	pEquip = pOwnerEnt->GetProperty<Prop::CPropEquipment>();
 	n_assert(pEquip);
 
 	Update();
@@ -176,10 +169,10 @@ bool CInventory::OnShow(CEventDispatcher* pDispatcher, const CEventBase& Event)
 //---------------------------------------------------------------------
 
 //???!!!subscribe OnShow, unsubscribe OnHide?
-bool CInventory::OnInvContentsChanged(CEventDispatcher* pDispatcher, const CEventBase& Event)
+bool CInventory::OnInvContentsChanged(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
 	if (IsVisible() && pEquip &&
-		((const CEvent&)Event).Params->Get<CString>(CStrID("Entity")) == pEquip->GetEntity()->GetUID().CStr())
+		((const Events::CEvent&)Event).Params->Get<CString>(CStrID("Entity")) == pEquip->GetEntity()->GetUID().CStr())
 		Update();
 	OK;
 }

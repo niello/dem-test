@@ -26,16 +26,14 @@ __ImplementClassNoFactory(App::CAppStateLoading, App::CStateHandler);
 void CAppStateLoading::DeleteUnreferencedResources()
 {
 n_assert(false);
-	//RenderSrv->MeshMgr.DeleteUnreferenced();
-	//RenderSrv->MaterialMgr.DeleteUnreferenced();
-	//RenderSrv->TextureMgr.DeleteUnreferenced();
-	//GameSrv->AnimationMgr.DeleteUnreferenced();
-	//PhysicsSrv->CollisionShapeMgr.DeleteUnreferenced();
+	//ResourceMgr->UnloadUnreferencedResources(); //???restrict types?
 }
 //---------------------------------------------------------------------
 
 void CAppStateLoading::OnStateEnter(CStrID PrevState, Data::PParams Params)
 {
+	StateParams = Params;
+
 	TimeSrv->Trigger();
 	GameSrv->PauseGame(true);
 
@@ -66,91 +64,7 @@ void CAppStateLoading::OnStateEnter(CStrID PrevState, Data::PParams Params)
 		View.UIContext = IPGApp->MainUIContext;
 	}
 
-
-	//!!!DBG HACK for sync loading!
-	OnFrame();
-
-	ELoadingRequest Request = (ELoadingRequest)Params->Get<int>(CStrID("Request"));
-	switch (Request)
-	{
-		case Request_NewLevel:
-		{
-			CStrID LevelID = Params->Get<CStrID>(CStrID("LevelID"), CStrID("__NewLevel__"));
-			Data::CParams DefaultLevelDesc;
-			//!!!fill or load DefaultLevelDesc! or level will get defaults inside
-			//or desc must be added as a state param along with LevelID!
-			GameSrv->LoadLevel(LevelID, DefaultLevelDesc);
-			break;
-		}
-		case Request_LoadLevel:
-		{
-			CStrID LevelID = Params->Get<CStrID>(CStrID("LevelID"));
-			const CString& FileName = Params->Get<CString>(CStrID("FileName"));
-			n_assert(FileName.IsValid());
-			Data::PParams Desc = DataSrv->LoadPRM(FileName);
-			n_assert(Desc.IsValidPtr());
-			GameSrv->LoadLevel(LevelID, *Desc);
-			break;
-		}
-		case Request_NewGame:
-		{
-			bool WasGameStarted = GameSrv->IsGameStarted();
-			//???where to get file name? ???Params->Get<CString>(CStrID("FileName"));
-			GameSrv->StartNewGame(CString("Export:Game/Main.prm"));
-			if (WasGameStarted) DeleteUnreferencedResources();
-			GameSrv->ValidateAllLevels();
-			break;
-		}
-		case Request_ContinueGame:
-		{
-			bool WasGameStarted = GameSrv->IsGameStarted();
-			//???where to get file name? ???Params->Get<CString>(CStrID("FileName"));
-			GameSrv->ContinueGame(CString("Export:Game/Main.prm"));
-			if (WasGameStarted) DeleteUnreferencedResources();
-			GameSrv->ValidateAllLevels();
-			break;
-		}
-		case Request_LoadGame:
-		{
-			bool WasGameStarted = GameSrv->IsGameStarted();
-			GameSrv->LoadGame(Params->Get<CString>(CStrID("SavedGameName")));
-			if (WasGameStarted) DeleteUnreferencedResources();
-			GameSrv->ValidateAllLevels();
-			break;
-		}
-		case Request_Transition:
-		{
-			Data::PDataArray IDs = Params->Get<Data::PDataArray>(CStrID("EntityIDs"));
-			n_assert(IDs->GetCount());
-
-			CStrID LevelID = GetStrID(*Params, CStrID("LevelID"));
-			CStrID MarkerID = GetStrID(*Params, CStrID("MarkerID"));
-			bool IsFarTravel = Params->Get<bool>(CStrID("IsFarTravel"));
-			bool IsPartyTravel = Params->Get<bool>(CStrID("IsPartyTravel"));
-
-			CArray<CStrID> TravellerIDs(IDs->GetCount(), 0);
-			for (UPTR i = 0; i < IDs->GetCount(); ++i)
-				TravellerIDs.Add(GetStrID(IDs->Get(i)));
-
-			if (WorldMgr->MakeTransition(TravellerIDs, LevelID, MarkerID, IsFarTravel))
-			{
-				if (IsFarTravel) DeleteUnreferencedResources();
-				GameSrv->ValidateLevel(LevelID);
-				if (IsPartyTravel)
-				{
-					Game::CGameLevel* pLevel = GameSrv->GetLevel(LevelID);
-					pLevel->ClearSelection();
-					for (UPTR i = 0; i < TravellerIDs.GetCount(); ++i) //???test and add only patry members to selection?
-						pLevel->AddToSelection(TravellerIDs[i]);
-					GameSrv->SetActiveLevel(LevelID);
-				}
-			}
-			else Sys::Error("Transition to %s failed!", LevelID.CStr());
-
-			break;
-		}
-		default: Sys::Error("Unknown game setup mode: %d!", Request);
-	}
+	//!!!spawn async loading task(s) here, if async!
 }
 //---------------------------------------------------------------------
 
@@ -175,7 +89,6 @@ CStrID CAppStateLoading::OnFrame()
 {
 	TimeSrv->Trigger();
 	EventSrv->ProcessPendingEvents();
-//	RenderSrv->GetDisplay().ProcessWindowMessages();
 	DbgSrv->Trigger();
 	UISrv->Trigger((float)TimeSrv->GetFrameTime());
 
@@ -188,6 +101,7 @@ CStrID CAppStateLoading::OnFrame()
 	{
 		//???begin-end to a render path? anyway RP renders the whole view (RT/SwapChain)!
 		//!!!rp/view doesn't know anything about present, so present manually!
+		pGPU->Present(SwapChainIdx);
 		if (pGPU->BeginFrame())
 		{
 			//???!!!store RP outside the view?! logically view doesn't own RP
@@ -195,17 +109,114 @@ CStrID CAppStateLoading::OnFrame()
 			View.RenderPath->Render(View);
 
 			pGPU->EndFrame();
-			pGPU->Present(SwapChainIdx);
 		}
 	}
 
 	CoreSrv->Trigger();
 
-	//!!!process loading if sync, wait for loading thread end if async!
-	IPGApp->FSM.RequestState(CStrID("Game")); //???!!!use CAppStateLoading::OnFrame return value!?
+	///// Emulates loading! /////////////////////////////////
+	//???spawn async based on request? some requests are sync?
+	//if so, loading screen will not be rendered properly for sync tasks!
 
-	return GetID();
+	bool LoadingTaskFinished = false;
+
+	ELoadingRequest Request = (ELoadingRequest)StateParams->Get<int>(CStrID("Request"));
+	switch (Request)
+	{
+		case Request_NewLevel:
+		{
+			CStrID LevelID = StateParams->Get<CStrID>(CStrID("LevelID"), CStrID("__NewLevel__"));
+			Data::CParams DefaultLevelDesc;
+			//!!!fill or load DefaultLevelDesc! or level will get defaults inside
+			//or desc must be added as a state param along with LevelID!
+			GameSrv->LoadLevel(LevelID, DefaultLevelDesc);
+			break;
+		}
+		case Request_LoadLevel:
+		{
+			CStrID LevelID = StateParams->Get<CStrID>(CStrID("LevelID"));
+			const CString& FileName = StateParams->Get<CString>(CStrID("FileName"));
+			n_assert(FileName.IsValid());
+			Data::PParams Desc = DataSrv->LoadPRM(FileName);
+			n_assert(Desc.IsValidPtr());
+			GameSrv->LoadLevel(LevelID, *Desc);
+			break;
+		}
+		case Request_NewGame:
+		case Request_ContinueGame:
+		{
+			bool WasGameStarted = GameSrv->IsGameStarted();
+
+			//???where to get file name? ???Params->Get<CString>(CStrID("FileName"));
+			const char* pGameFile = "Export:Game/Main.prm";
+			if (Request == Request_NewGame)
+				GameSrv->StartNewGame(pGameFile);
+			else
+				GameSrv->ContinueGame(pGameFile);
+
+			if (WasGameStarted) DeleteUnreferencedResources();
+			GameSrv->ValidateAllLevels();
+
+			break;
+		}
+		case Request_LoadGame:
+		{
+			bool WasGameStarted = GameSrv->IsGameStarted();
+			GameSrv->LoadGame(StateParams->Get<CString>(CStrID("SavedGameName")));
+			if (WasGameStarted) DeleteUnreferencedResources();
+			GameSrv->ValidateAllLevels();
+			break;
+		}
+		case Request_Transition:
+		{
+			Data::PDataArray IDs = StateParams->Get<Data::PDataArray>(CStrID("EntityIDs"));
+			n_assert(IDs->GetCount());
+
+			CStrID LevelID = GetStrID(*StateParams, CStrID("LevelID"));
+			CStrID MarkerID = GetStrID(*StateParams, CStrID("MarkerID"));
+			bool IsFarTravel = StateParams->Get<bool>(CStrID("IsFarTravel"));
+			bool IsPartyTravel = StateParams->Get<bool>(CStrID("IsPartyTravel"));
+
+			CArray<CStrID> TravellerIDs(IDs->GetCount(), 0);
+			for (UPTR i = 0; i < IDs->GetCount(); ++i)
+				TravellerIDs.Add(GetStrID(IDs->Get(i)));
+
+			if (WorldMgr->MakeTransition(TravellerIDs, LevelID, MarkerID, IsFarTravel))
+			{
+				if (IsFarTravel) DeleteUnreferencedResources();
+				GameSrv->ValidateLevel(LevelID);
+				if (IsPartyTravel)
+				{
+					Game::CGameLevel* pLevel = GameSrv->GetLevel(LevelID);
+					pLevel->ClearSelection();
+					RPG::CFaction* pParty = FactionMgr->GetFaction(CStrID("Party"));
+					if (pParty)
+					{
+						for (UPTR i = 0; i < TravellerIDs.GetCount(); ++i)
+						{
+							CStrID TravellerID = TravellerIDs[i];
+							if (pParty->IsMember(TravellerID))
+								pLevel->AddToSelection(TravellerID);
+						}
+					}
+				}
+			}
+			else Sys::Error("Transition to %s failed!", LevelID.CStr());
+
+			break;
+		}
+		default: Sys::Error("Unknown game setup mode: %d!", Request);
+	}
+
+	LoadingTaskFinished = true;
+	//////////////////////
+
+	//!!!DBG TMP! to render loading screen while loading is sync
+	if (LoadingTaskFinished && View.RenderPath.IsValidPtr() && pGPU->SwapChainExists(SwapChainIdx))
+		pGPU->Present(SwapChainIdx);
+
+	return LoadingTaskFinished ? CStrID("Game") : GetID();
 }
 //---------------------------------------------------------------------
 
-} // namespace Application
+}

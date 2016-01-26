@@ -20,29 +20,28 @@ namespace CEGUI
 
 namespace UI
 {
-using namespace Prop;
 
 class CContainerWindow: public CUIWindow
 {
 private:
 
-	static void FillList(CPropInventory* Inventory, CEGUI::Listbox* ListBox, CEGUI::Window* pWVInfo, bool IgnoreEquippedItems);
+	static void FillList(Prop::CPropInventory* Inventory, CEGUI::Listbox* ListBox, CEGUI::Window* pWVInfo, bool IgnoreEquippedItems);
 
 	void ClearLists();
 	void ReloadLists();
-	bool MoveSelectedItem(CEGUI::Listbox* pFromListBox, CPropInventory* pFromInventory, CPropInventory* pToInventory, bool FromInventoryToContainer);
+	bool MoveSelectedItem(CEGUI::Listbox* pFromListBox, Prop::CPropInventory* pFromInventory, Prop::CPropInventory* pToInventory, bool FromInventoryToContainer);
 
 protected:
 
-	CEGUI::PushButton*	pGiveBtn;
-	CEGUI::PushButton*	pTakeBtn;
-	CEGUI::Listbox*		pInvList;
-	CEGUI::Listbox*		pContList;
-	CEGUI::Window*		pContWVInfo;
-	CEGUI::Window*		pInvWVInfo;
+	CEGUI::PushButton*		pGiveBtn;
+	CEGUI::PushButton*		pTakeBtn;
+	CEGUI::Listbox*			pInvList;
+	CEGUI::Listbox*			pContList;
+	CEGUI::Window*			pContWVInfo;
+	CEGUI::Window*			pInvWVInfo;
 
-	CPropInventory*		pContainerInv;
-	CPropInventory*		pPlrInv;
+	Prop::CPropInventory*	pContainerInv;
+	Prop::CPropInventory*	pPlrInv;
 
 	bool OnCloseClick(const CEGUI::EventArgs& e);
 	bool OnGiveBtnClick(const CEGUI::EventArgs& e);
