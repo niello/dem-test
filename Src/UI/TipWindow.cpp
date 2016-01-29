@@ -2,7 +2,7 @@
 
 #include <Game/GameServer.h>
 #include <Events/EventServer.h>
-#include <Math/Rect.h>
+#include <Data/Regions.h>
 
 namespace UI
 {
@@ -58,25 +58,25 @@ void CTipWindow::UpdateBinding()
 		return;
 	}
 
-	rectangle ScreenRect;
+	Data::CRect ScreenRect;
 	pLevel->GetEntityScreenRect(ScreenRect, *pEntity, &WorldOffset);
 		
 	vector2 WndSize = GetSizeRel(),
 			WndPos = ScreenOffset;
 
 	if (Alignment & TipAlignTop)
-		WndPos.y += ScreenRect.v0.y - WndSize.y;
+		WndPos.y += (float)ScreenRect.Y - WndSize.y;
 	else if (Alignment & TipAlignBottom)
-		WndPos.y += ScreenRect.v1.y;
+		WndPos.y += (float)ScreenRect.Bottom();
 	else
-		WndPos.y += (ScreenRect.v0.y + ScreenRect.v1.y - WndSize.y) * 0.5f;
+		WndPos.y += ((float)ScreenRect.Y + (float)ScreenRect.Bottom() - WndSize.y) * 0.5f;
 
 	if (Alignment & TipAlignLeft)
-		WndPos.x += ScreenRect.v0.x - WndSize.x;
+		WndPos.x += (float)ScreenRect.X - WndSize.x;
 	else if (Alignment & TipAlignRight)
-		WndPos.x += ScreenRect.v1.x;
+		WndPos.x += (float)ScreenRect.Right();
 	else
-		WndPos.x += (ScreenRect.v0.x + ScreenRect.v1.x - WndSize.x) * 0.5f;
+		WndPos.x += ((float)ScreenRect.X + (float)ScreenRect.Right() - WndSize.x) * 0.5f;
 	
 	SetPositionRel(WndPos);
 }

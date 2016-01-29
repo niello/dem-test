@@ -17,6 +17,8 @@ class CAppStateGame: public CStateHandler
 
 protected:
 
+	HHandle hMainLevelView;
+
 	bool	RenderDbgAI;
 	bool	RenderDbgPhysics;
 	bool	RenderDbgGfx;

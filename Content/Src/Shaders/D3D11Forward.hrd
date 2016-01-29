@@ -1,6 +1,10 @@
 
 Phases
 {
+	Color
+	{
+		Type = "Geometry"
+	}
 	GUI
 	{
 		Type = "GUI"

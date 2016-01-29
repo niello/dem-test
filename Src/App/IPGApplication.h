@@ -74,7 +74,6 @@ private:
 	Ptr<Physics::CPhysicsServer>		PhysicsServer;
 	Ptr<Input::CInputServer>			InputServer;
 	Ptr<Video::CVideoServer>			VideoServer;
-	Ptr<Game::CGameServer>				GameServer;
 	Ptr<AI::CAIServer>					AIServer;
 	Ptr<UI::CUIServer>					UIServer;
 

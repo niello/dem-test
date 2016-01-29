@@ -58,7 +58,7 @@ void CAppStateLoading::OnStateEnter(CStrID PrevState, Data::PParams Params)
 		IPGApp->MainUIContext->HideMouseCursor();
 
 		View.GPU = IPGApp->GPU;
-		View.RenderPath = (Frame::CRenderPath*)RRP->GetObject();
+		View.RenderPath = RRP->GetObject<Frame::CRenderPath>();
 		View.RTs.SetSize(1);
 		View.RTs[0] = IPGApp->GPU->GetSwapChainRenderTarget(IPGApp->MainSwapChainIndex);
 		View.UIContext = IPGApp->MainUIContext;
@@ -187,6 +187,8 @@ CStrID CAppStateLoading::OnFrame()
 				GameSrv->ValidateLevel(LevelID);
 				if (IsPartyTravel)
 				{
+					NOT_IMPLEMENTED;
+					/*
 					Game::CGameLevel* pLevel = GameSrv->GetLevel(LevelID);
 					pLevel->ClearSelection();
 					RPG::CFaction* pParty = FactionMgr->GetFaction(CStrID("Party"));
@@ -199,6 +201,7 @@ CStrID CAppStateLoading::OnFrame()
 								pLevel->AddToSelection(TravellerID);
 						}
 					}
+					*/
 				}
 			}
 			else Sys::Error("Transition to %s failed!", LevelID.CStr());

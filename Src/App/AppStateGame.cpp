@@ -10,7 +10,9 @@
 #include <UI/IngameScreen.h>
 #include <UI/UIContext.h>
 #include <Render/GPUDriver.h>
+#include <Render/RenderTarget.h>
 #include <Frame/RenderPath.h>
+#include <Frame/Camera.h>
 #include <Resources/ResourceManager.h>
 #include <Resources/Resource.h>
 #include <Events/EventServer.h>
@@ -18,8 +20,10 @@
 #include <IO/IOServer.h>
 #include <Game/GameServer.h>
 #include <Game/GameLevel.h>
+#include <Game/GameLevelView.h>
 #include <Scene/Events/SetTransform.h>
 #include <Scene/SceneNode.h>
+#include <Scene/NodeControllerThirdPerson.h>
 #include <UI/PropUIControl.h>
 //#include <Audio/AudioServer.h>
 #include <Physics/PhysicsServer.h>
@@ -40,6 +44,7 @@ __ImplementClassNoFactory(App::CAppStateGame, App::CStateHandler);
 
 CAppStateGame::CAppStateGame(CStrID StateID):
 	CStateHandler(StateID),
+	hMainLevelView(INVALID_HANDLE),
     RenderDbgAI(false),
     RenderDbgPhysics(false),
     RenderDbgGfx(false),
@@ -73,6 +78,7 @@ void CAppStateGame::OnStateEnter(CStrID PrevState, Data::PParams Params)
 		n_assert(RRP->IsLoaded());
 	}
 
+	//!!!???only if game was (re)started!?
 	// Load views, create additional windows if required, load cameras
 
 	// If there are no views for any level:
@@ -80,58 +86,50 @@ void CAppStateGame::OnStateEnter(CStrID PrevState, Data::PParams Params)
 	{
 		CStrID PartyLeaderID = FactionMgr->GetFaction(CStrID("Party"))->GetLeader();
 		Game::CGameLevel* pActiveLevel = EntityMgr->GetEntity(PartyLeaderID)->GetLevel();
-		Frame::CView* pView = pActiveLevel->CreateView();
-				
-		Ptr<UI::CIngameScreen> IngameScreen = n_new(UI::CIngameScreen);
-		IngameScreen->Load("IngameScreen.layout");
+		hMainLevelView = GameSrv->CreateLevelView(pActiveLevel->GetID());
+		Game::CGameLevelView* pView = GameSrv->GetLevelView(hMainLevelView);
 
-		IPGApp->MainUIContext->SetRootWindow(IngameScreen);
-		IPGApp->MainUIContext->ShowGUI();
+		if (pView)
+		{
+			Ptr<UI::CIngameScreen> IngameScreen = n_new(UI::CIngameScreen);
+			IngameScreen->Load("IngameScreen.layout");
 
-		Render::PRenderTarget MainRT = IPGApp->GPU->GetSwapChainRenderTarget(IPGApp->MainSwapChainIndex);
+			IPGApp->MainUIContext->SetRootWindow(IngameScreen);
+			IPGApp->MainUIContext->ShowGUI();
+			IPGApp->MainUIContext->ShowMouseCursor();
+			IPGApp->MainUIContext->SetDefaultMouseCursor("TaharezLook/MouseArrow");
+			IPGApp->MainUIContext->SubscribeOnInput(IPGApp->MainWindow.GetUnsafe(), 100);
 
-		pView->GPU = IPGApp->GPU;
-		pView->RenderPath = (Frame::CRenderPath*)RRP->GetObject();
-		pView->RTs.SetSize(1);
-		pView->RTs[0] = MainRT;
-		pView->UIContext = IPGApp->MainUIContext;
+			Render::PRenderTarget MainRT = IPGApp->GPU->GetSwapChainRenderTarget(IPGApp->MainSwapChainIndex);
 
-		// create default camera for that level
-		// if no default camera defined, create app-default camera looking at the character selected
+			Frame::CView& FrameView = pView->GetFrameView();
+			FrameView.GPU = IPGApp->GPU;
+			FrameView.RenderPath = RRP->GetObject<Frame::CRenderPath>();
+			FrameView.RTs.SetSize(1);
+			FrameView.RTs[0] = MainRT;
+			FrameView.UIContext = IPGApp->MainUIContext;
+
+			//!!!create default camera for that level!
+			//!!!if no default camera defined, create app-default camera looking at the character selected!
+
+			//!!!DBG TMP!
+			Scene::CSceneNode* pCameraNode = pActiveLevel->GetSceneRoot()->CreateChild(CStrID("_DefaultCamera"));
+			Scene::PNodeControllerThirdPerson Ctlr = n_new(Scene::CNodeControllerThirdPerson);
+			pCameraNode->SetController(Ctlr);
+			Ctlr->Activate(true);
+			Ctlr->SetCOI(vector3(220.0f, 0.05f, 200.0f));
+			Ctlr->SetAngles(20.f, 0.f);
+			Ctlr->SetDistance(10.f);
+			Frame::PCamera MainCamera = n_new(Frame::CCamera);
+			pCameraNode->AddAttribute(*MainCamera);
+			MainCamera->SetWidth((float)MainRT->GetDesc().Width);
+			MainCamera->SetHeight((float)MainRT->GetDesc().Height);
+			FrameView.pCamera = MainCamera;
+			pCameraNode->UpdateTransform(NULL, 0, true); // Set valid camera transform before updating/rending the first frame
+		}
 	}
 
 			/*
-		//!!!if CameraManager is always present, may add there method CreateMainCamera() or smth like that
-		//and just call it here, or create main camera in a camera mgr constructor!
-		CameraManager = n_new(Scene::CCameraManager);
-
-		Scene::CSceneNode* pCameraNode = SceneRoot->CreateChild(CStrID("_DefaultCamera"));
-		MainCamera = n_new(Frame::CCamera);
-		pCameraNode->AddAttribute(*MainCamera);
-		MainCamera->SetWidth(800.f); //!!!(float)RenderSrv->GetBackBufferWidth());
-		MainCamera->SetHeight(600.f); //!!!(float)RenderSrv->GetBackBufferHeight());
-
-		Data::PParams CameraDesc;
-		if (SubDesc->Get(CameraDesc, CStrID("Camera")))
-		{
-			bool IsThirdPerson = CameraDesc->Get(CStrID("ThirdPerson"), true);
-			n_assert(IsThirdPerson); // Until a first person camera is implemented
-
-			if (IsThirdPerson)
-			{
-				CameraManager->InitThirdPersonCamera(*MainCamera->GetNode());
-				Scene::CNodeControllerThirdPerson* pCtlr = (Scene::CNodeControllerThirdPerson*)CameraManager->GetCameraController();
-				if (pCtlr)
-				{
-					pCtlr->SetVerticalAngleLimits(n_deg2rad(CameraDesc->Get(CStrID("MinVAngle"), 0.0f)), n_deg2rad(CameraDesc->Get(CStrID("MaxVAngle"), 89.999f)));
-					pCtlr->SetDistanceLimits(CameraDesc->Get(CStrID("MinDistance"), 0.0f), CameraDesc->Get(CStrID("MaxDistance"), 10000.0f));
-					pCtlr->SetCOI(CameraDesc->Get(CStrID("COI"), vector3::Zero));
-					pCtlr->SetAngles(n_deg2rad(CameraDesc->Get(CStrID("VAngle"), 0.0f)), n_deg2rad(CameraDesc->Get(CStrID("HAngle"), 0.0f)));
-					pCtlr->SetDistance(CameraDesc->Get(CStrID("Distance"), 20.0f));
-				}
-			}
-		}
-
 	// Save camera state //!!!save in game server for all views in a common desc!
 	if (CameraManager.IsValidPtr())
 	{
@@ -221,6 +219,9 @@ void CAppStateGame::OnStateLeave(CStrID NextState)
 	UNSUBSCRIBE_EVENT(ToggleRenderDbgEntities);
 	UNSUBSCRIBE_EVENT(TeleportSelected);
 
+	GameSrv->DestroyLevelView(hMainLevelView);
+	hMainLevelView = INVALID_HANDLE;
+
 	InputSrv->DisableContext(CStrID("Game"));
 }
 //---------------------------------------------------------------------
@@ -232,7 +233,6 @@ CStrID CAppStateGame::OnFrame()
 	TimeSrv->Trigger();
 	EventSrv->ProcessPendingEvents();
 	InputSrv->Trigger();
-//	RenderSrv->GetDisplay().ProcessWindowMessages();
 	DbgSrv->Trigger();
 	UISrv->Trigger((float)TimeSrv->GetFrameTime());
 
@@ -279,13 +279,13 @@ CStrID CAppStateGame::OnFrame()
 
 	PROFILER_START(profRender);
 
-n_assert(false);
-	//RenderSrv->Present(); // Must be called as late as possible after EndFrame
-	//if (RenderSrv->BeginFrame())
-	//{
-	//	if (GameSrv->GetActiveLevel()) GameSrv->GetActiveLevel()->RenderScene();
-	//	RenderSrv->EndFrame();
-	//}
+	IPGApp->GPU->Present(IPGApp->MainSwapChainIndex);
+	if (hMainLevelView != INVALID_HANDLE)
+	{
+		Game::CGameLevelView* pView = GameSrv->GetLevelView(hMainLevelView);
+		if (pView) pView->GetFrameView().Render();
+		else hMainLevelView = INVALID_HANDLE;
+	}
 
 	PROFILER_STOP(profRender);
 
@@ -313,6 +313,8 @@ n_assert(false);
 
 bool CAppStateGame::IssueActorCommand(bool Run, bool ClearQueue)
 {
+	NOT_IMPLEMENTED;
+	/*
 	Game::CEntity* pTargetEntity = GameSrv->GetEntityUnderMouse();
 	Prop::CPropUIControl* pCtl = pTargetEntity ? pTargetEntity->GetProperty<Prop::CPropUIControl>() : NULL;
 
@@ -346,6 +348,7 @@ bool CAppStateGame::IssueActorCommand(bool Run, bool ClearQueue)
 		Task.ClearQueueOnFailure = true;
 		pActor->EnqueueTask(Task);
 	}
+	*/
 
 	OK;
 }
@@ -429,6 +432,7 @@ bool CAppStateGame::OnMouseBtnDown(Events::CEventDispatcher* pDispatcher, const 
 		case Input::MBRight:
 		{
 			NOT_IMPLEMENTED;
+			/*
 			CStrID ID = CStrID::Empty; //FactionMgr->GetFaction(CStrID("Party"))->GetGroupLeader(GameSrv->GetActiveLevel()->GetSelection());
 			Game::CEntity* pActorEntity = EntityMgr->GetEntity(ID);
 			if (!pActorEntity) FAIL;
@@ -437,6 +441,7 @@ bool CAppStateGame::OnMouseBtnDown(Events::CEventDispatcher* pDispatcher, const 
 			Prop::CPropUIControl* pCtl = pTargetEntity->GetProperty<Prop::CPropUIControl>();
 			if (!pCtl) FAIL;
 			pCtl->ShowPopup(pActorEntity);
+			*/
 			OK;
 		}
 	}
@@ -505,6 +510,8 @@ bool CAppStateGame::OnWorldTransitionRequested(Events::CEventDispatcher* pDispat
 
 		if (WorldMgr->MakeTransition(TravellerIDs, LevelID, MarkerID, false) && IsPartyTravel)
 		{
+			NOT_IMPLEMENTED;
+			/*
 			Game::CGameLevel* pLevel = GameSrv->GetLevel(LevelID);
 			pLevel->ClearSelection();
 			RPG::CFaction* pParty = FactionMgr->GetFaction(CStrID("Party"));
@@ -517,8 +524,8 @@ bool CAppStateGame::OnWorldTransitionRequested(Events::CEventDispatcher* pDispat
 						pLevel->AddToSelection(TravellerID); //!!!can add to selection only entities selected before transition!
 				}
 			}
-			NOT_IMPLEMENTED;
-			//GameSrv->SetActiveLevel(LevelID);
+			GameSrv->SetActiveLevel(LevelID);
+			*/
 		}
 	}
 	else

@@ -38,6 +38,7 @@
 #include <Frame/Light.h>
 #include <Frame/Skin.h>
 #include <Frame/Terrain.h>
+#include <Frame/RenderPhaseGeometry.h>
 #include <UI/RenderPhaseGUI.h>
 
 // OTHER ===========================================
@@ -59,6 +60,7 @@ void ForceFactoryRegistration()
 	Frame::CLight::ForceFactoryRegistration();
 	Frame::CSkin::ForceFactoryRegistration();
 	Frame::CTerrain::ForceFactoryRegistration();
+	Frame::CRenderPhaseGeometry::ForceFactoryRegistration();
 	Frame::CRenderPhaseGUI::ForceFactoryRegistration();
 
 	AI::CActionTplIdle::ForceFactoryRegistration();

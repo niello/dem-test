@@ -273,8 +273,8 @@ bool CIPGApplication::Open()
 	PhysicsServer = n_new(Physics::CPhysicsServer);
 	PhysicsServer->Open();
 
-	GameServer = n_new(Game::CGameServer);
-	GameServer->Open();
+	n_new(Game::CGameServer);
+	GameSrv->Open();
 
 	AIServer = n_new(AI::CAIServer);
 
@@ -443,8 +443,8 @@ void CIPGApplication::Close()
 
 	AIServer = NULL;
 	
-	GameServer->Close();
-	GameServer = NULL;
+	GameSrv->Close();
+	n_delete(GameSrv);
 
 	PhysicsServer->Close();
 	PhysicsServer = NULL;
