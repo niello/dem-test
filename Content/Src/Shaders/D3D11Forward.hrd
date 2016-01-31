@@ -4,6 +4,10 @@ Phases
 	Color
 	{
 		Type = "Geometry"
+		Renderers
+		[
+			{ Object = "Frame::CModel" Renderer = "Frame::CModelRenderer" }
+		]
 	}
 	GUI
 	{

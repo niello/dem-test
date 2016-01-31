@@ -110,7 +110,7 @@ bool CIPGApplication::Open()
 	MainWindow = n_new(Sys::COSWindow);
 	MainWindow->SetWindowClass(*(Sys::COSWindowClassWin32*)EngineWindowClass.GetUnsafe()); //!!!bad design!
 	MainWindow->SetTitle(WindowTitle.CStr());
-	MainWindow->SetRect(Data::CRect(50, 50, 800, 600));
+	MainWindow->SetRect(Data::CRect(50, 50, 1024, 768));
 	MainWindow->Open();
 
 	DISP_SUBSCRIBE_PEVENT(MainWindow, OnClosing, CIPGApplication, OnOSWindowClosing);
@@ -120,7 +120,7 @@ bool CIPGApplication::Open()
 	Wnd2 = n_new(Sys::COSWindow);
 	Wnd2->SetWindowClass(*(Sys::COSWindowClassWin32*)EngineWindowClass.GetUnsafe()); //!!!bad design!
 	Wnd2->SetTitle("Window 2");
-	Wnd2->SetRect(Data::CRect(900, 50, 150, 200));
+	Wnd2->SetRect(Data::CRect(1100, 50, 150, 200));
 	Wnd2->Open();
 	SCIdx2 = -1;
 ///////////////////////
