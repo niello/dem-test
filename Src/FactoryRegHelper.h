@@ -30,12 +30,12 @@
 
 // RENDERING =======================================
 
-#include <Frame/Light.h>
-#include <Frame/Skin.h>
-#include <Frame/Terrain.h>
-#include <Frame/ModelRenderer.h>
+#include <Frame/NodeAttrLight.h>
+#include <Frame/NodeAttrSkin.h>
 #include <Frame/RenderPhaseGeometry.h>
 #include <UI/RenderPhaseGUI.h>
+#include <Render/Terrain.h>
+#include <Render/ModelRenderer.h>
 
 // OTHER ===========================================
 
@@ -48,12 +48,12 @@ void ForceFactoryRegistration()
 	Debug::CLuaConsole::ForceFactoryRegistration();
 	Debug::CWatcherWindow::ForceFactoryRegistration();
 
-	Frame::CLight::ForceFactoryRegistration();
-	Frame::CSkin::ForceFactoryRegistration();
-	Frame::CTerrain::ForceFactoryRegistration();
-	Frame::CModelRenderer::ForceFactoryRegistration();
+	Frame::CNodeAttrLight::ForceFactoryRegistration();
+	Frame::CNodeAttrSkin::ForceFactoryRegistration();
 	Frame::CRenderPhaseGeometry::ForceFactoryRegistration();
 	Frame::CRenderPhaseGUI::ForceFactoryRegistration();
+	Render::CTerrain::ForceFactoryRegistration();
+	Render::CModelRenderer::ForceFactoryRegistration();
 
 	AI::CActionTplIdle::ForceFactoryRegistration();
 	AI::CActionTplWander::ForceFactoryRegistration();

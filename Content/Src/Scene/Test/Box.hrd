@@ -1,7 +1,8 @@
 Attrs
 [
 	{
-		Class = "Frame::CModel"
+		Class = "Frame::CNodeAttrRenderable"
+		RenderableClass = "Render::CModel"
 		
 		Material = 'Test/Material'
 		Vars

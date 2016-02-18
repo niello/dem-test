@@ -1,7 +1,8 @@
 Attrs
 [
 	{
-		Class = "Frame::CModel"
+		Class = "Frame::CNodeAttrRenderable"
+		RenderableClass = "Render::CModel"
 		Material = 'Arch/Door'
 		Mesh = 'Arch/Door'
 		BatchType = 'Solid'
@@ -15,7 +16,8 @@ Children
 		Attrs
 		[
 			{
-				Class = "Frame::CModel"				
+				Class = "Frame::CNodeAttrRenderable"
+				RenderableClass = "Render::CModel"
 				Material = 'Arch/Door'
 				Mesh = 'Arch/Door'
 				MeshGroupIndex = 1

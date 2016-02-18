@@ -3,7 +3,8 @@
 Attrs
 [
 	{
-		Class = "Frame::CModel"
+		Class = "Frame::CNodeAttrRenderable"
+		RenderableClass = "Render::CModel"
 		
 		Material = 'Test/Material'
 		Vars
@@ -27,7 +28,8 @@ Attrs
 		]
 	},
 	{
-		Class = "Frame::CModel"
+		Class = "Frame::CNodeAttrRenderable"
+		RenderableClass = "Render::CModel"
 		
 		Material = 'Test/Material'
 		Vars
@@ -53,7 +55,8 @@ Attrs
 		]
 	},
 	{
-		Class = "Frame::CModel"
+		Class = "Frame::CNodeAttrRenderable"
+		RenderableClass = "Render::CModel"
 		
 		Material = 'Test/Material'
 		Vars
@@ -78,7 +81,7 @@ Attrs
 		]
 	},
 	{
-		Class = "Frame::CSkin"
+		Class = "Frame::CNodeAttrSkin"
 
 		SkinInfo = 'Test/Kila'
 		AutocreateBones = false		// Generates bone nodes automatically, attaching the skeleton root as a current node child

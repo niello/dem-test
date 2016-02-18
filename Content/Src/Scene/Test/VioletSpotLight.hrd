@@ -1,7 +1,7 @@
 Attrs
 [
 	{
-		Class = "Frame::CLight"
+		Class = "Frame::CNodeAttrLight"
 		LightType = 2			// Spot
 		Color = (1.0, 0.0, 1.0)
 		Intensity = 0.7

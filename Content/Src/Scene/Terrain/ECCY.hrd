@@ -1,7 +1,8 @@
 Attrs
 [
 	{
-		Class = "Frame::CTerrain"
+		Class = "Frame::CNodeAttrRenderable"
+		RenderableClass = "Render::CTerrain"
 
 		CDLODFile = "ECCY"
 

@@ -12,7 +12,7 @@
 #include <Render/GPUDriver.h>
 #include <Render/RenderTarget.h>
 #include <Frame/RenderPath.h>
-#include <Frame/Camera.h>
+#include <Frame/NodeAttrCamera.h>
 #include <Resources/ResourceManager.h>
 #include <Resources/Resource.h>
 #include <Events/EventServer.h>
@@ -120,7 +120,7 @@ void CAppStateGame::OnStateEnter(CStrID PrevState, Data::PParams Params)
 			Ctlr->SetCOI(vector3(220.0f, 0.05f, 200.0f));
 			Ctlr->SetAngles(20.f, 0.f);
 			Ctlr->SetDistance(10.f);
-			Frame::PCamera MainCamera = n_new(Frame::CCamera);
+			Frame::PNodeAttrCamera MainCamera = n_new(Frame::CNodeAttrCamera);
 			pCameraNode->AddAttribute(*MainCamera);
 			MainCamera->SetWidth((float)MainRT->GetDesc().Width);
 			MainCamera->SetHeight((float)MainRT->GetDesc().Height);
