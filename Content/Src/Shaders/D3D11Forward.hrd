@@ -6,7 +6,8 @@ Phases
 		Type = "Geometry"
 		Renderers
 		[
-			{ Object = "Render::CModel" Renderer = "Render::CModelRenderer" }
+			{ Object = "Render::CModel" Renderer = "Render::CModelRenderer" },
+			{ Object = "Render::CTerrain" Renderer = "Render::CTerrainRenderer" }
 		]
 	}
 	GUI
