@@ -39,14 +39,14 @@ RenderStates
 	{
 		VS
 		{
-			Src = "SrcShaders:SM_3_0/CEGUI_VS.hlsl"
+			In = "SrcShaders:SM_3_0/CEGUI_VS.hlsl"
 			Target = 0x0300
 			Entry = "VSMain"
 		}
 
 		PS
 		{
-			Src = "SrcShaders:SM_3_0/CEGUI_PS.hlsl"
+			In = "SrcShaders:SM_3_0/CEGUI_PS.hlsl"
 			Target = 0x0300
 			Entry = "PSMain"
 		}

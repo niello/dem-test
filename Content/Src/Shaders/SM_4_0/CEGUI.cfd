@@ -1,0 +1,21 @@
+// Description of CEGUI shaders
+
+VS
+{
+	Tool = 'CFShader'
+	In = "SrcShaders:SM_4_0/CEGUI_VS.hlsl"
+	Out = "Shaders:SM_4_0/CEGUI.vsh"
+	Type = 'Vertex'
+	Target = 0x0400
+	Entry = "VSMain"
+}
+
+PS
+{
+	Tool = 'CFShader'
+	In = "SrcShaders:SM_4_0/CEGUI_PS.hlsl"
+	Out = "Shaders:SM_4_0/CEGUI.psh"
+	Type = 'Pixel'
+	Target = 0x0400
+	Entry = "PSMain"
+}
