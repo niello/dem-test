@@ -1,1 +1,17 @@
-Obj
+#IDE and compiler intermediate files
+*.ncb
+*.sdf
+*.opensdf
+*.suo
+*.ilk
+*.idb
+*.pdb
+*.vcxproj.user
+*.vcproj.*.user
+*.ib_pdb_index
+
+#IDE and compiler intermediate directories
+Obj/
+
+#Debug executables
+*_d.exe

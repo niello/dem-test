@@ -37,11 +37,11 @@ sampler LinearSampler;
 
 float4 PSMain(PSSceneIn In): SV_Target
 {
-	#if DEM_LIGHT_COUNT == 0
+#if DEM_LIGHT_COUNT == 0
 	return float4(0.5f, 0.5f, 0.5f, 1.f);
-	#elif DEM_LIGHT_COUNT == 1
-	return float4(0.8f, 0.8f, 0.8f, 1.f);
-	#else
+#elif DEM_LIGHT_COUNT == 1
+	return float4(0.75f, 0.75f, 0.75f, 1.f);
+#else
 	return TexAlbedo.Sample(LinearSampler, In.Tex);
-	#endif
+#endif
 }

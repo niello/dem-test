@@ -10,7 +10,12 @@ Techniques
 	}
 }
 
-MaterialConsts
+GlobalParams
+{
+	ProjectionMatrix = null //CB: ChangeOnResize
+}
+
+MaterialParams
 {
 	TexAlbedo = null
 }
