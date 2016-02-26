@@ -34,6 +34,8 @@
 #include <Frame/NodeAttrSkin.h>
 #include <Frame/RenderPhaseGeometry.h>
 #include <UI/RenderPhaseGUI.h>
+#include <Render/Model.h>
+#include <Render/Terrain.h>
 #include <Render/ModelRenderer.h>
 #include <Render/TerrainRenderer.h>
 
@@ -52,6 +54,8 @@ void ForceFactoryRegistration()
 	Frame::CNodeAttrSkin::ForceFactoryRegistration();
 	Frame::CRenderPhaseGeometry::ForceFactoryRegistration();
 	Frame::CRenderPhaseGUI::ForceFactoryRegistration();
+	Render::CModel::ForceFactoryRegistration();
+	Render::CTerrain::ForceFactoryRegistration();
 	Render::CModelRenderer::ForceFactoryRegistration();
 	Render::CTerrainRenderer::ForceFactoryRegistration();
 
