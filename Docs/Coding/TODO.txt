@@ -179,7 +179,6 @@ Body FSM (for each part like bottom(moving) & top (action)), body resources & lo
 
 <Misc>
 
-Display.RequestDisplayMode() must work not only before RenderSrv->Open()
 Init functions with dependency check (InitScripting() { if !EventSrv->HasInstance() msg "you must init events first!" }
 
 Array flag Sorted to signal that array is sorted now and optimized algorithms can be used (forex Array1.ContainsAll(Array2))

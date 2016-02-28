@@ -4,7 +4,7 @@ Techniques
 {
 	Model
 	{
-		Passes = [ 'Model' ]
+		Passes = [ 'Model30' ]
 		InputSet = 'Model'
 		MaxLights = 2		// Compiles tech for DEM_LIGHT_COUNT = 0, 1, 2
 	}
@@ -37,7 +37,7 @@ RenderStates
 		DepthWriteEnable = false
 	}
 	
-	Model
+	Model40
 	{
 		Base = 'Common'
 
@@ -52,6 +52,25 @@ RenderStates
 		{
 			In = "SrcShaders:SM_4_0/PBR.hlsl"
 			Target = 0x0400
+			Entry = "PSMain"
+		}
+	}
+	
+	Model30
+	{
+		Base = 'Common'
+
+		VS
+		{
+			In = "SrcShaders:SM_3_0/PBR.hlsl"
+			Target = 0x0300
+			Entry = "VSMain"
+		}
+
+		PS
+		{
+			In = "SrcShaders:SM_3_0/PBR.hlsl"
+			Target = 0x0300
 			Entry = "PSMain"
 		}
 	}
