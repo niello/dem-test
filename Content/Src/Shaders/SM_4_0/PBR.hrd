@@ -10,6 +10,7 @@ Techniques
 	}
 }
 
+//!!!no need in default values!
 GlobalParams
 {
 	ProjectionMatrix = null //CB: ChangeOnResize
@@ -18,11 +19,7 @@ GlobalParams
 MaterialParams
 {
 	TexAlbedo = null
-}
-
-Samplers
-{
-	LinearSampler
+	LinearSampler // CEffect will create default CSampler instance at the load time
 	{
 		AddressU = "Wrap"
 		AddressV = "Wrap"
