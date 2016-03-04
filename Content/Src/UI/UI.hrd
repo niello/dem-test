@@ -1,0 +1,74 @@
+ResourceGroups
+{
+	schemes = "CEGUI:schemes/"
+	imagesets = "CEGUI:imagesets/"
+	fonts = "CEGUI:fonts/"
+	layouts = "CEGUI:layouts/"
+	looknfeels = "CEGUI:looknfeel/"
+	//lua_scripts = "CEGUI:lua_scripts/"
+}
+
+LoadOnStartup
+{
+	Fonts
+	[
+		"DejaVuSans-8.font",
+		"DejaVuSans-10.font",
+		"DejaVuSans-14.font",
+		"CourierNew-10.font"
+	]
+	
+	Schemes
+	[
+		"TaharezLook.scheme"
+	]
+}
+
+Shaders
+{
+	DX11
+	{
+		VS
+		{
+			Tool = 'CFShader'
+			In = "SrcShaders:SM_4_0/CEGUI_VS.hlsl"
+			//Out = "Shaders:Bin/CEGUI_40.vsh"
+			Type = 'Vertex'
+			Target = 0x0400
+			Entry = "VSMain"
+		}
+
+		PS
+		{
+			Tool = 'CFShader'
+			In = "SrcShaders:SM_4_0/CEGUI_PS.hlsl"
+			//Out = "Shaders:Bin/CEGUI_40.psh"
+			Type = 'Pixel'
+			Target = 0x0400
+			Entry = "PSMain"
+		}
+	}
+
+	DX9
+	{
+		VS
+		{
+			Tool = 'CFShader'
+			In = "SrcShaders:SM_3_0/CEGUI_VS.hlsl"
+			//Out = "Shaders:Bin/CEGUI_30.vsh"
+			Type = 'Vertex'
+			Target = 0x0300
+			Entry = "VSMain"
+		}
+
+		PS
+		{
+			Tool = 'CFShader'
+			In = "SrcShaders:SM_3_0/CEGUI_PS.hlsl"
+			//Out = "Shaders:Bin/CEGUI_30.psh"
+			Type = 'Pixel'
+			Target = 0x0300
+			Entry = "PSMain"
+		}
+	}
+}

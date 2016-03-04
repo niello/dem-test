@@ -233,6 +233,21 @@ bool CIPGApplication::Open()
 	UIServer = n_new(UI::CUIServer)(*GPU, MainSwapChainIndex, (float)RealBackBufDesc.Width, (float)RealBackBufDesc.Height, pCEGUIVS, pCEGUIPS);
 	DbgSrv->AllowUI(true);
 
+	//!!!to HRD params! data/cfg/UI.hrd
+	if (UI::CUIServer::HasInstance())
+	{
+		UISrv->LoadFont("DejaVuSans-8.font");
+		UISrv->LoadFont("DejaVuSans-10.font");
+		UISrv->LoadFont("DejaVuSans-14.font");
+		UISrv->LoadFont("CourierNew-10.font");
+		UISrv->LoadScheme("TaharezLook.scheme");
+	}
+
+	MainUIContext = UISrv->GetDefaultContext();
+	n_assert(MainUIContext.IsValidPtr());
+
+	Sys::Log("Setup UI - OK\n");
+
 	n_new(Scripting::CScriptServer);
 	if (!Scripting::CEntityScriptObject::RegisterClass())
 	{
@@ -254,19 +269,6 @@ bool CIPGApplication::Open()
 	InputSrv->EnableContext(CStrID("Debug"));
 
 	Sys::Log("Setup input - OK\n");
-
-	//!!!to HRD params! data/cfg/UI.hrd
-	if (UI::CUIServer::HasInstance())
-	{
-		UISrv->LoadFont("DejaVuSans-8.font");
-		UISrv->LoadFont("DejaVuSans-10.font");
-		UISrv->LoadFont("DejaVuSans-14.font");
-		UISrv->LoadFont("CourierNew-10.font");
-		UISrv->LoadScheme("TaharezLook.scheme");
-	}
-
-	MainUIContext = UISrv->GetDefaultContext();
-	n_assert(MainUIContext.IsValidPtr());
 
 	Sys::Log("InitGameSystem() ...\n");
 

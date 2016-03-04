@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4" >
+    <Window type="TaharezLook/FrameWindow" name="Console" >
+        <Property name="Area" value="{{0.0720703,0},{0.0284024,0},{0.664844,0},{0.40469,0}}" />
+        <Property name="Text" value="Console" />
+        <Window type="TaharezLook/Editbox" name="InputLine" >
+            <Property name="Area" value="{{0.0112026,0},{0,-11},{0.986079,0},{0,17}}" />
+            <Property name="VerticalAlignment" value="Bottom" />
+        </Window>
+        <Window type="TaharezLook/Listbox" name="OutputList" >
+            <Property name="Area" value="{{0.012356,0},{0.031252,0},{0.988879,0},{0.8,0}}" />
+        </Window>
+    </Window>
+</GUILayout>
