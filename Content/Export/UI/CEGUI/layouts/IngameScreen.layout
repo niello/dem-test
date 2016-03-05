@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4" >
+    <Window type="DefaultWindow" name="IngameScreen" >
+        <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
+        <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        <Property name="MousePassThroughEnabled" value="true" />
+        <Window type="DefaultWindow" name="DialogueWindow" >
+            <Property name="Area" value="{{0.339671,0},{0.73757,0},{0.747977,0},{0.996683,0}}" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+            <Window type="TaharezLook/Button" name="MainButton" >
+                <Property name="Area" value="{{0.00351384,0},{0.859526,0},{0.983995,0},{0.994389,0}}" />
+                <Property name="Text" value="Continue/End" />
+                <Property name="TooltipText" value="Нажмите для продолжения или окончания" />
+                <Property name="WantsMultiClickEvents" value="false" />
+            </Window>
+            <Window type="TaharezLook/Listbox" name="TextArea" >
+                <Property name="Area" value="{{0.00358269,0},{0.0239574,0},{0.987689,0},{0.839653,0}}" />
+            </Window>
+        </Window>
+        <Window type="DefaultWindow" name="Console" >
+            <Property name="Area" value="{{0.00410175,0},{0.741407,0},{0.339063,0},{0.996615,0}}" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+            <Window type="TaharezLook/Listbox" name="TextArea" >
+                <Property name="Area" value="{{0.00845493,0},{0.00833259,0},{0.996065,0},{0.987501,0}}" />
+            </Window>
+        </Window>
+        <Window type="TaharezLook/FrameWindow" name="Inventory" >
+            <Property name="Area" value="{{0.236914,0},{0.140633,0},{0.83457,0},{0.675936,0}}" />
+            <Property name="Text" value="Inventory" />
+            <Property name="Visible" value="false" />
+            <Window type="TaharezLook/Listbox" name="InvList" >
+                <Property name="Area" value="{{0.0127454,0},{0.028532,0},{0.427778,0},{0.897646,0}}" />
+            </Window>
+            <Window type="TaharezLook/Listbox" name="EquipList" >
+                <Property name="Area" value="{{0.544118,0},{0.0316272,0},{0.973856,0},{0.898049,0}}" />
+            </Window>
+            <Window type="TaharezLook/Button" name="EquipBtn" >
+                <Property name="Area" value="{{0.443464,0},{0.302288,0},{0.526798,0},{0.393472,0}}" />
+                <Property name="Text" >&gt;&gt;
+</Property>
+            </Window>
+            <Window type="TaharezLook/Button" name="UnequipBtn" >
+                <Property name="Area" value="{{0.443791,0},{0.415747,0},{0.527124,0},{0.501547,0}}" />
+                <Property name="Text" value="&lt;&lt;" />
+            </Window>
+            <Window type="TaharezLook/StaticText" name="WVInfo" >
+                <Property name="Area" value="{{0.0127454,0},{0.906058,0},{0.429411,0},{0.983783,0}}" />
+                <Property name="Text" value="Weight: 0/100    Volume: 0/230" />
+                <Property name="MaxSize" value="{{1,0},{1,0}}" />
+                <Property name="HorzScrollPageSize" value="238.2" />
+                <Property name="VertScrollPageSize" value="17.2" />
+                <Property name="HorzScrollDocumentSize" value="272" />
+                <Property name="VertScrollDocumentSize" value="19.8618" />
+            </Window>
+        </Window>
+        <Window type="TaharezLook/FrameWindow" name="ContainerWindow" >
+            <Property name="Area" value="{{0.236914,0},{0.140633,0},{0.83457,0},{0.675936,0}}" />
+            <Property name="Text" value="Container" />
+            <Window type="TaharezLook/Listbox" name="ContList" >
+                <Property name="Area" value="{{0.0127454,0},{0.028532,0},{0.427778,0},{0.897646,0}}" />
+            </Window>
+            <Window type="TaharezLook/Listbox" name="InvList" >
+                <Property name="Area" value="{{0.544118,0},{0.0316272,0},{0.973856,0},{0.898049,0}}" />
+            </Window>
+            <Window type="TaharezLook/Button" name="GiveBtn" >
+                <Property name="Area" value="{{0.443464,0},{0.302288,0},{0.526798,0},{0.393472,0}}" />
+                <Property name="Text" value="&gt;&gt;" />
+            </Window>
+            <Window type="TaharezLook/Button" name="TakeBtn" >
+                <Property name="Area" value="{{0.443791,0},{0.415747,0},{0.527124,0},{0.501547,0}}" />
+                <Property name="Text" value="&lt;&lt;" />
+            </Window>
+            <Window type="TaharezLook/StaticText" name="ContWVInfo" >
+                <Property name="Area" value="{{0.0127454,0},{0.906058,0},{0.429411,0},{0.983783,0}}" />
+                <Property name="Text" value="Weight: 0/100    Volume: 0/230" />
+                <Property name="MaxSize" value="{{1,0},{1,0}}" />
+                <Property name="HorzScrollPageSize" value="238.2" />
+                <Property name="VertScrollPageSize" value="17.2" />
+                <Property name="HorzScrollDocumentSize" value="272" />
+                <Property name="VertScrollDocumentSize" value="19.8618" />
+            </Window>
+            <Window type="TaharezLook/StaticText" name="InvWVInfo" >
+                <Property name="Area" value="{{0.544118,0},{0.906058,0},{0.972223,0},{0.983783,0}}" />
+                <Property name="Text" value="Weight: 0/100    Volume: 0/230" />
+                <Property name="MaxSize" value="{{1,0},{1,0}}" />
+                <Property name="HorzScrollPageSize" value="244.2" />
+                <Property name="VertScrollPageSize" value="17.2" />
+                <Property name="HorzScrollDocumentSize" value="272" />
+                <Property name="VertScrollDocumentSize" value="19.8618" />
+            </Window>
+        </Window>
+        <Window type="TaharezLook/FrameWindow" name="MovingItemsWindow" >
+            <Property name="Area" value="{{0.361587,0},{0.305353,0},{0.716588,0},{0.478169,0}}" />
+            <Property name="Text" value="Moving items" />
+            <Window type="TaharezLook/Spinner" name="ContainerSpinner" >
+                <Property name="Area" value="{{0.408955,0},{0.138934,0},{0.658955,0},{0.367923,0}}" />
+                <Property name="Text" value="0" />
+                <AutoWindow namePath="__auto_editbox__" >
+                    <Property name="Text" value="0" />
+                    <Property name="ValidationString" value="-?\d*" />
+                </AutoWindow>
+                <AutoWindow namePath="__auto_incbtn__" >
+                    <Property name="WantsMultiClickEvents" value="false" />
+                    <Property name="MouseAutoRepeatEnabled" value="true" />
+                </AutoWindow>
+                <AutoWindow namePath="__auto_decbtn__" >
+                    <Property name="WantsMultiClickEvents" value="false" />
+                    <Property name="MouseAutoRepeatEnabled" value="true" />
+                </AutoWindow>
+            </Window>
+            <Window type="TaharezLook/Spinner" name="InventorySpinner" >
+                <Property name="Area" value="{{0.410448,0},{0.494223,0},{0.660448,0},{0.709204,0}}" />
+                <Property name="Text" value="0" />
+                <AutoWindow namePath="__auto_editbox__" >
+                    <Property name="Text" value="0" />
+                    <Property name="ValidationString" value="-?\d*" />
+                </AutoWindow>
+                <AutoWindow namePath="__auto_incbtn__" >
+                    <Property name="WantsMultiClickEvents" value="false" />
+                    <Property name="MouseAutoRepeatEnabled" value="true" />
+                </AutoWindow>
+                <AutoWindow namePath="__auto_decbtn__" >
+                    <Property name="WantsMultiClickEvents" value="false" />
+                    <Property name="MouseAutoRepeatEnabled" value="true" />
+                </AutoWindow>
+            </Window>
+            <Window type="TaharezLook/StaticText" name="ContainerText" >
+                <Property name="Area" value="{{0.0537313,0},{0.134578,0},{0.360447,0},{0.384578,0}}" />
+                <Property name="Text" value="Container" />
+                <Property name="MaxSize" value="{{1,0},{1,0}}" />
+                <Property name="HorzScrollPageSize" value="95.2" />
+                <Property name="VertScrollPageSize" value="13.2" />
+                <Property name="HorzScrollDocumentSize" value="88" />
+                <Property name="VertScrollDocumentSize" value="19.8618" />
+            </Window>
+            <Window type="TaharezLook/Button" name="OkButton" >
+                <Property name="Area" value="{{0.702985,0},{0.650196,0},{0.952985,0},{0.900196,0}}" />
+                <Property name="Text" value="Ok" />
+            </Window>
+            <Window type="TaharezLook/StaticText" name="InventoryText" >
+                <Property name="Area" value="{{0.0589552,0},{0.485746,0},{0.365671,0},{0.735746,0}}" />
+                <Property name="Text" value="Inventory" />
+                <Property name="MaxSize" value="{{1,0},{1,0}}" />
+                <Property name="HorzScrollPageSize" value="95.2" />
+                <Property name="VertScrollPageSize" value="13.2" />
+                <Property name="HorzScrollDocumentSize" value="85" />
+                <Property name="VertScrollDocumentSize" value="19.8618" />
+            </Window>
+        </Window>
+        <Window type="DefaultWindow" name="IngameMenuPanel" >
+            <Property name="Area" value="{{0.00976579,0},{0.00432145,0},{0.0771486,0},{0.726945,0}}" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+            <Window type="TaharezLook/Button" name="InvBtn" >
+                <Property name="Area" value="{{0.0243008,0},{0.00687907,0},{0.922093,0},{0.0734296,0}}" />
+                <Property name="Text" >Inv
+</Property>
+            </Window>
+        </Window>
+        <Window type="TaharezLook/Button" name="BtnDbgExit" >
+            <Property name="Area" value="{{0.933205,0},{0.00565389,0},{0.993751,0},{0.0592253,0}}" />
+            <Property name="Text" value="Exit" />
+        </Window>
+    </Window>
+</GUILayout>

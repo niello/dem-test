@@ -1,0 +1,48 @@
+<GUILayout version="4">
+    <Window name="Watcher" type="TaharezLook/FrameWindow">
+        <Property name="Text" value="Watcher" />
+        <Property name="TitlebarFont" value="DejaVuSans-10" />
+        <Property name="TitlebarEnabled" value="True" />
+        <Property name="Area" value="{{0.2,0},{0.2,0},{0.839648,0},{0.634909,0}}" />
+        <Window name="PatternLabel" type="TaharezLook/StaticText">
+            <Property name="Font" value="DejaVuSans-8" />
+            <Property name="Text" value="Filter" />
+            <Property name="HorzExtent" value="27" />
+            <Property name="VertExtent" value="10.8585" />
+            <Property name="Area" value="{{0,5},{0,3},{0,60},{0,26}}" />
+        </Window>
+        <Window name="PatternEdit" type="TaharezLook/Editbox">
+            <Property name="Text" value="*" />
+            <Property name="TooltipText" value="Use '*' character to allow partial matching" />
+            <Property name="MaxTextLength" value="1073741823" />
+            <Property name="Area" value="{{0,65},{0,3},{0.699267,0},{0,26}}" />
+            <Property name="TextParsingEnabled" value="False" />
+        </Window>
+        <Window name="List" type="TaharezLook/MultiColumnList">
+            <Property name="Area" value="{{0,5},{0,30},{0.981317,0},{0.847962,0}}" />
+        </Window>
+        <Window name="NewWatchEdit" type="TaharezLook/Editbox">
+            <Property name="MaxTextLength" value="1073741823" />
+            <Property name="Area" value="{{0.226718,0},{0.874833,0},{0.982061,0},{0.975173,0}}" />
+            <Property name="TextParsingEnabled" value="False" />
+        </Window>
+        <Window name="RBNEnv" type="TaharezLook/RadioButton">
+            <Property name="Text" value="Nebula2" />
+            <Property name="Area" value="{{0.0122135,0},{0.882996,0},{0.132443,0},{0.966328,0}}" />
+        </Window>
+        <Window name="RBLua" type="TaharezLook/RadioButton">
+            <Property name="Text" value="Lua" />
+            <Property name="Area" value="{{0.141221,0},{0.877513,0},{0.217176,0},{0.974451,0}}" />
+        </Window>
+        <Window name="BtnAllVars" type="TaharezLook/Button">
+            <Property name="Font" value="DejaVuSans-8" />
+            <Property name="Text" value="Add all N2 vars" />
+            <Property name="Area" value="{{0.810687,0},{0,3},{0.981298,0},{0,26}}" />
+        </Window>
+        <Window name="BtnClear" type="TaharezLook/Button">
+            <Property name="Font" value="DejaVuSans-8" />
+            <Property name="Text" value="Clear" />
+            <Property name="Area" value="{{0.706107,0},{0,3},{0.801908,0},{0,26}}" />
+        </Window>
+    </Window>
+</GUILayout>

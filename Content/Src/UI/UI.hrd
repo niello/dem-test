@@ -1,11 +1,11 @@
 ResourceGroups
 {
-	schemes = "CEGUI:schemes/"
-	imagesets = "CEGUI:imagesets/"
-	fonts = "CEGUI:fonts/"
-	layouts = "CEGUI:layouts/"
-	looknfeels = "CEGUI:looknfeel/"
-	//lua_scripts = "CEGUI:lua_scripts/"
+	schemes = "UI:CEGUI/schemes/"
+	imagesets = "UI:CEGUI/imagesets/"
+	fonts = "UI:CEGUI/fonts/"
+	layouts = "UI:CEGUI/layouts/"
+	looknfeels = "UI:CEGUI/looknfeel/"
+	//lua_scripts = "UI:CEGUI/lua_scripts/"
 }
 
 LoadOnStartup
@@ -30,7 +30,6 @@ Shaders
 	{
 		VS
 		{
-			Tool = 'CFShader'
 			In = "SrcShaders:SM_4_0/CEGUI_VS.hlsl"
 			//Out = "Shaders:Bin/CEGUI_40.vsh"
 			Type = 'Vertex'
@@ -40,7 +39,6 @@ Shaders
 
 		PS
 		{
-			Tool = 'CFShader'
 			In = "SrcShaders:SM_4_0/CEGUI_PS.hlsl"
 			//Out = "Shaders:Bin/CEGUI_40.psh"
 			Type = 'Pixel'
@@ -53,7 +51,6 @@ Shaders
 	{
 		VS
 		{
-			Tool = 'CFShader'
 			In = "SrcShaders:SM_3_0/CEGUI_VS.hlsl"
 			//Out = "Shaders:Bin/CEGUI_30.vsh"
 			Type = 'Vertex'
@@ -63,7 +60,6 @@ Shaders
 
 		PS
 		{
-			Tool = 'CFShader'
 			In = "SrcShaders:SM_3_0/CEGUI_PS.hlsl"
 			//Out = "Shaders:Bin/CEGUI_30.psh"
 			Type = 'Pixel'

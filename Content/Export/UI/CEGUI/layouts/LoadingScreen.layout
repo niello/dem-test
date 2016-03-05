@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4" >
+    <Window type="DefaultWindow" name="LoadingScreen" >
+        <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
+        <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        <Window type="TaharezLook/StaticImage" name="BG" >
+            <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
+            <Property name="Text" value="LOADING..." />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="TaharezLook/StaticText" name="Text" >
+            <Property name="Area" value="{{0.375,0},{0.375,0},{0.625,0},{0.625,0}}" />
+            <Property name="Text" value="LOADING..." />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+            <Property name="HorzFormatting" value="CentreAligned" />
+            <Property name="BackgroundEnabled" value="false" />
+            <Property name="HorzScrollPageSize" value="243.2" />
+            <Property name="VertScrollPageSize" value="179.2" />
+            <Property name="HorzScrollDocumentSize" value="96" />
+            <Property name="VertScrollDocumentSize" value="19.8618" />
+        </Window>
+    </Window>
+</GUILayout>
