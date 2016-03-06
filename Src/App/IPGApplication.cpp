@@ -34,6 +34,7 @@
 #include <Items/Prop/PropEquipment.h>
 #include <Items/Prop/PropItem.h>
 #include <IO/IOServer.h>
+#include <Data/DataArray.h>
 #include <SI/SI_L1.h>
 #include <SI/SI_L2.h>
 #include <SI/SI_L3.h>
@@ -128,8 +129,7 @@ bool CIPGApplication::Open()
 	// Rendering
 
 	const bool UseD3D9 = false;
-	const char* pCEGUIVS;
-	const char* pCEGUIPS;
+	CStrID GfxAPI; //???to GPUDrv? GetAPIID()
 	if (UseD3D9)
 	{
 		Render::PD3D9DriverFactory Fct = n_new(Render::CD3D9DriverFactory);
@@ -141,8 +141,7 @@ bool CIPGApplication::Open()
 		ResourceMgr->RegisterDefaultLoader("vsh", &Render::CShader::RTTI, ShaderLoader.GetUnsafe());
 		ResourceMgr->RegisterDefaultLoader("psh", &Render::CShader::RTTI, ShaderLoader.GetUnsafe());
 
-		pCEGUIVS = "Shaders:Bin/1.vsh";
-		pCEGUIPS = "Shaders:Bin/2.psh";
+		GfxAPI = CStrID("D3D9");
 	}
 	else
 	{
@@ -158,8 +157,7 @@ bool CIPGApplication::Open()
 		Resources::PD3D11PixelShaderLoader PShaderLoader = n_new(Resources::CD3D11PixelShaderLoader);
 		ResourceMgr->RegisterDefaultLoader("psh", &Render::CShader::RTTI, PShaderLoader.GetUnsafe());
 
-		pCEGUIVS = "Shaders:Bin/4.vsh";
-		pCEGUIPS = "Shaders:Bin/5.psh";
+		GfxAPI = CStrID("D3D11");
 	}
 
 	GPU = VideoDrvFct->CreateGPUDriver(Render::Adapter_Primary, Render::GPU_Hardware);
@@ -228,25 +226,46 @@ bool CIPGApplication::Open()
 	VideoServer = n_new(Video::CVideoServer);
 	VideoServer->Open();
 
-	//!!!need to compile properly named non-effect shaders! parse (CE)GUI settings HRD!
-	//???redesign not to create default context with new CEGUI?
-	UIServer = n_new(UI::CUIServer)(*GPU, MainSwapChainIndex, (float)RealBackBufDesc.Width, (float)RealBackBufDesc.Height, pCEGUIVS, pCEGUIPS);
-	DbgSrv->AllowUI(true);
-
-	//!!!to HRD params! data/cfg/UI.hrd
-	if (UI::CUIServer::HasInstance())
+	Data::PParams UIDesc = DataSrv->LoadPRM("UI:UI.prm", false);
+	if (UIDesc.IsValidPtr())
 	{
-		UISrv->LoadFont("DejaVuSans-8.font");
-		UISrv->LoadFont("DejaVuSans-10.font");
-		UISrv->LoadFont("DejaVuSans-14.font");
-		UISrv->LoadFont("CourierNew-10.font");
-		UISrv->LoadScheme("TaharezLook.scheme");
+		Data::PParams ShadersDesc = UIDesc->Get<Data::PParams>(CStrID("Shaders"))->Get<Data::PParams>(GfxAPI);
+
+		UI::CUISettings UISettings;
+		UISettings.GPUDriver = GPU;
+		UISettings.VertexShaderID = (U32)ShadersDesc->Get<int>(CStrID("VS"), 0);
+		UISettings.PixelShaderID = (U32)ShadersDesc->Get<int>(CStrID("PS"), 0);
+		UISettings.SwapChainID = MainSwapChainIndex;
+		UISettings.DefaultContextWidth = (float)RealBackBufDesc.Width;
+		UISettings.DefaultContextHeight = (float)RealBackBufDesc.Height;
+		UIDesc->Get<Data::PParams>(UISettings.ResourceGroups, CStrID("ResourceGroups"));
+
+		//???redesign not to create default context with new CEGUI?
+		UIServer = n_new(UI::CUIServer)(UISettings);
+
+		Data::PParams LoadOnStartup;
+		if (UIDesc->Get<Data::PParams>(LoadOnStartup, CStrID("LoadOnStartup")))
+		{
+			Data::PDataArray ResourcesToLoad;
+
+			if (LoadOnStartup->Get<Data::PDataArray>(ResourcesToLoad, CStrID("Fonts")))
+				for (UPTR i = 0; i < ResourcesToLoad->GetCount(); ++i)
+					UISrv->LoadFont(ResourcesToLoad->Get<CString>(i).CStr());
+
+			if (LoadOnStartup->Get<Data::PDataArray>(ResourcesToLoad, CStrID("Schemes")))
+				for (UPTR i = 0; i < ResourcesToLoad->GetCount(); ++i)
+					UISrv->LoadScheme(ResourcesToLoad->Get<CString>(i).CStr());
+		}
+
+		UIDesc = NULL;
+
+		MainUIContext = UISrv->GetDefaultContext();
+		n_assert(MainUIContext.IsValidPtr());
+
+		DbgSrv->AllowUI(true);
+
+		Sys::Log("Setup UI - OK\n");
 	}
-
-	MainUIContext = UISrv->GetDefaultContext();
-	n_assert(MainUIContext.IsValidPtr());
-
-	Sys::Log("Setup UI - OK\n");
 
 	n_new(Scripting::CScriptServer);
 	if (!Scripting::CEntityScriptObject::RegisterClass())
