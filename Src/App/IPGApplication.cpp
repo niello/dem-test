@@ -18,6 +18,10 @@
 #include <Render/RenderStateDesc.h>
 #include <Render/Mesh.h>
 #include <Render/MeshLoaderNVX2.h>
+#include <Render/Material.h>
+#include <Render/MaterialLoader.h>
+#include <Render/Effect.h>
+#include <Render/EffectLoader.h>
 #include <Render/SkinInfo.h>
 #include <Render/SkinInfoLoaderSKN.h>
 #include <Animation/KeyframeClip.h>
@@ -49,7 +53,6 @@
 #include <System/OSWindowClass.h>
 
 #include <time.h> //???!!!wrap needed func in Time::?
-
 
 namespace App
 {
@@ -202,6 +205,12 @@ bool CIPGApplication::Open()
 	Resources::PRenderPathLoader RPLoader = n_new(Resources::CRenderPathLoader);
 	ResourceMgr->RegisterDefaultLoader("hrd", &Frame::CRenderPath::RTTI, RPLoader);
 	ResourceMgr->RegisterDefaultLoader("prm", &Frame::CRenderPath::RTTI, RPLoader);
+
+	Resources::PMaterialLoader MaterialLoader = n_new(Resources::CMaterialLoader);
+	ResourceMgr->RegisterDefaultLoader("prm", &Render::CMaterial::RTTI, MaterialLoader);
+
+	Resources::PEffectLoader EffectLoader = n_new(Resources::CEffectLoader);
+	ResourceMgr->RegisterDefaultLoader("eff", &Render::CEffect::RTTI, EffectLoader);
 
 	Resources::PCollisionShapeLoader CollShapeLoader = n_new(Resources::CCollisionShapeLoader);
 	ResourceMgr->RegisterDefaultLoader("hrd", &Physics::CCollisionShape::RTTI, CollShapeLoader);

@@ -1,8 +1,6 @@
-Shader = 'Phong'
-FeatureFlags = "Solid"
-ShaderVars
+Effect = 'PBR'
+Constants
 {
-	CullMode = 2
 	//NMHeightScale = 0.3
 	SpecularExponent = 10.0
 	MtlDiffuse = (0.558, 0.558, 0.558, 1.0)
@@ -10,6 +8,6 @@ ShaderVars
 }
 Textures
 {
-	DiffMap0 = 'Arch/Door_0_a.dds'
-	NormalMap = 'Arch/Door_0_b.tga'
+	TexAlbedo = "Arch/Door_0_a.dds"
+	TexNormalMap = "Arch/Door_0_b.tga"
 }

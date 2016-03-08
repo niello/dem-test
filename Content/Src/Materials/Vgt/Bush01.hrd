@@ -1,5 +1,4 @@
-Shader = 'Phong'
-FeatureFlags = "ATest"
+Effect = 'PBR_ATest'
 ShaderVars
 {
 	CullMode = 1 // None
@@ -11,6 +10,5 @@ ShaderVars
 }
 Textures
 {
-	NormalMap = 'System/NoBump.dds'
-	DiffMap0 = 'Vgt/Leaves.tga'
+	TexAlbedo = "Vgt/Leaves.tga"
 }
