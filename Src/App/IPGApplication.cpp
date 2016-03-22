@@ -207,10 +207,11 @@ bool CIPGApplication::Open()
 	ResourceMgr->RegisterDefaultLoader("prm", &Frame::CRenderPath::RTTI, RPLoader);
 
 	Resources::PMaterialLoader MaterialLoader = n_new(Resources::CMaterialLoader);
-	ResourceMgr->RegisterDefaultLoader("prm", &Render::CMaterial::RTTI, MaterialLoader);
+	MaterialLoader->GPU = GPU;
+	ResourceMgr->RegisterDefaultLoader("prm", &Render::CMaterial::RTTI, MaterialLoader, false);
 
 	Resources::PEffectLoader EffectLoader = n_new(Resources::CEffectLoader);
-	ResourceMgr->RegisterDefaultLoader("eff", &Render::CEffect::RTTI, EffectLoader);
+	ResourceMgr->RegisterDefaultLoader("eff", &Render::CEffect::RTTI, EffectLoader, true);
 
 	Resources::PCollisionShapeLoader CollShapeLoader = n_new(Resources::CCollisionShapeLoader);
 	ResourceMgr->RegisterDefaultLoader("hrd", &Physics::CCollisionShape::RTTI, CollShapeLoader);
