@@ -1,4 +1,4 @@
-Effect = 'PBR_ATest'
+Effect = 'Shaders:Effects/PBR.eff' //???use ID like 'PBR' and internal management, as effect isn't identified by its file (libraries and partial definitions)
 ShaderVars
 {
 	CullMode = 1 // None

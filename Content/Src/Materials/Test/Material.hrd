@@ -1,4 +1,4 @@
-Effect = 'Shaders:SM_4_0/PBR.eff' //???use ID like 'PBR' and internal management, as effect isn't identified by its file (libraries and partial definitions)
+Effect = 'Shaders:Effects/PBR.eff' //???use ID like 'PBR' and internal management, as effect isn't identified by its file (libraries and partial definitions)
 Constants
 {
 	SpecularExponent = 16.0

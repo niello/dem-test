@@ -6,20 +6,19 @@ Techniques
 	{
 		Passes = [ 'Model50' ]
 		InputSet = 'Model'
-		MaxLights = 2		// Compiles tech for DEM_LIGHT_COUNT = 0, 1, 2
+		MaxLights = 0
 	}
 }
 
 //!!!no need in default values!
 GlobalParams
 {
-	ProjectionMatrix = null //CB: ChangeOnResize
+	ViewProj = null
 }
 
 MaterialParams
 {
 	TexAlbedo = null
-	Y = 5
 	LinearSampler // CEffect will create default CSampler instance at the load time
 	{
 		AddressU = "Wrap"
