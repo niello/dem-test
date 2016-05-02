@@ -36,10 +36,10 @@ PSSceneIn VSMain(VSSceneIn In)
 	return Out;
 }
 
-//Texture2D TexAlbedo;
-//sampler LinearSampler;
+Texture2D TexAlbedo;
+sampler LinearSampler;
 
 float4 PSMain(PSSceneIn In): SV_Target
 {
-	return float4(0.95f, 0.95f, 0.1f, 1.f); //TexAlbedo.Sample(LinearSampler, In.Tex)
+	return TexAlbedo.Sample(LinearSampler, In.Tex);
 }
