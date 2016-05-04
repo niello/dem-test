@@ -11,13 +11,17 @@ struct PSSceneIn
 	float2 Tex: TEXCOORD;
 };
 
-cbuffer CameraParams: register(c0)
+cbuffer CameraParams: register(b0)
 {
 	matrix ViewProj;
-	//float3 Eye;
 }
 
-cbuffer InstanceParams: register(c1)
+cbuffer MaterialParams: register(b1)
+{
+	float4 TestConst;
+}
+
+cbuffer InstanceParams: register(b2)
 {
 	matrix WorldMatrix;
 }
@@ -41,5 +45,5 @@ sampler LinearSampler;
 
 float4 PSMain(PSSceneIn In): SV_Target
 {
-	return TexAlbedo.Sample(LinearSampler, In.Tex);
+	return TexAlbedo.Sample(LinearSampler, In.Tex) * TestConst;
 }

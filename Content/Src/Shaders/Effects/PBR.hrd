@@ -25,6 +25,7 @@ MaterialParams
 		AddressV = "Wrap"
 		Filter = "MinMagMip_Linear"
 	}
+	TestConst = (0.5, 0.5, 0.5)
 }
 
 RenderStates
