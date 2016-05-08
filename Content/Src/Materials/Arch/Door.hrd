@@ -1,13 +1,9 @@
-Effect = 'Shaders:Effects/PBR.eff' //???use ID like 'PBR' and internal management, as effect isn't identified by its file (libraries and partial definitions)
-Constants
+Effect = 'PBR'
+Params
 {
-	//NMHeightScale = 0.3
-	SpecularExponent = 10.0
-	MtlDiffuse = (0.558, 0.558, 0.558, 1.0)
-	MtlSpecular = (0.0, 0.0, 0.0, 1.0)
-}
-Textures
-{
+	//SpecularExponent = 10.0
+	TestConst = (0.558, 0.558, 0.558, 1.0)
+	//MtlSpecular = (0.0, 0.0, 0.0, 1.0)
 	TexAlbedo = "Arch/Door_0_a.dds"
-	TexNormalMap = "Arch/Door_0_b.tga"
+	//TexNormalMap = "Arch/Door_0_b.tga"
 }

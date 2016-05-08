@@ -1,6 +1,7 @@
-Effect = 'Shaders:Effects/PBR.eff' //???use ID like 'PBR' and internal management, as effect isn't identified by its file (libraries and partial definitions)
-Constants
+Effect = 'PBR' // effect isn't identified by its file (libraries and partial definitions)
+Params
 {
-	SpecularExponent = 16.0
-	NMHeightScale = 0.05
+	TexAlbedo = "Textures:Test/materials/checker.dds"
+	TestConst = (1.0, 1.0, 1.0)
+	LinearSampler = null
 }
