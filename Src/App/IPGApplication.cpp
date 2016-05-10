@@ -48,8 +48,10 @@
 #include "AppStateGame.h"
 #include <Render/D3D11/D3D11DriverFactory.h>
 #include <Render/D3D11/D3D11ShaderLoaders.h>
+#include <Render/D3D11/D3D11TextureLoaderDDS.h>
 #include <Render/D3D9/D3D9DriverFactory.h>
 #include <Render/D3D9/D3D9ShaderLoaders.h>
+#include <Render/D3D9/D3D9TextureLoaderDDS.h>
 #include <System/OSWindowClass.h>
 
 #include <time.h> //???!!!wrap needed func in Time::?
@@ -144,6 +146,9 @@ bool CIPGApplication::Open()
 		ResourceMgr->RegisterDefaultLoader("vsh", &Render::CShader::RTTI, ShaderLoader.GetUnsafe());
 		ResourceMgr->RegisterDefaultLoader("psh", &Render::CShader::RTTI, ShaderLoader.GetUnsafe());
 
+		Resources::PD3D9TextureLoaderDDS TextureLoaderDDS = n_new(Resources::CD3D9TextureLoaderDDS);
+		ResourceMgr->RegisterDefaultLoader("dds", &Render::CTexture::RTTI, TextureLoaderDDS.GetUnsafe());
+
 		GfxAPI = CStrID("D3D9");
 	}
 	else
@@ -159,6 +164,9 @@ bool CIPGApplication::Open()
 		ResourceMgr->RegisterDefaultLoader("vsh", &Render::CShader::RTTI, VShaderLoader.GetUnsafe());
 		Resources::PD3D11PixelShaderLoader PShaderLoader = n_new(Resources::CD3D11PixelShaderLoader);
 		ResourceMgr->RegisterDefaultLoader("psh", &Render::CShader::RTTI, PShaderLoader.GetUnsafe());
+
+		Resources::PD3D11TextureLoaderDDS TextureLoaderDDS = n_new(Resources::CD3D11TextureLoaderDDS);
+		ResourceMgr->RegisterDefaultLoader("dds", &Render::CTexture::RTTI, TextureLoaderDDS.GetUnsafe());
 
 		GfxAPI = CStrID("D3D11");
 	}
