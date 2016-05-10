@@ -208,7 +208,7 @@ bool CIPGApplication::Open()
 
 	Resources::PMaterialLoader MaterialLoader = n_new(Resources::CMaterialLoader);
 	MaterialLoader->GPU = GPU;
-	ResourceMgr->RegisterDefaultLoader("prm", &Render::CMaterial::RTTI, MaterialLoader, false);
+	ResourceMgr->RegisterDefaultLoader("mtl", &Render::CMaterial::RTTI, MaterialLoader, false);
 
 	Resources::PEffectLoader EffectLoader = n_new(Resources::CEffectLoader);
 	ResourceMgr->RegisterDefaultLoader("eff", &Render::CEffect::RTTI, EffectLoader, true);
