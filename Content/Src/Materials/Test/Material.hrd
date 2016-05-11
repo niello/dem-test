@@ -2,6 +2,6 @@ Effect = 'PBR' // effect isn't identified by its file (libraries and partial def
 Params
 {
 	TexAlbedo = "Textures:Test/materials/checker.dds"
-	TestConst = (1.0, 1.0, 1.0)
+	MtlDiffuse = (1.0, 1.0, 1.0)
 	LinearSampler = null
 }

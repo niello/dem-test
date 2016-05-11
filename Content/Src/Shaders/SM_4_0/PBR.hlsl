@@ -18,7 +18,7 @@ cbuffer CameraParams: register(b0)
 
 cbuffer MaterialParams: register(b1)
 {
-	float4 TestConst;
+	float4 MtlDiffuse;
 }
 
 cbuffer InstanceParams: register(b2)
@@ -45,5 +45,5 @@ sampler LinearSampler;
 
 float4 PSMain(PSSceneIn In): SV_Target
 {
-	return TexAlbedo.Sample(LinearSampler, In.Tex) * TestConst;
+	return TexAlbedo.Sample(LinearSampler, In.Tex) * MtlDiffuse;
 }

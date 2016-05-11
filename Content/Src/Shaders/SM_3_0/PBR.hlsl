@@ -13,7 +13,7 @@ struct PSSceneIn
 
 matrix ViewProj: register(c0);
 matrix WorldMatrix: register(c4);
-float4 TestConst: register(c8);
+float4 MtlDiffuse: register(c8);
 
 PSSceneIn VSMain(VSSceneIn In)
 {
@@ -29,5 +29,5 @@ sampler LinearSampler { Texture = TexAlbedo; };
 
 float4 PSMain(PSSceneIn In): COLOR
 {
-	return tex2D(LinearSampler, In.Tex) * TestConst;
+	return tex2D(LinearSampler, In.Tex) * MtlDiffuse;
 }

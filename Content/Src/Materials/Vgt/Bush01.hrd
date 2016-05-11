@@ -1,14 +1,11 @@
-Effect = 'Shaders:Effects/PBR.eff' //???use ID like 'PBR' and internal management, as effect isn't identified by its file (libraries and partial definitions)
-ShaderVars
+Effect = 'PBR'
+Params
 {
-	CullMode = 1 // None
-	SpecularExponent = 16.0
-	NMHeightScale = 0.05
-	SpecularExponent = 0.000001
+	//CullMode = 1 // None
+	//SpecularExponent = 16.0
+	//NMHeightScale = 0.05
+	//SpecularExponent = 0.000001
+	TexAlbedo = "Textures:Vgt/Leaves.tga"
 	MtlDiffuse = (1.0, 1.0, 1.0, 1.0)
-	MtlSpecular = (0.9, 0.9, 0.9, 1.0)
-}
-Textures
-{
-	TexAlbedo = "Vgt/Leaves.tga"
+	//MtlSpecular = (0.9, 0.9, 0.9, 1.0)
 }
