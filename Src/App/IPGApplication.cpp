@@ -12,6 +12,7 @@
 #include <Render/GPUDriver.h>
 #include <Render/Shader.h>
 #include <Render/Texture.h>
+#include <Render/TextureLoaderDDS.h>
 #include <Render/RenderTarget.h>
 #include <Render/DepthStencilBuffer.h>
 #include <Render/SwapChain.h>
@@ -48,10 +49,8 @@
 #include "AppStateGame.h"
 #include <Render/D3D11/D3D11DriverFactory.h>
 #include <Render/D3D11/D3D11ShaderLoaders.h>
-#include <Render/D3D11/D3D11TextureLoaderDDS.h>
 #include <Render/D3D9/D3D9DriverFactory.h>
 #include <Render/D3D9/D3D9ShaderLoaders.h>
-#include <Render/D3D9/D3D9TextureLoaderDDS.h>
 #include <System/OSWindowClass.h>
 
 #include <time.h> //???!!!wrap needed func in Time::?
@@ -146,9 +145,6 @@ bool CIPGApplication::Open()
 		ResourceMgr->RegisterDefaultLoader("vsh", &Render::CShader::RTTI, ShaderLoader.GetUnsafe());
 		ResourceMgr->RegisterDefaultLoader("psh", &Render::CShader::RTTI, ShaderLoader.GetUnsafe());
 
-		Resources::PD3D9TextureLoaderDDS TextureLoaderDDS = n_new(Resources::CD3D9TextureLoaderDDS);
-		ResourceMgr->RegisterDefaultLoader("dds", &Render::CTexture::RTTI, TextureLoaderDDS.GetUnsafe());
-
 		GfxAPI = CStrID("D3D9");
 	}
 	else
@@ -164,9 +160,6 @@ bool CIPGApplication::Open()
 		ResourceMgr->RegisterDefaultLoader("vsh", &Render::CShader::RTTI, VShaderLoader.GetUnsafe());
 		Resources::PD3D11PixelShaderLoader PShaderLoader = n_new(Resources::CD3D11PixelShaderLoader);
 		ResourceMgr->RegisterDefaultLoader("psh", &Render::CShader::RTTI, PShaderLoader.GetUnsafe());
-
-		Resources::PD3D11TextureLoaderDDS TextureLoaderDDS = n_new(Resources::CD3D11TextureLoaderDDS);
-		ResourceMgr->RegisterDefaultLoader("dds", &Render::CTexture::RTTI, TextureLoaderDDS.GetUnsafe());
 
 		GfxAPI = CStrID("D3D11");
 	}
@@ -209,7 +202,6 @@ bool CIPGApplication::Open()
 	SCIdx2 = GPU->CreateSwapChain(BBDesc, SCDesc, Wnd2);
 	n_assert(GPU->SwapChainExists(SCIdx2));
 ////////////////////////////
-
 	Resources::PRenderPathLoader RPLoader = n_new(Resources::CRenderPathLoader);
 	ResourceMgr->RegisterDefaultLoader("hrd", &Frame::CRenderPath::RTTI, RPLoader);
 	ResourceMgr->RegisterDefaultLoader("prm", &Frame::CRenderPath::RTTI, RPLoader);
@@ -228,6 +220,9 @@ bool CIPGApplication::Open()
 	Resources::PMeshLoaderNVX2 MeshLoaderNVX2 = n_new(Resources::CMeshLoaderNVX2);
 	MeshLoaderNVX2->GPU = GPU;
 	ResourceMgr->RegisterDefaultLoader("nvx2", &Render::CMesh::RTTI, MeshLoaderNVX2, false);
+
+	Resources::PTextureLoaderDDS TextureLoaderDDS = n_new(Resources::CTextureLoaderDDS);
+	ResourceMgr->RegisterDefaultLoader("dds", &Render::CTexture::RTTI, TextureLoaderDDS.GetUnsafe());
 
 	Resources::PSkinInfoLoaderSKN SkinInfoLoaderSKN = n_new(Resources::CSkinInfoLoaderSKN);
 	ResourceMgr->RegisterDefaultLoader("skn", &Render::CSkinInfo::RTTI, SkinInfoLoaderSKN);
