@@ -13,6 +13,7 @@
 #include <Render/Shader.h>
 #include <Render/Texture.h>
 #include <Render/TextureLoaderDDS.h>
+#include <Render/TextureLoaderTGA.h>
 #include <Render/RenderTarget.h>
 #include <Render/DepthStencilBuffer.h>
 #include <Render/SwapChain.h>
@@ -223,6 +224,9 @@ bool CIPGApplication::Open()
 
 	Resources::PTextureLoaderDDS TextureLoaderDDS = n_new(Resources::CTextureLoaderDDS);
 	ResourceMgr->RegisterDefaultLoader("dds", &Render::CTexture::RTTI, TextureLoaderDDS.GetUnsafe());
+
+	Resources::PTextureLoaderTGA TextureLoaderTGA = n_new(Resources::CTextureLoaderTGA);
+	ResourceMgr->RegisterDefaultLoader("tga", &Render::CTexture::RTTI, TextureLoaderTGA.GetUnsafe());
 
 	Resources::PSkinInfoLoaderSKN SkinInfoLoaderSKN = n_new(Resources::CSkinInfoLoaderSKN);
 	ResourceMgr->RegisterDefaultLoader("skn", &Render::CSkinInfo::RTTI, SkinInfoLoaderSKN);
