@@ -30,7 +30,7 @@ Shaders
 	{
 		VS
 		{
-			In = "SrcShaders:SM_4_0/CEGUI_VS.hlsl"
+			In = "SrcShaders:USM/CEGUI_VS.hlsl"
 			//Out = "Shaders:Bin/CEGUI_40.vsh"
 			Type = 'Vertex'
 			Target = 0x0400
@@ -39,7 +39,7 @@ Shaders
 
 		PS
 		{
-			In = "SrcShaders:SM_4_0/CEGUI_PS.hlsl"
+			In = "SrcShaders:USM/CEGUI_PS.hlsl"
 			//Out = "Shaders:Bin/CEGUI_40.psh"
 			Type = 'Pixel'
 			Target = 0x0400

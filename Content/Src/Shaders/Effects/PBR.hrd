@@ -8,6 +8,12 @@ Techniques
 		InputSet = 'Model'
 		MaxLights = 0
 	}
+	Model30
+	{
+		Passes = [ 'Model30' ]
+		InputSet = 'Model'
+		MaxLights = 0
+	}
 }
 
 //!!!no need in default values!
@@ -44,14 +50,14 @@ RenderStates
 
 		VS
 		{
-			In = "SrcShaders:SM_4_0/PBR.hlsl"
+			In = "SrcShaders:USM/PBR.hlsl"
 			Target = 0x0500
 			Entry = "VSMain"
 		}
 
 		PS
 		{
-			In = "SrcShaders:SM_4_0/PBR.hlsl"
+			In = "SrcShaders:USM/PBR.hlsl"
 			Target = 0x0400
 			Entry = "PSMain"
 		}

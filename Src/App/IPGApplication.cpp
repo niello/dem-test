@@ -133,7 +133,7 @@ bool CIPGApplication::Open()
 
 	// Rendering
 
-	const bool UseD3D9 = false;
+	const bool UseD3D9 = true;
 	CStrID GfxAPI; //???to GPUDrv? GetAPIID()
 	if (UseD3D9)
 	{
@@ -145,6 +145,8 @@ bool CIPGApplication::Open()
 		Resources::PD3D9ShaderLoader ShaderLoader = n_new(Resources::CD3D9ShaderLoader);
 		ResourceMgr->RegisterDefaultLoader("vsh", &Render::CShader::RTTI, ShaderLoader.GetUnsafe());
 		ResourceMgr->RegisterDefaultLoader("psh", &Render::CShader::RTTI, ShaderLoader.GetUnsafe());
+
+		IOSrv->SetAssign("Effects", IOSrv->ResolveAssigns("Shaders:SM_3_0/Effects/"));
 
 		GfxAPI = CStrID("D3D9");
 	}
@@ -161,6 +163,8 @@ bool CIPGApplication::Open()
 		ResourceMgr->RegisterDefaultLoader("vsh", &Render::CShader::RTTI, VShaderLoader.GetUnsafe());
 		Resources::PD3D11PixelShaderLoader PShaderLoader = n_new(Resources::CD3D11PixelShaderLoader);
 		ResourceMgr->RegisterDefaultLoader("psh", &Render::CShader::RTTI, PShaderLoader.GetUnsafe());
+
+		IOSrv->SetAssign("Effects", IOSrv->ResolveAssigns("Shaders:USM/Effects/"));
 
 		GfxAPI = CStrID("D3D11");
 	}
