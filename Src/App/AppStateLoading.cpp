@@ -37,7 +37,7 @@ void CAppStateLoading::OnStateEnter(CStrID PrevState, Data::PParams Params)
 	TimeSrv->Trigger();
 	GameSrv->PauseGame(true);
 
-	const char* pRenderPathURI = "Shaders:D3D11Forward.hrd";
+	const char* pRenderPathURI = "Shaders:D3D11Forward.prm";
 	Resources::PResource RRP = ResourceMgr->RegisterResource(pRenderPathURI);
 	if (!RRP->IsLoaded())
 	{
