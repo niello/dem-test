@@ -24,6 +24,8 @@
 #include <Render/MaterialLoader.h>
 #include <Render/Effect.h>
 #include <Render/EffectLoader.h>
+#include <Render/ShaderLibrary.h>
+#include <Render/ShaderLibraryLoaderSLB.h>
 #include <Render/SkinInfo.h>
 #include <Render/SkinInfoLoaderSKN.h>
 #include <Animation/KeyframeClip.h>
@@ -33,6 +35,7 @@
 #include <Frame/RenderPath.h>
 #include <Frame/RenderPathLoader.h>
 #include <Physics/CollisionShapeLoader.h>
+#include <Resources/Resource.h>
 #include <Resources/ResourceManager.h>
 #include <Physics/PropPhysics.h>
 #include <Physics/PropCharacterController.h>
@@ -133,18 +136,16 @@ bool CIPGApplication::Open()
 
 	// Rendering
 
-	const bool UseD3D9 = true;
+	const bool UseD3D9 = false;
 	CStrID GfxAPI; //???to GPUDrv? GetAPIID()
+	Resources::PShaderLoader ShaderLoader;
 	if (UseD3D9)
 	{
 		Render::PD3D9DriverFactory Fct = n_new(Render::CD3D9DriverFactory);
 		Fct->Open(MainWindow);
 		VideoDrvFct = Fct;
 
-		//!!!GPU intentionally not set in loader for testing!
-		Resources::PD3D9ShaderLoader ShaderLoader = n_new(Resources::CD3D9ShaderLoader);
-		ResourceMgr->RegisterDefaultLoader("vsh", &Render::CShader::RTTI, ShaderLoader.GetUnsafe());
-		ResourceMgr->RegisterDefaultLoader("psh", &Render::CShader::RTTI, ShaderLoader.GetUnsafe());
+		ShaderLoader = n_new(Resources::CD3D9ShaderLoader);
 
 		IOSrv->SetAssign("Effects", IOSrv->ResolveAssigns("Shaders:SM_3_0/Effects/"));
 
@@ -156,13 +157,9 @@ bool CIPGApplication::Open()
 		Fct->Open();
 		VideoDrvFct = Fct;
 
-		//!!!GPU intentionally not set in loader for testing!
 		//???rsrc storage - not singleton? may register one global, one D3D9 and one D3D11 resource storage,
 		//and manage resource location in a central manager. How to load both versions of the same resource transparently?
-		Resources::PD3D11VertexShaderLoader VShaderLoader = n_new(Resources::CD3D11VertexShaderLoader);
-		ResourceMgr->RegisterDefaultLoader("vsh", &Render::CShader::RTTI, VShaderLoader.GetUnsafe());
-		Resources::PD3D11PixelShaderLoader PShaderLoader = n_new(Resources::CD3D11PixelShaderLoader);
-		ResourceMgr->RegisterDefaultLoader("psh", &Render::CShader::RTTI, PShaderLoader.GetUnsafe());
+		ShaderLoader = n_new(Resources::CD3D11ShaderLoader);
 
 		IOSrv->SetAssign("Effects", IOSrv->ResolveAssigns("Shaders:USM/Effects/"));
 
@@ -207,20 +204,39 @@ bool CIPGApplication::Open()
 	SCIdx2 = GPU->CreateSwapChain(BBDesc, SCDesc, Wnd2);
 	n_assert(GPU->SwapChainExists(SCIdx2));
 ////////////////////////////
-	Resources::PRenderPathLoader RPLoader = n_new(Resources::CRenderPathLoader);
-	ResourceMgr->RegisterDefaultLoader("hrd", &Frame::CRenderPath::RTTI, RPLoader);
-	ResourceMgr->RegisterDefaultLoader("prm", &Frame::CRenderPath::RTTI, RPLoader);
+
+	ShaderLoader->GPU = GPU;
+	ResourceMgr->RegisterDefaultLoader("vsh", &Render::CShader::RTTI, ShaderLoader.GetUnsafe());
+	ResourceMgr->RegisterDefaultLoader("psh", &Render::CShader::RTTI, ShaderLoader.GetUnsafe());
+
+	Resources::PShaderLibraryLoaderSLB ShaderLibraryLoaderSLB = n_new(Resources::CShaderLibraryLoaderSLB);
+	ResourceMgr->RegisterDefaultLoader("slb", &Render::CShaderLibrary::RTTI, ShaderLibraryLoaderSLB, true);
+
+	Resources::PResource RShaderLib = ResourceMgr->RegisterResource("Shaders:Shaders.slb");
+	if (!RShaderLib->IsLoaded())
+	{
+		ResourceMgr->LoadResourceSync(*RShaderLib, *ShaderLibraryLoaderSLB.GetUnsafe());
+		n_assert(RShaderLib->IsLoaded());
+	}
+
+	Render::PShaderLibrary ShaderLib = RShaderLib->GetObject<Render::CShaderLibrary>();
+	ShaderLib->SetLoader(ShaderLoader);
+
+	Resources::PRenderPathLoaderHRD RPLoaderHRD = n_new(Resources::CRenderPathLoaderHRD);
+	ResourceMgr->RegisterDefaultLoader("hrd", &Frame::CRenderPath::RTTI, RPLoaderHRD);
+	Resources::PRenderPathLoaderPRM RPLoaderPRM = n_new(Resources::CRenderPathLoaderPRM);
+	ResourceMgr->RegisterDefaultLoader("prm", &Frame::CRenderPath::RTTI, RPLoaderPRM);
 
 	Resources::PMaterialLoader MaterialLoader = n_new(Resources::CMaterialLoader);
 	MaterialLoader->GPU = GPU;
 	ResourceMgr->RegisterDefaultLoader("mtl", &Render::CMaterial::RTTI, MaterialLoader, false);
 
 	Resources::PEffectLoader EffectLoader = n_new(Resources::CEffectLoader);
+	EffectLoader->ShaderLibrary = ShaderLib;
 	ResourceMgr->RegisterDefaultLoader("eff", &Render::CEffect::RTTI, EffectLoader, true);
 
-	Resources::PCollisionShapeLoader CollShapeLoader = n_new(Resources::CCollisionShapeLoader);
-	ResourceMgr->RegisterDefaultLoader("hrd", &Physics::CCollisionShape::RTTI, CollShapeLoader);
-	ResourceMgr->RegisterDefaultLoader("prm", &Physics::CCollisionShape::RTTI, CollShapeLoader);
+	Resources::PCollisionShapeLoaderPRM CollShapeLoaderPRM = n_new(Resources::CCollisionShapeLoaderPRM);
+	ResourceMgr->RegisterDefaultLoader("prm", &Physics::CCollisionShape::RTTI, CollShapeLoaderPRM);
 
 	Resources::PMeshLoaderNVX2 MeshLoaderNVX2 = n_new(Resources::CMeshLoaderNVX2);
 	MeshLoaderNVX2->GPU = GPU;
@@ -254,8 +270,8 @@ bool CIPGApplication::Open()
 
 		UI::CUISettings UISettings;
 		UISettings.GPUDriver = GPU;
-		UISettings.VertexShaderID = (U32)ShadersDesc->Get<int>(CStrID("VS"), 0);
-		UISettings.PixelShaderID = (U32)ShadersDesc->Get<int>(CStrID("PS"), 0);
+		UISettings.VertexShader = ShaderLib->GetShaderByID((U32)ShadersDesc->Get<int>(CStrID("VS"), 0));
+		UISettings.PixelShader = ShaderLib->GetShaderByID((U32)ShadersDesc->Get<int>(CStrID("PS"), 0));
 		UISettings.SwapChainID = MainSwapChainIndex;
 		UISettings.DefaultContextWidth = (float)RealBackBufDesc.Width;
 		UISettings.DefaultContextHeight = (float)RealBackBufDesc.Height;
