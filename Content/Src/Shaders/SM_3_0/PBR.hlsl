@@ -11,9 +11,9 @@ struct PSSceneIn
 	float2 Tex: TEXCOORD;
 };
 
-matrix ViewProj: register(c0);
-matrix WorldMatrix: register(c4);
-float4 MtlDiffuse: register(c8);
+matrix ViewProj: register(c0) <string CBuffer = "CameraParams";>;
+matrix WorldMatrix: register(c4) <string CBuffer = "InstanceParams";>;
+float4 MtlDiffuse: register(c8) <string CBuffer = "MaterialParams";>;
 
 PSSceneIn VSMain(VSSceneIn In)
 {

@@ -2,7 +2,7 @@
 
 Techniques
 {
-	Model
+	ModelUSM
 	{
 		Passes = [ 'Model50' ]
 		InputSet = 'Model'

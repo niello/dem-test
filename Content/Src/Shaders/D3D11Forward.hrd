@@ -1,3 +1,14 @@
+GlobalParams
+{
+	VS
+	{
+		In = "SrcShaders:USM/Globals.hlsl"
+		Type = 'Vertex'
+		Target = 0x0500
+		Entry = "VSMain"
+	}
+	Params = [ "ViewProj" ]
+}
 
 Phases
 {
@@ -6,6 +17,7 @@ Phases
 		Type = "Geometry"
 		Renderers
 		[
+		//!!!to fourcc on exporting!
 			{ Object = "Render::CModel" Renderer = "Render::CModelRenderer" },
 			{ Object = "Render::CTerrain" Renderer = "Render::CTerrainRenderer" }
 		]
