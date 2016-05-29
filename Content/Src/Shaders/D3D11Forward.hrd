@@ -1,4 +1,6 @@
-GlobalParams
+//???or use list of effect IDs, parse them and collect all globals?
+//???or on effect loading load globals into a provided render path context?
+GlobalParamShaders
 {
 	VS
 	{
@@ -7,8 +9,9 @@ GlobalParams
 		Target = 0x0500
 		Entry = "VSMain"
 	}
-	Params = [ "ViewProj" ]
 }
+
+GlobalParams = [ "ViewProj" ]
 
 Phases
 {
@@ -17,7 +20,6 @@ Phases
 		Type = "Geometry"
 		Renderers
 		[
-		//!!!to fourcc on exporting!
 			{ Object = "Render::CModel" Renderer = "Render::CModelRenderer" },
 			{ Object = "Render::CTerrain" Renderer = "Render::CTerrainRenderer" }
 		]
