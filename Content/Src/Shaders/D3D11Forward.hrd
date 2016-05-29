@@ -1,6 +1,6 @@
 //???or use list of effect IDs, parse them and collect all globals?
 //???or on effect loading load globals into a provided render path context?
-GlobalParamShaders
+/*GlobalParamShaders
 {
 	VS
 	{
@@ -11,7 +11,14 @@ GlobalParamShaders
 	}
 }
 
-GlobalParams = [ "ViewProj" ]
+GlobalParams = [ "ViewProj" ]*/
+
+// Used for building global params metadata
+//!!!may define directory and parse all effects inside!
+EffectsWithGlobals =
+[
+	"Shaders:USM/Effects/PBR.eff"
+]
 
 Phases
 {
