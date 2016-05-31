@@ -7,7 +7,8 @@
 //!!!may define effect IDs and build path based on ID and shader model!
 EffectsWithGlobals =
 [
-	"Shaders:USM/Effects/PBR.eff"
+	"Shaders:USM/Effects/PBR.eff",
+	"Shaders:SM_3_0/Effects/PBR.eff"
 ]
 
 Phases
