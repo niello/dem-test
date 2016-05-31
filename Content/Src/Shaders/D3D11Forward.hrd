@@ -1,20 +1,10 @@
-//???or use list of effect IDs, parse them and collect all globals?
-//???or on effect loading load globals into a provided render path context?
-/*GlobalParamShaders
-{
-	VS
-	{
-		In = "SrcShaders:USM/Globals.hlsl"
-		Type = 'Vertex'
-		Target = 0x0500
-		Entry = "VSMain"
-	}
-}
 
-GlobalParams = [ "ViewProj" ]*/
+//SM30 = true
+//USM = true
 
 // Used for building global params metadata
 //!!!may define directory and parse all effects inside!
+//!!!may define effect IDs and build path based on ID and shader model!
 EffectsWithGlobals =
 [
 	"Shaders:USM/Effects/PBR.eff"
