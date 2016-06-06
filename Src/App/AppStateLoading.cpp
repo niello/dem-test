@@ -37,7 +37,7 @@ void CAppStateLoading::OnStateEnter(CStrID PrevState, Data::PParams Params)
 	TimeSrv->Trigger();
 	GameSrv->PauseGame(true);
 
-	const char* pRenderPathURI = "Shaders:D3D11Forward.prm";
+	const char* pRenderPathURI = "Shaders:USM/D3D11Forward.rp";
 	Resources::PResource RRP = ResourceMgr->RegisterResource(pRenderPathURI);
 	if (!RRP->IsLoaded())
 	{
@@ -58,7 +58,7 @@ void CAppStateLoading::OnStateEnter(CStrID PrevState, Data::PParams Params)
 		IPGApp->MainUIContext->HideMouseCursor();
 
 		View.GPU = IPGApp->GPU;
-		View.RenderPath = RRP->GetObject<Frame::CRenderPath>();
+		View.SetRenderPath(RRP->GetObject<Frame::CRenderPath>());
 		View.RTs.SetSize(1);
 		View.RTs[0] = IPGApp->GPU->GetSwapChainRenderTarget(IPGApp->MainSwapChainIndex);
 		View.UIContext = IPGApp->MainUIContext;
@@ -78,7 +78,7 @@ void CAppStateLoading::OnStateLeave(CStrID NextState)
 		View.UIContext = NULL;
 	}
 
-	View.RenderPath = NULL;
+	View.SetRenderPath(NULL);
 	View.RTs.SetSize(0);
 
 	GameSrv->PauseGame(false);
@@ -97,7 +97,7 @@ CStrID CAppStateLoading::OnFrame()
 
 	Render::CGPUDriver* pGPU = View.GPU;
 	int SwapChainIdx = IPGApp->MainSwapChainIndex;
-	if (View.RenderPath.IsValidPtr() && pGPU->SwapChainExists(SwapChainIdx))
+	if (View.GetRenderPath() && pGPU->SwapChainExists(SwapChainIdx))
 	{
 		//???begin-end to a render path? anyway RP renders the whole view (RT/SwapChain)!
 		//!!!rp/view doesn't know anything about present, so present manually!
@@ -106,7 +106,7 @@ CStrID CAppStateLoading::OnFrame()
 		{
 			//???!!!store RP outside the view?! logically view doesn't own RP
 			//!!!use return value!
-			View.RenderPath->Render(View);
+			View.GetRenderPath()->Render(View);
 
 			pGPU->EndFrame();
 		}
@@ -215,7 +215,7 @@ CStrID CAppStateLoading::OnFrame()
 	//////////////////////
 
 	//!!!DBG TMP! to render loading screen while loading is sync
-	if (LoadingTaskFinished && View.RenderPath.IsValidPtr() && pGPU->SwapChainExists(SwapChainIdx))
+	if (LoadingTaskFinished && View.GetRenderPath() && pGPU->SwapChainExists(SwapChainIdx))
 		pGPU->Present(SwapChainIdx);
 
 	return LoadingTaskFinished ? CStrID("Game") : GetID();

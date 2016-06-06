@@ -6,7 +6,6 @@
 #include <UI/UIContext.h>
 #include <UI/MainMenu.h>
 #include <Frame/RenderPath.h>
-#include <Frame/RenderPathLoader.h>
 #include <Render/GPUDriver.h>
 #include <Resources/ResourceManager.h>
 #include <Resources/Resource.h>
@@ -25,7 +24,7 @@ void CAppStateMenu::OnStateEnter(CStrID PrevState, Data::PParams Params)
 {
 	TimeSrv->Trigger();
 
-	const char* pRenderPathURI = "Shaders:D3D11Forward.prm";
+	const char* pRenderPathURI = "Shaders:USM/D3D11Forward.rp";
 	Resources::PResource RRP = ResourceMgr->RegisterResource(pRenderPathURI);
 	if (!RRP->IsLoaded())
 	{
@@ -47,7 +46,7 @@ void CAppStateMenu::OnStateEnter(CStrID PrevState, Data::PParams Params)
 		IPGApp->MainUIContext->SubscribeOnInput(IPGApp->MainWindow.GetUnsafe(), 100);
 
 		MenuView.GPU = IPGApp->GPU;
-		MenuView.RenderPath = RRP->GetObject<Frame::CRenderPath>();
+		MenuView.SetRenderPath(RRP->GetObject<Frame::CRenderPath>());
 		MenuView.RTs.SetSize(1);
 		MenuView.RTs[0] = IPGApp->GPU->GetSwapChainRenderTarget(IPGApp->MainSwapChainIndex);
 		MenuView.UIContext = IPGApp->MainUIContext;
@@ -65,7 +64,7 @@ void CAppStateMenu::OnStateLeave(CStrID NextState)
 		MenuView.UIContext = NULL;
 	}
 
-	MenuView.RenderPath = NULL;
+	MenuView.SetRenderPath(NULL);
 	MenuView.RTs.SetSize(0);
 }
 //---------------------------------------------------------------------
@@ -85,7 +84,7 @@ CStrID CAppStateMenu::OnFrame()
 
 	Render::CGPUDriver* pGPU = MenuView.GPU;
 	int SwapChainIdx = IPGApp->MainSwapChainIndex;
-	if (MenuView.RenderPath.IsValidPtr() && pGPU->SwapChainExists(SwapChainIdx))
+	if (MenuView.GetRenderPath() && pGPU->SwapChainExists(SwapChainIdx))
 	{
 		//???begin-end to a render path? anyway RP renders the whole view (RT/SwapChain)!
 		//!!!rp/view doesn't know anything about present, so present manually!
@@ -93,7 +92,7 @@ CStrID CAppStateMenu::OnFrame()
 		{
 			//???!!!store RP outside the view?! logically view doesn't own RP
 			//!!!use return value!
-			MenuView.RenderPath->Render(MenuView);
+			MenuView.GetRenderPath()->Render(MenuView);
 
 			pGPU->EndFrame();
 			pGPU->Present(SwapChainIdx);

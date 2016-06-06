@@ -67,7 +67,7 @@ void CAppStateGame::OnStateEnter(CStrID PrevState, Data::PParams Params)
 
 	InputSrv->EnableContext(CStrID("Game"));
 
-	const char* pRenderPathURI = "Shaders:D3D11Forward.prm";
+	const char* pRenderPathURI = "Shaders:USM/D3D11Forward.rp";
 	Resources::PResource RRP = ResourceMgr->RegisterResource(pRenderPathURI);
 	if (!RRP->IsLoaded())
 	{
@@ -104,7 +104,7 @@ void CAppStateGame::OnStateEnter(CStrID PrevState, Data::PParams Params)
 
 			Frame::CView& FrameView = pView->GetFrameView();
 			FrameView.GPU = IPGApp->GPU;
-			FrameView.RenderPath = RRP->GetObject<Frame::CRenderPath>();
+			FrameView.SetRenderPath(RRP->GetObject<Frame::CRenderPath>());
 			FrameView.RTs.SetSize(1);
 			FrameView.RTs[0] = MainRT;
 			FrameView.UIContext = IPGApp->MainUIContext;
@@ -124,7 +124,7 @@ void CAppStateGame::OnStateEnter(CStrID PrevState, Data::PParams Params)
 			pCameraNode->AddAttribute(*MainCamera);
 			MainCamera->SetWidth((float)MainRT->GetDesc().Width);
 			MainCamera->SetHeight((float)MainRT->GetDesc().Height);
-			FrameView.pCamera = MainCamera;
+			FrameView.SetCamera(MainCamera);
 			pCameraNode->UpdateTransform(NULL, 0, true); // Set valid camera transform before updating/rending the first frame
 		}
 	}

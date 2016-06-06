@@ -33,7 +33,7 @@
 #include <Animation/MocapClip.h>
 #include <Animation/MocapClipLoaderNAX2.h>
 #include <Frame/RenderPath.h>
-#include <Frame/RenderPathLoader.h>
+#include <Frame/RenderPathLoaderRP.h>
 #include <Physics/CollisionShapeLoader.h>
 #include <Resources/Resource.h>
 #include <Resources/ResourceManager.h>
@@ -136,7 +136,7 @@ bool CIPGApplication::Open()
 
 	// Rendering
 
-	const bool UseD3D9 = true;
+	const bool UseD3D9 = false;
 	CStrID GfxAPI; //???to GPUDrv? GetAPIID()
 	Resources::PShaderLoader ShaderLoader;
 	if (UseD3D9)
@@ -222,10 +222,8 @@ bool CIPGApplication::Open()
 	Render::PShaderLibrary ShaderLib = RShaderLib->GetObject<Render::CShaderLibrary>();
 	ShaderLib->SetLoader(ShaderLoader);
 
-	Resources::PRenderPathLoaderHRD RPLoaderHRD = n_new(Resources::CRenderPathLoaderHRD);
-	ResourceMgr->RegisterDefaultLoader("hrd", &Frame::CRenderPath::RTTI, RPLoaderHRD);
-	Resources::PRenderPathLoaderPRM RPLoaderPRM = n_new(Resources::CRenderPathLoaderPRM);
-	ResourceMgr->RegisterDefaultLoader("prm", &Frame::CRenderPath::RTTI, RPLoaderPRM);
+	Resources::PRenderPathLoaderRP RPLoaderRP = n_new(Resources::CRenderPathLoaderRP);
+	ResourceMgr->RegisterDefaultLoader("rp", &Frame::CRenderPath::RTTI, RPLoaderRP);
 
 	Resources::PMaterialLoader MaterialLoader = n_new(Resources::CMaterialLoader);
 	MaterialLoader->GPU = GPU;
