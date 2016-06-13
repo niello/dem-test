@@ -148,6 +148,7 @@ bool CIPGApplication::Open()
 		ShaderLoader = n_new(Resources::CD3D9ShaderLoader);
 
 		IOSrv->SetAssign("Effects", IOSrv->ResolveAssigns("Shaders:SM_3_0/Effects/"));
+		IOSrv->SetAssign("RenderPathes", IOSrv->ResolveAssigns("Shaders:SM_3_0/"));
 
 		GfxAPI = CStrID("D3D9");
 	}
@@ -162,6 +163,7 @@ bool CIPGApplication::Open()
 		ShaderLoader = n_new(Resources::CD3D11ShaderLoader);
 
 		IOSrv->SetAssign("Effects", IOSrv->ResolveAssigns("Shaders:USM/Effects/"));
+		IOSrv->SetAssign("RenderPathes", IOSrv->ResolveAssigns("Shaders:USM/"));
 
 		GfxAPI = CStrID("D3D11");
 	}

@@ -24,7 +24,7 @@ void CAppStateMenu::OnStateEnter(CStrID PrevState, Data::PParams Params)
 {
 	TimeSrv->Trigger();
 
-	const char* pRenderPathURI = "Shaders:USM/D3D11Forward.rp";
+	const char* pRenderPathURI = "RenderPathes:D3D11Forward.rp";
 	Resources::PResource RRP = ResourceMgr->RegisterResource(pRenderPathURI);
 	if (!RRP->IsLoaded())
 	{
