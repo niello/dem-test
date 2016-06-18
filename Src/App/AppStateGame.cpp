@@ -102,11 +102,24 @@ void CAppStateGame::OnStateEnter(CStrID PrevState, Data::PParams Params)
 
 			Render::PRenderTarget MainRT = IPGApp->GPU->GetSwapChainRenderTarget(IPGApp->MainSwapChainIndex);
 
+			const Render::CRenderTargetDesc& RealBackBufDesc = MainRT->GetDesc();
+
+			Render::CRenderTargetDesc DSDesc;
+			DSDesc.Format = Render::PixelFmt_DefaultDepthBuffer;
+			DSDesc.MSAAQuality = Render::MSAA_None;
+			DSDesc.UseAsShaderInput = false;
+			DSDesc.MipLevels = 0;
+			DSDesc.Width = RealBackBufDesc.Width;
+			DSDesc.Height = RealBackBufDesc.Height;
+
+			Render::PDepthStencilBuffer MainDS = IPGApp->GPU->CreateDepthStencilBuffer(DSDesc);
+
 			Frame::CView& FrameView = pView->GetFrameView();
 			FrameView.GPU = IPGApp->GPU;
 			FrameView.SetRenderPath(RRP->GetObject<Frame::CRenderPath>());
 			FrameView.RTs.SetSize(1);
 			FrameView.RTs[0] = MainRT;
+			FrameView.DSBuffer = MainDS;
 			FrameView.UIContext = IPGApp->MainUIContext;
 
 			//!!!create default camera for that level!
@@ -118,7 +131,7 @@ void CAppStateGame::OnStateEnter(CStrID PrevState, Data::PParams Params)
 			pCameraNode->SetController(Ctlr);
 			Ctlr->Activate(true);
 			Ctlr->SetCOI(vector3(220.0f, 0.05f, 200.0f));
-			Ctlr->SetAngles(PI * 0.1f, PI * 0.25f);
+			Ctlr->SetAngles(PI * 0.1f, PI * 0.3f);
 			Ctlr->SetDistance(20.f);
 			Frame::PNodeAttrCamera MainCamera = n_new(Frame::CNodeAttrCamera);
 			pCameraNode->AddAttribute(*MainCamera);

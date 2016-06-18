@@ -188,19 +188,6 @@ bool CIPGApplication::Open()
 
 	const Render::CRenderTargetDesc& RealBackBufDesc = GPU->GetSwapChainRenderTarget(MainSwapChainIndex)->GetDesc();
 
-	{
-		Render::CRenderTargetDesc DSDesc;
-		DSDesc.Format = Render::PixelFmt_DefaultDepthBuffer;
-		DSDesc.MSAAQuality = Render::MSAA_None;
-		DSDesc.UseAsShaderInput = false;
-		DSDesc.MipLevels = 0;
-		DSDesc.Width = RealBackBufDesc.Width;
-		DSDesc.Height = RealBackBufDesc.Height;
-
-		Render::PDepthStencilBuffer DSBuf = GPU->CreateDepthStencilBuffer(DSDesc);
-		n_assert(DSBuf.IsValidPtr());
-	}
-
 ////////////////////////////
 //!!!DBG TMP!
 	SCIdx2 = GPU->CreateSwapChain(BBDesc, SCDesc, Wnd2);
