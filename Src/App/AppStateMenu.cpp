@@ -47,7 +47,6 @@ void CAppStateMenu::OnStateEnter(CStrID PrevState, Data::PParams Params)
 
 		MenuView.GPU = IPGApp->GPU;
 		MenuView.SetRenderPath(RRP->GetObject<Frame::CRenderPath>());
-		MenuView.RTs.SetSize(1);
 		MenuView.RTs[0] = IPGApp->GPU->GetSwapChainRenderTarget(IPGApp->MainSwapChainIndex);
 		MenuView.UIContext = IPGApp->MainUIContext;
 	}
@@ -65,7 +64,6 @@ void CAppStateMenu::OnStateLeave(CStrID NextState)
 	}
 
 	MenuView.SetRenderPath(NULL);
-	MenuView.RTs.SetSize(0);
 }
 //---------------------------------------------------------------------
 

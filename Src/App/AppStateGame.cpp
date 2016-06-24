@@ -117,9 +117,8 @@ void CAppStateGame::OnStateEnter(CStrID PrevState, Data::PParams Params)
 			Frame::CView& FrameView = pView->GetFrameView();
 			FrameView.GPU = IPGApp->GPU;
 			FrameView.SetRenderPath(RRP->GetObject<Frame::CRenderPath>());
-			FrameView.RTs.SetSize(1);
 			FrameView.RTs[0] = MainRT;
-			FrameView.DSBuffer = MainDS;
+			FrameView.DSBuffers[0] = MainDS;
 			FrameView.UIContext = IPGApp->MainUIContext;
 
 			//!!!create default camera for that level!

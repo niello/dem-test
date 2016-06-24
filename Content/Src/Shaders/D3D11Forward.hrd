@@ -11,10 +11,39 @@ EffectsWithGlobals =
 	"Shaders:SM_3_0/Effects/PBR.eff"
 ]
 
+RenderTargets
+[
+	{
+		ClearValue = (0.1, 0.7, 0.1, 1.0)
+	}
+]
+
+DepthStencilBuffers
+[
+	{
+		DepthClearValue = 1.0
+		//StencilClearValue = 0
+	}
+]
+
 Phases
 {
+	/*Depth
+	{
+		Type = "Geometry"
+		RenderTarget = null
+		DepthStencilBuffer = 0
+		Material = 'Depth'	// Overrides object materials, won't be found for alpha objects, so they won't be rendered
+		Renderers
+		[
+			{ Object = "Render::CModel" Renderer = "Render::CModelRenderer" },
+			{ Object = "Render::CTerrain" Renderer = "Render::CTerrainRenderer" }
+		]
+	}*/
 	Color
 	{
+		RenderTarget = 0 //???or named? Array for MRT, like [ 2, 0, 1]
+		DepthStencilBuffer = 0
 		Type = "Geometry"
 		Renderers
 		[

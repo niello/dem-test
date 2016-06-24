@@ -6,21 +6,8 @@ Attrs
 		Class = "Frame::CNodeAttrRenderable"
 		RenderableClass = "Render::CModel"
 		
-		Material = 'Test/Material'
-		Vars
-		{
-			MtlEmissive = (0.0, 0.0, 0.0, 1.0)
-			MtlDiffuse = (1.0, 1.0, 1.0, 1.0)
-			MtlSpecular = (0.5, 0.5, 0.5, 1.0)
-		}
-		Textures
-		{
-			NormalMap = 'System/NoBump.dds'
-			DiffMap0 = 'Test/charaktere/kila_hair.dds'
-		}
+		Material = 'Test/KilaHair'
 		Mesh = 'Test/Kila_sk_0'
-		BatchType = 'Solid'
-		FeatFlags = "Skinned"
 		MeshGroupIndex = 12
 		JointPalette 
 		[
@@ -31,21 +18,8 @@ Attrs
 		Class = "Frame::CNodeAttrRenderable"
 		RenderableClass = "Render::CModel"
 		
-		Material = 'Test/Material'
-		Vars
-		{
-			MtlEmissive = (0.0, 0.0, 0.0, 1.0)
-			MtlDiffuse = (1.0, 1.0, 1.0, 1.0)
-			MtlSpecular = (0.0, 0.0, 0.0, 1.0)
-		}
-		Textures
-		{
-			NormalMap = 'System/NoBump.dds'
-			DiffMap0 = 'Test/charaktere/kila_head.dds'
-		}
+		Material = 'Test/KilaHead'
 		Mesh = 'Test/Kila_sk_0'
-		BatchType = 'Solid'
-		FeatFlags = "Skinned"
 		MeshGroupIndex = 13
 		JointPalette
 		[
@@ -58,21 +32,8 @@ Attrs
 		Class = "Frame::CNodeAttrRenderable"
 		RenderableClass = "Render::CModel"
 		
-		Material = 'Test/Material'
-		Vars
-		{
-			MtlEmissive = (0.0, 0.0, 0.0, 1.0)
-			MtlDiffuse = (1.0, 1.0, 1.0, 1.0)
-			MtlSpecular = (0.5, 0.5, 0.5, 1.0)
-		}
-		Textures
-		{
-			NormalMap = 'System/NoBump.dds'
-			DiffMap0 = 'Test/charaktere/kila_body.dds'
-		}
+		Material = 'Test/KilaBody'
 		Mesh = 'Test/Kila_sk_0'
-		BatchType = 'Solid'
-		FeatFlags = "Skinned"
 		MeshGroupIndex = 14
 		JointPalette
 		[
@@ -89,6 +50,7 @@ Attrs
 ]
 
 // Skeleton hierarchy
+///*
 Children
 {
 	Root
@@ -458,3 +420,4 @@ Children
 		}
 	}
 }
+/**/

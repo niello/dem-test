@@ -59,7 +59,6 @@ void CAppStateLoading::OnStateEnter(CStrID PrevState, Data::PParams Params)
 
 		View.GPU = IPGApp->GPU;
 		View.SetRenderPath(RRP->GetObject<Frame::CRenderPath>());
-		View.RTs.SetSize(1);
 		View.RTs[0] = IPGApp->GPU->GetSwapChainRenderTarget(IPGApp->MainSwapChainIndex);
 		View.UIContext = IPGApp->MainUIContext;
 	}
@@ -79,7 +78,6 @@ void CAppStateLoading::OnStateLeave(CStrID NextState)
 	}
 
 	View.SetRenderPath(NULL);
-	View.RTs.SetSize(0);
 
 	GameSrv->PauseGame(false);
 }
