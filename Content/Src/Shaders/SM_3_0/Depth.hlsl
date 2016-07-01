@@ -22,12 +22,22 @@ float4 VSMainOpaque(float3 Pos: POSITION): POSITION
 	return OutPos;
 }
 
-/*
+PSSceneIn VSMainAlphaTest(VSSceneIn In)
+{
+	PSSceneIn Out = (PSSceneIn)0.0;
+	Out.Pos = mul(float4(In.Pos, 1), WorldMatrix);
+	Out.Pos = mul(Out.Pos, ViewProj);
+	Out.Tex = In.Tex;
+	return Out;
+}
+
 Texture2D TexAlbedo;
 sampler LinearSampler { Texture = TexAlbedo; };
+float AlphaRef: register(c9) <string CBuffer = "MaterialParams";>;
 
-float4 PSMain(PSSceneIn In): COLOR
+float4 PSMainAlphaTest(PSSceneIn In): COLOR
 {
-	return tex2D(LinearSampler, In.Tex) * MtlDiffuse;
+	float Alpha = tex2D(LinearSampler, In.Tex).a;
+	clip(Alpha - AlphaRef);
+	return Alpha;
 }
-*/

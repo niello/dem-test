@@ -16,6 +16,12 @@ cbuffer CameraParams: register(b0)
 	matrix ViewProj;
 }
 
+cbuffer MaterialParams: register(b1)
+{
+	float4 MtlDiffuse;
+	float AlphaRef;
+}
+
 cbuffer InstanceParams: register(b2)
 {
 	matrix WorldMatrix;
@@ -26,16 +32,7 @@ tbuffer SkinParams: register(t0)
 	matrix SkinMatrix[1024];
 }
 
-//!!!may premultiply and pass WVP instead of WorldMatrix!
-float4 VSMainOpaque(float3 Pos: POSITION): SV_Position
-{
-	float4 OutPos = mul(float4(Pos, 1), WorldMatrix);
-	OutPos = mul(OutPos, ViewProj);
-	return OutPos;
-}
-
-//!!!DUPLICATE CODE, see PBR VSMain!
-PSSceneIn VSMainAlphaTest(VSSceneIn In)
+PSSceneIn VSMain(VSSceneIn In)
 {
 	PSSceneIn Out = (PSSceneIn)0.0;
 	Out.Pos = mul(float4(In.Pos, 1), WorldMatrix);
@@ -47,14 +44,15 @@ PSSceneIn VSMainAlphaTest(VSSceneIn In)
 Texture2D TexAlbedo;
 sampler LinearSampler;
 
-cbuffer MaterialParams: register(b1)
+float4 PSMainAlphaTest(PSSceneIn In): SV_Target
 {
-	float4 MtlDiffuse;
-	float AlphaRef;
+	float4 Albedo = TexAlbedo.Sample(LinearSampler, In.Tex);
+	clip(Albedo.a - AlphaRef);
+	return Albedo * MtlDiffuse;
 }
 
-void PSMainAlphaTest(PSSceneIn In)
+// For a color phase, try
+float4 PSMain(PSSceneIn In): SV_Target
 {
-	float Alpha = TexAlbedo.Sample(LinearSampler, In.Tex).a;
-	clip(Alpha - AlphaRef);
+	return TexAlbedo.Sample(LinearSampler, In.Tex) * MtlDiffuse;
 }

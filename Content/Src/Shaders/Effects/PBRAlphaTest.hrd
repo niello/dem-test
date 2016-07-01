@@ -45,23 +45,24 @@ RenderStates
 		FrontCCW = false
 		DepthEnable = true
 		DepthWriteEnable = false
-		DepthFunc = "LE" //???With depth pre-pass use "E"?
+		//DepthFunc = "LE" //???With depth pre-pass use "E"?
 	}
 	
 	Model50
 	{
 		Base = 'Common'
+		DepthFunc = "E"
 
 		VS
 		{
-			In = "SrcShaders:USM/PBR.hlsl"
+			In = "SrcShaders:USM/PBRATest.hlsl"
 			Target = 0x0500
 			Entry = "VSMain"
 		}
 
 		PS
 		{
-			In = "SrcShaders:USM/PBR.hlsl"
+			In = "SrcShaders:USM/PBRATest.hlsl"
 			Target = 0x0400
 			Entry = "PSMainAlphaTest"
 		}
@@ -70,6 +71,7 @@ RenderStates
 	Model30
 	{
 		Base = 'Common'
+		DepthFunc = "LE"
 
 		VS
 		{

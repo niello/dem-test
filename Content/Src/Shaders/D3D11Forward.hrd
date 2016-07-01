@@ -34,7 +34,7 @@ Phases
 		Effects
 		{
 			Opaque = 'DepthOpaque'
-			AlphaTest = null // 'DepthATest'
+			AlphaTest = 'DepthAlphaTest'
 			Skybox = null
 			AlphaBlend = null
 		}

@@ -19,7 +19,6 @@ cbuffer CameraParams: register(b0)
 cbuffer MaterialParams: register(b1)
 {
 	float4 MtlDiffuse;
-	float AlphaRef;
 }
 
 cbuffer InstanceParams: register(b2)
@@ -47,11 +46,4 @@ sampler LinearSampler;
 float4 PSMain(PSSceneIn In): SV_Target
 {
 	return TexAlbedo.Sample(LinearSampler, In.Tex) * MtlDiffuse;
-}
-
-float4 PSMainAlphaTest(PSSceneIn In): SV_Target
-{
-	float4 Albedo = TexAlbedo.Sample(LinearSampler, In.Tex);
-	clip(Albedo.a - AlphaRef);
-	return Albedo * MtlDiffuse;
 }

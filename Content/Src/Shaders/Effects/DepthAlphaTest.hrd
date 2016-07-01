@@ -1,6 +1,6 @@
 // Physically based rendering with a microfacet model
 
-Type = "Opaque"
+Type = "AlphaTest"
 
 Techniques
 {
@@ -35,6 +35,19 @@ GlobalParams
 	ViewProj = null
 }
 
+MaterialParams
+{
+	TexAlbedo = null
+	LinearSampler // CEffect will create default CSampler instance at the load time
+	{
+		AddressU = "Wrap"
+		AddressV = "Wrap"
+		Filter = "MinMagMip_Linear"
+	}
+	MtlDiffuse = (1.0, 1.0, 1.0, 1.0)
+	AlphaRef = 0.5
+}
+
 RenderStates
 {
 	Common
@@ -44,7 +57,6 @@ RenderStates
 		DepthEnable = true
 		DepthWriteEnable = true
 		DepthFunc = "LE" //???For single pass may use "L"?
-		WriteMask = 0
 	}
 	
 	ModelUSM
@@ -55,19 +67,34 @@ RenderStates
 		{
 			In = "SrcShaders:USM/Depth.hlsl"
 			Target = 0x0500
-			Entry = "VSMainOpaque"
+			Entry = "VSMainAlphaTest"
+		}
+
+		PS
+		{
+			In = "SrcShaders:USM/Depth.hlsl"
+			Target = 0x0500
+			Entry = "PSMainAlphaTest"
 		}
 	}
 	
 	Model30
 	{
 		Base = 'Common'
+		WriteMask = 0
 
 		VS
 		{
 			In = "SrcShaders:SM_3_0/Depth.hlsl"
 			Target = 0x0300
-			Entry = "VSMainOpaque"
+			Entry = "VSMainAlphaTest"
+		}
+
+		PS
+		{
+			In = "SrcShaders:SM_3_0/Depth.hlsl"
+			Target = 0x0300
+			Entry = "PSMainAlphaTest"
 		}
 	}
 	
