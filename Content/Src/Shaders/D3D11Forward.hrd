@@ -1,11 +1,11 @@
 
-// Used for building global params metadata
+// Used for building global params metadata. Effects used for override aren't
+// necessary to be included here as far as its base effects are included
 //!!!may define directory and parse all effects inside!
 EffectsWithGlobals =
 [
 	"PBR",
 	"PBRAlphaTest"
-	//"DepthOpaque"
 ]
 
 RenderTargets
@@ -25,39 +25,41 @@ DepthStencilBuffers
 
 Phases
 {
-	/*Depth
+	Depth
 	{
 		Type = "Geometry"
 		RenderTarget = null
 		DepthStencilBuffer = 0
 		Sort = "FtB"
-		Materials	// Overrides object materials, won't be found for alpha objects, so they won't be rendered
+		Effects
 		{
 			Opaque = 'DepthOpaque'
-			AlphaTest = 'DepthATest'
+			AlphaTest = null // 'DepthATest'
 			Skybox = null
 			AlphaBlend = null
 		}
+		Renderers
+		[
+			// Skybox is never rendered in a depth phase, so its renderer isn't included
+			{ Object = "Render::CModel" Renderer = "Render::CModelRenderer" },
+			{ Object = "Render::CTerrain" Renderer = "Render::CTerrainRenderer" }
+		]
+	}
+
+	Color
+	{
+		Type = "Geometry"
+		RenderTarget = 0 // Array for MRT, like [ 2, 0, 1 ]
+		DepthStencilBuffer = 0
+		Sort = "Material"
 		Renderers
 		[
 			{ Object = "Render::CModel" Renderer = "Render::CModelRenderer" },
 			//{ Object = "Render::CSkybox" Renderer = "Render::CSkyboxRenderer" },
 			{ Object = "Render::CTerrain" Renderer = "Render::CTerrainRenderer" }
 		]
-	}*/
-	Color
-	{
-	//!!!atest color phase may use Equal depth test comparison w/out texkill! there were artifacts for some reason when I tried it earlier!
-		Type = "Geometry"
-		RenderTarget = 0 //???or named? Array for MRT, like [ 2, 0, 1]
-		DepthStencilBuffer = 0
-		Sort = "Material"
-		Renderers
-		[
-			{ Object = "Render::CModel" Renderer = "Render::CModelRenderer" },
-			{ Object = "Render::CTerrain" Renderer = "Render::CTerrainRenderer" }
-		]
 	}
+
 	GUI
 	{
 		Type = "GUI"

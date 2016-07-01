@@ -1,0 +1,96 @@
+// Physically based rendering with a microfacet model
+
+Type = "Opaque"
+
+Techniques
+{
+	ModelUSM
+	{
+		Passes = [ 'ModelUSM' ]
+		InputSet = 'Model'
+		MaxLights = 0
+	}
+	Model30
+	{
+		Passes = [ 'Model30' ]
+		InputSet = 'Model'
+		MaxLights = 0
+	}
+	/*TerrainUSM
+	{
+		Passes = [ 'TerrainUSM' ]
+		InputSet = 'Terrain'
+		MaxLights = 0
+	}
+	Terrain30
+	{
+		Passes = [ 'Terrain30' ]
+		InputSet = 'Terrain'
+		MaxLights = 0
+	}*/
+}
+
+GlobalParams
+{
+	ViewProj = null
+}
+
+RenderStates
+{
+	Common
+	{
+		Cull = "back"
+		FrontCCW = false
+		DepthEnable = true
+		DepthWriteEnable = true
+		DepthFunc = "LE" //???For single pass may use "L"?
+	}
+	
+	ModelUSM
+	{
+		Base = 'Common'
+
+		VS
+		{
+			In = "SrcShaders:USM/Depth.hlsl"
+			Target = 0x0500
+			Entry = "VSMainOpaque"
+		}
+	}
+	
+	Model30
+	{
+		Base = 'Common'
+
+		VS
+		{
+			In = "SrcShaders:SM_3_0/Depth.hlsl"
+			Target = 0x0300
+			Entry = "VSMainOpaque"
+		}
+	}
+	
+	/*TerrainUSM
+	{
+		Base = 'Common'
+
+		VS
+		{
+			In = "SrcShaders:USM/Terrain.hlsl"
+			Target = 0x0500
+			Entry = "VSMain"
+		}
+	}
+	
+	Terrain30
+	{
+		Base = 'Common'
+
+		VS
+		{
+			In = "SrcShaders:SM_3_0/Terrain.hlsl"
+			Target = 0x0300
+			Entry = "VSMain"
+		}
+	}*/
+}

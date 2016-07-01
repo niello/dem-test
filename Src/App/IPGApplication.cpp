@@ -136,7 +136,7 @@ bool CIPGApplication::Open()
 
 	// Rendering
 
-	const bool UseD3D9 = true;
+	const bool UseD3D9 = false;
 	CStrID GfxAPI; //???to GPUDrv? GetAPIID()
 	Resources::PShaderLoader ShaderLoader;
 	if (UseD3D9)
@@ -219,6 +219,7 @@ bool CIPGApplication::Open()
 	ResourceMgr->RegisterDefaultLoader("mtl", &Render::CMaterial::RTTI, MaterialLoader, false);
 
 	Resources::PEffectLoader EffectLoader = n_new(Resources::CEffectLoader);
+	EffectLoader->GPU = GPU;
 	EffectLoader->ShaderLibrary = ShaderLib;
 	ResourceMgr->RegisterDefaultLoader("eff", &Render::CEffect::RTTI, EffectLoader, true);
 

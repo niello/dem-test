@@ -45,6 +45,7 @@ RenderStates
 		FrontCCW = false
 		DepthEnable = true
 		DepthWriteEnable = false
+		DepthFunc = "LE" //???With depth pre-pass use "E"?
 	}
 	
 	Model50
