@@ -1,4 +1,4 @@
-Effect = 'PBR'
+Effect = 'PBRAlphaTest'
 Params
 {
 	//CullMode = 1 // None

@@ -1,14 +1,11 @@
 
-//SM30 = true
-//USM = true
-
 // Used for building global params metadata
 //!!!may define directory and parse all effects inside!
-//!!!may define effect IDs and build path based on ID and shader model!
 EffectsWithGlobals =
 [
-	"Shaders:USM/Effects/PBR.eff",
-	"Shaders:SM_3_0/Effects/PBR.eff"
+	"PBR",
+	"PBRAlphaTest"
+	//"DepthOpaque"
 ]
 
 RenderTargets
@@ -33,18 +30,28 @@ Phases
 		Type = "Geometry"
 		RenderTarget = null
 		DepthStencilBuffer = 0
-		Material = 'Depth'	// Overrides object materials, won't be found for alpha objects, so they won't be rendered
+		Sort = "FtB"
+		Materials	// Overrides object materials, won't be found for alpha objects, so they won't be rendered
+		{
+			Opaque = 'DepthOpaque'
+			AlphaTest = 'DepthATest'
+			Skybox = null
+			AlphaBlend = null
+		}
 		Renderers
 		[
 			{ Object = "Render::CModel" Renderer = "Render::CModelRenderer" },
+			//{ Object = "Render::CSkybox" Renderer = "Render::CSkyboxRenderer" },
 			{ Object = "Render::CTerrain" Renderer = "Render::CTerrainRenderer" }
 		]
 	}*/
 	Color
 	{
+	//!!!atest color phase may use Equal depth test comparison w/out texkill! there were artifacts for some reason when I tried it earlier!
+		Type = "Geometry"
 		RenderTarget = 0 //???or named? Array for MRT, like [ 2, 0, 1]
 		DepthStencilBuffer = 0
-		Type = "Geometry"
+		Sort = "Material"
 		Renderers
 		[
 			{ Object = "Render::CModel" Renderer = "Render::CModelRenderer" },
@@ -54,6 +61,6 @@ Phases
 	GUI
 	{
 		Type = "GUI"
-		//default target is a main target!
+		RenderTarget = 0
 	}
 }

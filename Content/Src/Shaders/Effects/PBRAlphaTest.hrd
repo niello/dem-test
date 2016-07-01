@@ -1,6 +1,6 @@
 // Physically based rendering with a microfacet model
 
-Type = "Opaque"
+Type = "AlphaTest"
 
 Techniques
 {
@@ -34,6 +34,7 @@ MaterialParams
 		Filter = "MinMagMip_Linear"
 	}
 	MtlDiffuse = (1.0, 1.0, 1.0, 1.0)
+	AlphaRef = 0.5
 }
 
 RenderStates
@@ -61,7 +62,7 @@ RenderStates
 		{
 			In = "SrcShaders:USM/PBR.hlsl"
 			Target = 0x0400
-			Entry = "PSMain"
+			Entry = "PSMainAlphaTest"
 		}
 	}
 	
@@ -80,7 +81,7 @@ RenderStates
 		{
 			In = "SrcShaders:SM_3_0/PBR.hlsl"
 			Target = 0x0300
-			Entry = "PSMain"
+			Entry = "PSMainAlphaTest"
 		}
 	}
 }
