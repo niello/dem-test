@@ -45,18 +45,22 @@ MaterialParams
 		Filter = "MinMagMip_Linear"
 	}
 	MtlDiffuse = (1.0, 1.0, 1.0, 1.0)
-	AlphaRef = 0.5
+	//AlphaRef = 0.5
 }
 
 RenderStates
 {
 	Common
 	{
-		Cull = "back"
+		Cull = "none"
 		FrontCCW = false
 		DepthEnable = true
 		DepthWriteEnable = true
 		DepthFunc = "LE" //???For single pass may use "L"?
+		Blend
+		{
+			WriteMask = 0
+		}
 	}
 	
 	ModelUSM
@@ -81,7 +85,6 @@ RenderStates
 	Model30
 	{
 		Base = 'Common'
-		WriteMask = 0
 
 		VS
 		{

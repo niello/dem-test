@@ -7,6 +7,6 @@ Params
 	//SpecularExponent = 0.000001
 	TexAlbedo = "Textures:Vgt/Leaves.tga"
 	MtlDiffuse = (1.0, 1.0, 1.0, 1.0)
-	AlphaRef = 0.1
+	//AlphaRef = 0.1
 	//MtlSpecular = (0.9, 0.9, 0.9, 1.0)
 }

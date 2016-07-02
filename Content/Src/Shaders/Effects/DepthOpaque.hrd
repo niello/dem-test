@@ -44,7 +44,10 @@ RenderStates
 		DepthEnable = true
 		DepthWriteEnable = true
 		DepthFunc = "LE" //???For single pass may use "L"?
-		WriteMask = 0
+		Blend
+		{
+			WriteMask = 0
+		}
 	}
 	
 	ModelUSM

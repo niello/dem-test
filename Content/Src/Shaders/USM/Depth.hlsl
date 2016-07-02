@@ -47,14 +47,8 @@ PSSceneIn VSMainAlphaTest(VSSceneIn In)
 Texture2D TexAlbedo;
 sampler LinearSampler;
 
-cbuffer MaterialParams: register(b1)
-{
-	float4 MtlDiffuse;
-	float AlphaRef;
-}
-
 void PSMainAlphaTest(PSSceneIn In)
 {
 	float Alpha = TexAlbedo.Sample(LinearSampler, In.Tex).a;
-	clip(Alpha - AlphaRef);
+	clip(Alpha - 0.5);
 }

@@ -47,3 +47,12 @@ float4 PSMain(PSSceneIn In): SV_Target
 {
 	return TexAlbedo.Sample(LinearSampler, In.Tex) * MtlDiffuse;
 }
+
+/*
+float4 PSMainAlphaTest(PSSceneIn In): SV_Target
+{
+	float4 Albedo = TexAlbedo.Sample(LinearSampler, In.Tex);
+	clip(Albedo.a - 0.5);
+	return Albedo * MtlDiffuse;
+}
+*/

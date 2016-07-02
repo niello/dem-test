@@ -33,11 +33,10 @@ PSSceneIn VSMainAlphaTest(VSSceneIn In)
 
 Texture2D TexAlbedo;
 sampler LinearSampler { Texture = TexAlbedo; };
-float AlphaRef: register(c9) <string CBuffer = "MaterialParams";>;
 
 float4 PSMainAlphaTest(PSSceneIn In): COLOR
 {
 	float Alpha = tex2D(LinearSampler, In.Tex).a;
-	clip(Alpha - AlphaRef);
+	clip(Alpha - 0.5);
 	return Alpha;
 }
