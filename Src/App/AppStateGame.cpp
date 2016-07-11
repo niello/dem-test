@@ -129,6 +129,7 @@ void CAppStateGame::OnStateEnter(CStrID PrevState, Data::PParams Params)
 			Scene::PNodeControllerThirdPerson Ctlr = n_new(Scene::CNodeControllerThirdPerson);
 			pCameraNode->SetController(Ctlr);
 			Ctlr->Activate(true);
+			//Ctlr->SetCOI(vector3(227.0f, 0.05f, 195.0f)); // Boxes only
 			Ctlr->SetCOI(vector3(220.0f, 0.05f, 200.0f));
 			Ctlr->SetAngles(PI * 0.2f, PI * 0.3f);
 			Ctlr->SetDistance(10.f);
