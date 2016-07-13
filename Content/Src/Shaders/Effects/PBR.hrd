@@ -10,6 +10,12 @@ Techniques
 		InputSet = 'Model'
 		MaxLights = 0
 	}
+	ModelUSMInst
+	{
+		Passes = [ 'Model50Inst' ]
+		InputSet = 'ModelInstanced'
+		MaxLights = 0
+	}
 	Model30
 	{
 		Passes = [ 'Model30' ]
@@ -62,6 +68,26 @@ RenderStates
 			In = "SrcShaders:USM/PBR.hlsl"
 			Target = 0x0500
 			Entry = "VSMain"
+		}
+
+		PS
+		{
+			In = "SrcShaders:USM/PBR.hlsl"
+			Target = 0x0400
+			Entry = "PSMain"
+		}
+	}
+	
+	Model50Inst
+	{
+		Base = 'Common'
+
+		VS
+		{
+			In = "SrcShaders:USM/PBR.hlsl"
+			Target = 0x0500
+			Entry = "VSMainInstancedConst"
+			Defines = "MAX_INSTANCE_COUNT=32"
 		}
 
 		PS
