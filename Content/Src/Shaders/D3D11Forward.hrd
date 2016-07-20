@@ -5,7 +5,8 @@
 EffectsWithGlobals =
 [
 	"PBR",
-	"PBRAlphaTest"
+	"PBRAlphaTest",
+	"PBRSplatting"
 ]
 
 RenderTargets

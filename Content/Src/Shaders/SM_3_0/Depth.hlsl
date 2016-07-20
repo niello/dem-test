@@ -12,7 +12,7 @@ struct PSSceneIn
 };
 
 matrix ViewProj: register(c0) <string CBuffer = "CameraParams";>;
-matrix WorldMatrix: register(c4) <string CBuffer = "InstanceParams";>;
+matrix WorldMatrix: register(c5) <string CBuffer = "InstanceParams";>;
 
 //!!!may premultiply and pass WVP instead of WorldMatrix!
 float4 VSMainOpaque(float3 Pos: POSITION): POSITION

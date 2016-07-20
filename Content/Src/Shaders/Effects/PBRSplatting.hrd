@@ -1,19 +1,19 @@
 // Physically based rendering with a microfacet model
 
-Type = "AlphaTest"
+Type = "Opaque"
 
 Techniques
 {
-	ModelUSM
+	TerrainUSM
 	{
-		Passes = [ 'Model50' ]
-		InputSet = 'Model'
+		Passes = [ 'TerrainUSM' ]
+		InputSet = 'Terrain'
 		MaxLights = 0
 	}
-	Model30
+	Terrain30
 	{
-		Passes = [ 'Model30' ]
-		InputSet = 'Model'
+		Passes = [ 'Terrain30' ]
+		InputSet = 'Terrain'
 		MaxLights = 0
 	}
 }
@@ -27,68 +27,73 @@ GlobalParams
 
 MaterialParams
 {
-	TexAlbedo = null
-	LinearSampler // CEffect will create default CSampler instance at the load time
+	SplatMap = null
+	//NormalMap = 'Terrain/ECCY_NM.png'
+	SplatTex0 = null
+	SplatTex1 = null
+	SplatTex2 = null
+	SplatTex3 = null
+	SplatTex4 = null
+	LinearSampler
 	{
 		AddressU = "Wrap"
 		AddressV = "Wrap"
 		Filter = "MinMagMip_Linear"
 	}
-	MtlDiffuse = (1.0, 1.0, 1.0, 1.0)
-	//AlphaRef = 0.5
+	VSHeightSampler
+	{
+		AddressU  = "Clamp"
+		AddressV  = "Clamp"
+		Filter = "minmag_linear_mip_point"
+	}
 }
 
 RenderStates
 {
 	Common
 	{
-		Cull = "none"
+		Cull = "back"
 		FrontCCW = false
 		DepthEnable = true
 		DepthWriteEnable = false
+		DepthFunc = "LE" //???With depth pre-pass use "E"?
 	}
 	
-	Model50
+	TerrainUSM
 	{
 		Base = 'Common'
-
-		DepthFunc = "E"
 
 		VS
 		{
 			In = "SrcShaders:USM/PBR.hlsl"
 			Target = 0x0500
-			Entry = "VSMain"
+			Entry = "VSMainCDLOD"
 		}
 
 		PS
 		{
 			In = "SrcShaders:USM/PBR.hlsl"
 			Target = 0x0400
-			Entry = "PSMain"
+			Entry = "PSMainSplatted"
 		}
 	}
 	
-	Model30
+	Terrain30
 	{
 		Base = 'Common'
-
-		//DepthFunc = "LE"
-		DepthFunc = "E"
 
 		VS
 		{
 			In = "SrcShaders:SM_3_0/PBR.hlsl"
 			Target = 0x0300
-			Entry = "VSMain"
+			Entry = "VSMainCDLOD"
 		}
 
 		PS
 		{
 			In = "SrcShaders:SM_3_0/PBR.hlsl"
 			Target = 0x0300
-			//Entry = "PSMainAlphaTest"
-			Entry = "PSMain"
+			Entry = "PSMainSplatted"
 		}
 	}
 }

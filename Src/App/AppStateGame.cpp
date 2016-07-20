@@ -130,9 +130,9 @@ void CAppStateGame::OnStateEnter(CStrID PrevState, Data::PParams Params)
 			pCameraNode->SetController(Ctlr);
 			Ctlr->Activate(true);
 			//Ctlr->SetCOI(vector3(227.0f, 0.05f, 195.0f)); // Boxes only
-			Ctlr->SetCOI(vector3(220.0f, 0.05f, 200.0f));
+			Ctlr->SetCOI(vector3(220.0f, 0.05f, 200.0f)); // All objects
 			Ctlr->SetAngles(PI * 0.2f, PI * 0.3f);
-			Ctlr->SetDistance(10.f);
+			Ctlr->SetDistance(20.f);
 			Frame::PNodeAttrCamera MainCamera = n_new(Frame::CNodeAttrCamera);
 			pCameraNode->AddAttribute(*MainCamera);
 			MainCamera->SetWidth((float)MainRT->GetDesc().Width);

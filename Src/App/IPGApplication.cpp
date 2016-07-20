@@ -20,6 +20,8 @@
 #include <Render/RenderStateDesc.h>
 #include <Render/Mesh.h>
 #include <Render/MeshLoaderNVX2.h>
+#include <Render/CDLODData.h>
+#include <Render/CDLODDataLoader.h>
 #include <Render/Material.h>
 #include <Render/MaterialLoader.h>
 #include <Render/Effect.h>
@@ -136,7 +138,7 @@ bool CIPGApplication::Open()
 
 	// Rendering
 
-	const bool UseD3D9 = false;
+	const bool UseD3D9 = true;
 	CStrID GfxAPI; //???to GPUDrv? GetAPIID()
 	Resources::PShaderLoader ShaderLoader;
 	if (UseD3D9)
@@ -229,6 +231,10 @@ bool CIPGApplication::Open()
 	Resources::PMeshLoaderNVX2 MeshLoaderNVX2 = n_new(Resources::CMeshLoaderNVX2);
 	MeshLoaderNVX2->GPU = GPU;
 	ResourceMgr->RegisterDefaultLoader("nvx2", &Render::CMesh::RTTI, MeshLoaderNVX2, false);
+
+	Resources::PCDLODDataLoader CDLODDataLoader = n_new(Resources::CCDLODDataLoader);
+	CDLODDataLoader->GPU = GPU;
+	ResourceMgr->RegisterDefaultLoader("cdlod", &Render::CCDLODData::RTTI, CDLODDataLoader, false);
 
 	Resources::PTextureLoaderDDS TextureLoaderDDS = n_new(Resources::CTextureLoaderDDS);
 	ResourceMgr->RegisterDefaultLoader("dds", &Render::CTexture::RTTI, TextureLoaderDDS.GetUnsafe());

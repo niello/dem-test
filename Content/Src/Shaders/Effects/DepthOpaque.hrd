@@ -33,6 +33,7 @@ Techniques
 GlobalParams
 {
 	ViewProj = null
+	EyePos = null
 }
 
 RenderStates

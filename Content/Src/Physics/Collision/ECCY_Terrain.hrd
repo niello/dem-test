@@ -1,2 +1,2 @@
 Type = 'Heightfield'
-CDLODFile = "ECCY"
+HeightMapFile = "ECCY"
