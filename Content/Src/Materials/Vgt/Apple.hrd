@@ -1,0 +1,9 @@
+Effect = 'PBR'
+Params
+{
+	//TexAlbedo = "Textures:Vgt/Apple_0_a.jpg"
+	TexAlbedo = "Textures:Test/materials/checker.dds"
+	MtlDiffuse = (0.588, 0.588, 0.588, 1.0)
+	//MtlSpecular = (0.3922, 0.3937, 0.3106, 1.0)
+	//SpecularExponent = 64.0
+}

@@ -3,7 +3,6 @@
 #endif
 
 sampler LinearSampler;
-sampler VSHeightSampler;
 
 struct PSSceneIn
 {
@@ -77,6 +76,7 @@ PSSceneIn VSMainInstancedConst(float3 Pos: POSITION, float2 Tex: TEXCOORD, uint 
 //---------------------------------------------------------------------
 
 Texture2D HeightMap;
+sampler VSHeightSampler;
 
 cbuffer CDLODParams: register(b2)
 {
@@ -96,7 +96,7 @@ float SampleHeightMap(float2 UV) //, float MipLevel)
 void VSMainCDLOD(	float2	Pos:			POSITION,
 					float4	PatchXZ:		TEXCOORD0,	// xy - scale, zw - offset
 					float2	MorphConsts:	TEXCOORD1,	// x - end / (end - start), y - 1 / (end - start)
-				out	float4	oPos:			POSITION,
+				out	float4	oPos:			SV_Position,
 				out	float4	oVertexConsts:	TEXCOORD0,
 				out	float4	oSplatDetUV:	TEXCOORD1,
 				out	float4	oPosWorld:		TEXCOORD2)

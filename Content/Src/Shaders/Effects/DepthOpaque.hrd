@@ -16,18 +16,18 @@ Techniques
 		InputSet = 'Model'
 		MaxLights = 0
 	}
-	/*TerrainUSM
+	TerrainUSM
 	{
 		Passes = [ 'TerrainUSM' ]
-		InputSet = 'Terrain'
+		InputSet = 'CDLOD'
 		MaxLights = 0
 	}
 	Terrain30
 	{
 		Passes = [ 'Terrain30' ]
-		InputSet = 'Terrain'
+		InputSet = 'CDLOD'
 		MaxLights = 0
-	}*/
+	}
 }
 
 GlobalParams
@@ -75,15 +75,15 @@ RenderStates
 		}
 	}
 	
-	/*TerrainUSM
+	TerrainUSM
 	{
 		Base = 'Common'
 
 		VS
 		{
-			In = "SrcShaders:USM/Terrain.hlsl"
+			In = "SrcShaders:USM/Depth.hlsl"
 			Target = 0x0500
-			Entry = "VSMain"
+			Entry = "VSMainCDLOD"
 		}
 	}
 	
@@ -93,9 +93,9 @@ RenderStates
 
 		VS
 		{
-			In = "SrcShaders:SM_3_0/Terrain.hlsl"
+			In = "SrcShaders:SM_3_0/Depth.hlsl"
 			Target = 0x0300
-			Entry = "VSMain"
+			Entry = "VSMainCDLOD"
 		}
-	}*/
+	}
 }

@@ -3,19 +3,7 @@ Attrs
 	{
 		Class = "Frame::CNodeAttrRenderable"
 		RenderableClass = "Render::CModel"
-		Material = 'Test/Material'
-		Vars
-		{
-			SpecularExponent = 96.078431
-			MtlDiffuse = (0.8, 0.731357, 0.467789, 1.0)
-			MtlSpecular = (0.0, 0.0, 0.0, 1.0)
-		}
-		Textures
-		{
-			NormalMap = 'Arch/ECCY_Obelisk_0_b.dds'
-			DiffMap0 = 'Arch/ECCY_Obelisk_0_d.dds'
-		}
+		Material = 'Arch/ECCY_Obelisk'
 		Mesh = 'Arch/ECCY_Obelisk'
-		BatchType = 'Solid'
 	}
 ]

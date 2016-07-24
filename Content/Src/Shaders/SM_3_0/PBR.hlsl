@@ -38,7 +38,7 @@ PSSceneIn VSMainInstanced(	float3 Pos: POSITION,
 //---------------------------------------------------------------------
 
 texture HeightMap;
-sampler VSHeightSampler;
+sampler VSHeightSampler { Texture = HeightMap; };
 
 float4 WorldToHM: register(c5) <string CBuffer = "CDLODParams";>;
 float4 TerrainYInvSplat: register(c6) <string CBuffer = "CDLODParams";>;	// x - Y scale, y - Y offset, zw - inv. splat size XZ

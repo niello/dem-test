@@ -7,13 +7,13 @@ Techniques
 	TerrainUSM
 	{
 		Passes = [ 'TerrainUSM' ]
-		InputSet = 'Terrain'
+		InputSet = 'CDLOD'
 		MaxLights = 0
 	}
 	Terrain30
 	{
 		Passes = [ 'Terrain30' ]
-		InputSet = 'Terrain'
+		InputSet = 'CDLOD'
 		MaxLights = 0
 	}
 }
@@ -28,7 +28,7 @@ GlobalParams
 MaterialParams
 {
 	SplatMap = null
-	//NormalMap = 'Terrain/ECCY_NM.png'
+	//NormalMap = null
 	SplatTex0 = null
 	SplatTex1 = null
 	SplatTex2 = null

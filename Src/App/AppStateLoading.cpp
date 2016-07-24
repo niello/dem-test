@@ -98,7 +98,6 @@ CStrID CAppStateLoading::OnFrame()
 	if (View.GetRenderPath() && pGPU->SwapChainExists(SwapChainIdx))
 	{
 		//???begin-end to a render path? anyway RP renders the whole view (RT/SwapChain)!
-		//!!!rp/view doesn't know anything about present, so present manually!
 		pGPU->Present(SwapChainIdx);
 		if (pGPU->BeginFrame())
 		{
@@ -153,7 +152,7 @@ CStrID CAppStateLoading::OnFrame()
 				GameSrv->ContinueGame(pGameFile);
 
 			if (WasGameStarted) DeleteUnreferencedResources();
-			GameSrv->ValidateAllLevels();
+			GameSrv->ValidateAllLevels(pGPU);
 
 			break;
 		}
@@ -162,7 +161,7 @@ CStrID CAppStateLoading::OnFrame()
 			bool WasGameStarted = GameSrv->IsGameStarted();
 			GameSrv->LoadGame(StateParams->Get<CString>(CStrID("SavedGameName")));
 			if (WasGameStarted) DeleteUnreferencedResources();
-			GameSrv->ValidateAllLevels();
+			GameSrv->ValidateAllLevels(pGPU);
 			break;
 		}
 		case Request_Transition:
@@ -182,7 +181,7 @@ CStrID CAppStateLoading::OnFrame()
 			if (WorldMgr->MakeTransition(TravellerIDs, LevelID, MarkerID, IsFarTravel))
 			{
 				if (IsFarTravel) DeleteUnreferencedResources();
-				GameSrv->ValidateLevel(LevelID);
+				GameSrv->ValidateLevel(LevelID, pGPU);
 				if (IsPartyTravel)
 				{
 					NOT_IMPLEMENTED;
