@@ -30,6 +30,7 @@
 #include <Render/ShaderLibraryLoaderSLB.h>
 #include <Render/SkinInfo.h>
 #include <Render/SkinInfoLoaderSKN.h>
+#include <Scene/SceneNodeLoaderSCN.h>
 #include <Animation/KeyframeClip.h>
 #include <Animation/KeyframeClipLoaderKFA.h>
 #include <Animation/MocapClip.h>
@@ -250,6 +251,9 @@ bool CIPGApplication::Open()
 
 	Resources::PMocapClipLoaderNAX2 MocapClipLoaderNAX2 = n_new(Resources::CMocapClipLoaderNAX2);
 	ResourceMgr->RegisterDefaultLoader("nax2", &Anim::CAnimClip::RTTI, MocapClipLoaderNAX2, true);
+
+	Resources::PSceneNodeLoaderSCN SceneNodeLoaderSCN = n_new(Resources::CSceneNodeLoaderSCN);
+	ResourceMgr->RegisterDefaultLoader("scn", &Scene::CSceneNode::RTTI, SceneNodeLoaderSCN);
 
 	InputServer = n_new(Input::CInputServer);
 	InputServer->Open();
