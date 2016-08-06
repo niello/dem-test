@@ -181,7 +181,7 @@ CStrID CAppStateLoading::OnFrame()
 			if (WorldMgr->MakeTransition(TravellerIDs, LevelID, MarkerID, IsFarTravel))
 			{
 				if (IsFarTravel) DeleteUnreferencedResources();
-				GameSrv->ValidateLevel(LevelID, pGPU);
+				GameSrv->GetLevel(LevelID)->Validate(pGPU);
 				if (IsPartyTravel)
 				{
 					NOT_IMPLEMENTED;

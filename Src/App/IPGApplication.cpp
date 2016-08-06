@@ -1,7 +1,5 @@
 #include "IPGApplication.h"
 
-#include <Game/EntityLoaderCommon.h>
-#include <Game/EntityLoaderStatic.h>
 #include <Scene/PropSceneNode.h> //???!!!move all props from Prop:: to Game::?
 #include <AI/PropSmartObject.h>
 #include <AI/PropAIHints.h>
@@ -367,9 +365,6 @@ bool CIPGApplication::Open()
 	GameSrv->SetCurrentProfile(UserProfileName);
 
 	Sys::Log("Set user profile '%s' - OK\n", UserProfileName.CStr());
-
-	GameSrv->SetEntityLoader(CStrID::Empty, n_new(Game::CEntityLoaderCommon));
-	GameSrv->SetEntityLoader(CStrID("Static"), n_new(Game::CEntityLoaderStatic));
 
 	EntityMgr->RegisterProperty<Prop::CPropSceneNode>(256);
 	EntityMgr->RegisterProperty<Prop::CPropSmartObject>(64);
