@@ -16,6 +16,12 @@ Techniques
 		InputSet = 'ModelInstanced'
 		MaxLights = 0
 	}
+	ModelUSMSkinned
+	{
+		Passes = [ 'Model50Skinned' ]
+		InputSet = 'ModelSkinned'
+		MaxLights = 0
+	}
 	Model30
 	{
 		Passes = [ 'Model30' ]
@@ -98,7 +104,27 @@ RenderStates
 			Entry = "PSMain"
 		}
 	}
-	
+
+	Model50Skinned
+	{
+		Base = 'Common'
+
+		VS
+		{
+			In = "SrcShaders:USM/PBR.hlsl"
+			Target = 0x0500
+			Entry = "VSMainSkinned"
+			Defines = "MAX_BONES_PER_PALETTE=1024"
+		}
+
+		PS
+		{
+			In = "SrcShaders:USM/PBR.hlsl"
+			Target = 0x0400
+			Entry = "PSMain"
+		}
+	}
+
 	Model30
 	{
 		Base = 'Common'
