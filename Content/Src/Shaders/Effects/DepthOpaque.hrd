@@ -10,10 +10,22 @@ Techniques
 		InputSet = 'Model'
 		MaxLights = 0
 	}
+	ModelUSMSkinned
+	{
+		Passes = [ 'ModelUSMSkinned' ]
+		InputSet = 'ModelSkinned'
+		MaxLights = 0
+	}
 	Model30
 	{
 		Passes = [ 'Model30' ]
 		InputSet = 'Model'
+		MaxLights = 0
+	}
+	Model30Skinned
+	{
+		Passes = [ 'Model30Skinned' ]
+		InputSet = 'ModelSkinned'
 		MaxLights = 0
 	}
 	TerrainUSM
@@ -50,7 +62,7 @@ RenderStates
 			WriteMask = 0
 		}
 	}
-	
+
 	ModelUSM
 	{
 		Base = 'Common'
@@ -60,6 +72,19 @@ RenderStates
 			In = "SrcShaders:USM/Depth.hlsl"
 			Target = 0x0500
 			Entry = "VSMainOpaque"
+		}
+	}
+
+	ModelUSMSkinned
+	{
+		Base = 'Common'
+
+		VS
+		{
+			In = "SrcShaders:USM/Depth.hlsl"
+			Target = 0x0500
+			Entry = "VSMainSkinnedOpaque"
+			Defines = "MAX_BONES_PER_PALETTE=1024"
 		}
 	}
 	
@@ -72,6 +97,18 @@ RenderStates
 			In = "SrcShaders:SM_3_0/Depth.hlsl"
 			Target = 0x0300
 			Entry = "VSMainOpaque"
+		}
+	}
+
+	Model30Skinned
+	{
+		Base = 'Common'
+
+		VS
+		{
+			In = "SrcShaders:SM_3_0/Depth.hlsl"
+			Target = 0x0300
+			Entry = "VSMainSkinnedOpaque"
 		}
 	}
 	

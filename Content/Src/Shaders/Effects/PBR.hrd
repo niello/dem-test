@@ -34,6 +34,12 @@ Techniques
 		InputSet = 'ModelInstanced'
 		MaxLights = 0
 	}
+	Model30Skinned
+	{
+		Passes = [ 'Model30Skinned' ]
+		InputSet = 'ModelSkinned'
+		MaxLights = 0
+	}
 }
 
 //!!!no need in default values!
@@ -153,6 +159,25 @@ RenderStates
 			In = "SrcShaders:SM_3_0/PBR.hlsl"
 			Target = 0x0300
 			Entry = "VSMainInstanced"
+		}
+
+		PS
+		{
+			In = "SrcShaders:SM_3_0/PBR.hlsl"
+			Target = 0x0300
+			Entry = "PSMain"
+		}
+	}
+
+	Model30Skinned
+	{
+		Base = 'Common'
+
+		VS
+		{
+			In = "SrcShaders:SM_3_0/PBR.hlsl"
+			Target = 0x0300
+			Entry = "VSMainSkinned"
 		}
 
 		PS

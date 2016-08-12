@@ -5,10 +5,10 @@ struct PSSceneIn
 	float2 Tex: TEXCOORD;
 };
 
-matrix ViewProj: register(c0) <string CBuffer = "CameraParams";>;
-float3 EyePos: register(c4) <string CBuffer = "CameraParams";>;
-matrix WorldMatrix: register(c5) <string CBuffer = "InstanceParams";>;
-float4 MtlDiffuse: register(c9) <string CBuffer = "MaterialParams";>;
+matrix ViewProj: register(c0) <string CBuffer = "CameraParams"; int SlotIndex = 0;>;
+float3 EyePos: register(c4) <string CBuffer = "CameraParams"; int SlotIndex = 0;>;
+matrix WorldMatrix: register(c5) <string CBuffer = "InstanceParams"; int SlotIndex = 2;>;
+float4 MtlDiffuse: register(c9) <string CBuffer = "MaterialParams"; int SlotIndex = 1;>;
 
 PSSceneIn VSMain(float3 Pos: POSITION, float2 Tex: TEXCOORD)
 {
@@ -31,6 +31,40 @@ PSSceneIn VSMainInstanced(	float3 Pos: POSITION,
 
 	PSSceneIn Out = (PSSceneIn)0.0;
 	Out.Pos = mul(float4(Pos, 1), InstWorld);
+	Out.Pos = mul(Out.Pos, ViewProj);
+	Out.Tex = Tex;
+	return Out;
+}
+//---------------------------------------------------------------------
+
+#ifndef MAX_BONES_PER_PALETTE
+#define MAX_BONES_PER_PALETTE 72
+#endif
+#ifndef MAX_BONES_PER_VERTEX
+#define MAX_BONES_PER_VERTEX 4
+#endif
+column_major float4x3 SkinPalette[MAX_BONES_PER_PALETTE]: register(c40) <string CBuffer = "SkinParams"; int SlotIndex = 2;>;
+
+//???why indices are float? use uint4
+float4 SkinnedPosition(const float4 InPos, const float4 Weights, const float4 Indices)
+{
+	//// need to re-normalize weights because of compression
+	//float4 NormWeights = Weights / dot(Weights, float4(1.0, 1.0, 1.0, 1.0));
+
+	float3 OutPos = mul(InPos, SkinPalette[Indices[0]]).xyz * Weights[0];
+	for (int i = 1; i < MAX_BONES_PER_VERTEX; i++)
+		OutPos += mul(InPos, SkinPalette[Indices[i]]).xyz * Weights[i];
+	return float4(OutPos, 1.0f);
+}
+//---------------------------------------------------------------------
+
+PSSceneIn VSMainSkinned(float4	Pos:		POSITION,
+						float4	Weights:	BLENDWEIGHT,
+						float4	Indices:	BLENDINDICES,
+						float2	Tex:		TEXCOORD0)
+{
+	PSSceneIn Out = (PSSceneIn)0.0;
+	Out.Pos = SkinnedPosition(Pos, Weights, Indices);
 	Out.Pos = mul(Out.Pos, ViewProj);
 	Out.Tex = Tex;
 	return Out;
