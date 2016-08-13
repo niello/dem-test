@@ -53,7 +53,7 @@ RenderStates
 	Common
 	{
 		Cull = "back"
-		FrontCCW = false
+		FrontCCW = true
 		DepthEnable = true
 		DepthWriteEnable = true
 		DepthFunc = "LE" //???For single pass may use "L"?

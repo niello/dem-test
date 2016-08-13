@@ -74,10 +74,10 @@ PSSceneIn VSMainSkinned(float4	Pos:		POSITION,
 texture HeightMap;
 sampler VSHeightSampler { Texture = HeightMap; };
 
-float4 WorldToHM: register(c5) <string CBuffer = "CDLODParams";>;
-float4 TerrainYInvSplat: register(c6) <string CBuffer = "CDLODParams";>;	// x - Y scale, y - Y offset, zw - inv. splat size XZ
-float2 GridConsts: register(c7) <string CBuffer = "CDLODParams";>;			// x - grid halfsize, y - inv. grid halfsize
-float2 HMTexInfo: register(c8) <string CBuffer = "CDLODParams";>;			// xy - texel size, zw - texture size for manual bilinear filtering (change to float4 for this case)
+float4 WorldToHM: register(c5) <string CBuffer = "CDLODParams"; int SlotIndex = 2;>;
+float4 TerrainYInvSplat: register(c6) <string CBuffer = "CDLODParams"; int SlotIndex = 2;>;	// x - Y scale, y - Y offset, zw - inv. splat size XZ
+float2 GridConsts: register(c7) <string CBuffer = "CDLODParams"; int SlotIndex = 2;>;		// x - grid halfsize, y - inv. grid halfsize
+float2 HMTexInfo: register(c8) <string CBuffer = "CDLODParams"; int SlotIndex = 2;>;		// xy - texel size, zw - texture size for manual bilinear filtering (change to float4 for this case)
 
 //???height map can be loaded with mips?
 float SampleHeightMap(float2 UV) //, float MipLevel)
