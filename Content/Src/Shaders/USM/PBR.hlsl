@@ -1,7 +1,3 @@
-#ifndef MAX_INSTANCE_COUNT
-#define MAX_INSTANCE_COUNT 64
-#endif
-
 sampler LinearSampler;
 
 struct PSSceneIn
@@ -25,6 +21,10 @@ cbuffer InstanceParams: register(b2)
 {
 	matrix WorldMatrix;
 }
+
+#ifndef MAX_INSTANCE_COUNT
+#define MAX_INSTANCE_COUNT 64
+#endif
 
 cbuffer InstanceParams: register(b2)
 {
@@ -114,39 +114,50 @@ sampler VSHeightSampler;
 
 cbuffer CDLODParams: register(b2)
 {
-	float4 WorldToHM;
-	float4 TerrainYInvSplat;	// x - Y scale, y - Y offset, zw - inv. splat size XZ
-	float2 GridConsts;			// x - grid halfsize, y - inv. grid halfsize
-	float2 HMTexInfo;			// xy - texel size, zw - texture size for manual bilinear filtering (change to float4 for this case)
+	struct
+	{
+		float4 WorldToHM;
+		float4 TerrainYInvSplat;	// x - Y scale, y - Y offset, zw - inv. splat size XZ
+		float2 HMTexelSize;			// xy - height map texel size, zw - texture size for manual bilinear filtering (change to float4 for this case)
+	} CDLODParams;
+}
+
+cbuffer GridParams: register(b3)
+{
+	float2 GridConsts;				// x - grid halfsize, y - inv. grid halfsize
 }
 
 //???height map can be loaded with mips?
 float SampleHeightMap(float2 UV) //, float MipLevel)
 {
-	return HeightMap.SampleLevel(VSHeightSampler, UV + HMTexInfo.xy * 0.5, 0).x;
+	return HeightMap.SampleLevel(VSHeightSampler, UV + CDLODParams.HMTexelSize.xy * 0.5, 0).x;
 }
 //---------------------------------------------------------------------
 
-void VSMainCDLOD(	float2	Pos:			POSITION,
-					float4	PatchXZ:		TEXCOORD0,	// xy - scale, zw - offset
-					float2	MorphConsts:	TEXCOORD1,	// x - end / (end - start), y - 1 / (end - start)
-				out	float4	oPos:			SV_Position,
-				out	float4	oVertexConsts:	TEXCOORD0,
-				out	float4	oSplatDetUV:	TEXCOORD1,
-				out	float4	oPosWorld:		TEXCOORD2)
+struct PSInSplatted
+{
+	float4 Pos:				SV_Position;
+	float4 VertexConsts:	TEXCOORD0;
+	float4 SplatDetUV:		TEXCOORD1;
+	float4 PosWorld:		TEXCOORD2;
+};
+
+PSInSplatted VSMainCDLOD(	float2	Pos:			POSITION,
+							float4	PatchXZ:		TEXCOORD0,	// xy - scale, zw - offset
+							float2	MorphConsts:	TEXCOORD1)	// x - end / (end - start), y - 1 / (end - start)
 {
 	float3 Vertex;
 	Vertex.xz = Pos * PatchXZ.xy + PatchXZ.zw;
-	float2 HMapUV = Vertex.xz * WorldToHM.xy + WorldToHM.zw;
-	Vertex.y = SampleHeightMap(HMapUV) * TerrainYInvSplat.x + TerrainYInvSplat.y;
+	float2 HMapUV = Vertex.xz * CDLODParams.WorldToHM.xy + CDLODParams.WorldToHM.zw;
+	Vertex.y = SampleHeightMap(HMapUV) * CDLODParams.TerrainYInvSplat.x + CDLODParams.TerrainYInvSplat.y;
 
 	float MorphK  = 1.0f - clamp(MorphConsts.x - distance(Vertex, EyePos) * MorphConsts.y, 0.0f, 1.0f);
 	float2 FracPart = frac(Pos * GridConsts.xx) * GridConsts.yy;
 	const float2 PosMorphed = Pos - FracPart * MorphK;
 
 	Vertex.xz = PosMorphed * PatchXZ.xy + PatchXZ.zw;
-	HMapUV = Vertex.xz * WorldToHM.xy + WorldToHM.zw;
-	Vertex.y = SampleHeightMap(HMapUV) * TerrainYInvSplat.x + TerrainYInvSplat.y;
+	HMapUV = Vertex.xz * CDLODParams.WorldToHM.xy + CDLODParams.WorldToHM.zw;
+	Vertex.y = SampleHeightMap(HMapUV) * CDLODParams.TerrainYInvSplat.x + CDLODParams.TerrainYInvSplat.y;
 
 	float DetailMorphK = 0.0;
 	float2 DetailUV = float2(0.0, 0.0);
@@ -160,10 +171,12 @@ void VSMainCDLOD(	float2	Pos:			POSITION,
 	}
 	*/
 
-	oPosWorld = float4(Vertex, 1.0);
-	oPos = mul(oPosWorld, ViewProj);
-	oVertexConsts = float4(MorphK, DetailMorphK, oPos.w, distance(Vertex, EyePos));
-	oSplatDetUV = float4(Vertex.xz * TerrainYInvSplat.zw, DetailUV);
+	PSInSplatted Out;
+	Out.PosWorld = float4(Vertex, 1.0);
+	Out.Pos = mul(Out.PosWorld, ViewProj);
+	Out.VertexConsts = float4(MorphK, DetailMorphK, Out.Pos.w, distance(Vertex, EyePos));
+	Out.SplatDetUV = float4(Vertex.xz * CDLODParams.TerrainYInvSplat.zw, DetailUV);
+	return Out;
 }
 //---------------------------------------------------------------------
 
@@ -185,34 +198,38 @@ float4 PSMainAlphaTest(PSSceneIn In): SV_Target
 //---------------------------------------------------------------------
 */
 
-//!!!NM & Splatting tex were Weighted with their parents by MorphK (VertexConsts.x)
-float4 PSMainSplatted(	float4	VertexConsts:	TEXCOORD0,
-						float4	SplatDetUV:		TEXCOORD1,
-						float4	PosWorld:		TEXCOORD2): SV_Target
+Texture2D SplatMap;
+Texture2D SplatTex0;
+Texture2D SplatTex1;
+Texture2D SplatTex2;
+Texture2D SplatTex3;
+Texture2D SplatTex4;
+sampler SplatSampler;
+
+// Version with normals can be found in old code
+float3 Splatting(float4 SplatWeights, float2 SplatTexUV)
 {
-	/*//WorldToNM, WorldToSM == WorldToHM; - for all textures that cover the whole terrain
-	float2 UV = PosWorld.xz * WorldToHM.xy + WorldToHM.zw;
-	//float3 N = FetchNormal(UV);
+	float4 SplatColors[5];
+	SplatColors[0] = SplatTex0.Sample(LinearSampler, SplatTexUV);
+	SplatColors[1] = SplatTex0.Sample(LinearSampler, SplatTexUV);
+	SplatColors[2] = SplatTex0.Sample(LinearSampler, SplatTexUV);
+	SplatColors[3] = SplatTex0.Sample(LinearSampler, SplatTexUV);
+	SplatColors[4] = SplatTex0.Sample(LinearSampler, SplatTexUV);
 
-	// Detail map
-	//N.xy += normalize(tex2D(NMDetailSampler, SplatDetUV.zw).xy - 0.5f) * VertexConsts.y; // fadeout
-	//N.z = sqrt(1.f - N.x * N.x - N.y * N.y);
+	float WeightRemain = min(1.f - SplatWeights.x - SplatWeights.y - SplatWeights.z - SplatWeights.w, 0.f);
+	float3 Color = SplatColors[4].xyz * WeightRemain;
+	for (int i = 0; i < 4; i++)
+		Color += SplatWeights[i] * SplatColors[i].xyz;
+	return Color;
+}
+//---------------------------------------------------------------------
 
-	float3 TexDiffuse;
-	float SpecPow = 32.0f;
-	float SpecMul = 1.0f;
-	Splatting(tex2D(SplatSampler, UV), SplatDetUV.xy, TexDiffuse);
-
-	float4 SurfaceDiffuse = float4(TexDiffuse, 1.f);
-	float4 Result = LightAmbient * SurfaceDiffuse;
-
-	//float3 V = normalize(EyePos - PosWorld.xyz);
-	//for (int i = 0; i < LightCount; i++)
-	//	Result += DiffuseLambert(N, LightDir[i]) * LightColor[i] * SurfaceDiffuse;
-
-	// Can apply fog here, using a distance to the camera*/
-
-	//return Result; //???enforce alpha to be 1?
-	return float4(0.3, 0.3, 0.3, 1);
+//!!!see old code version for more code!
+float4 PSMainSplatted(PSInSplatted In): SV_Target
+{
+	float2 UV = In.PosWorld.xz; //!!! * WorldToHM.xy + WorldToHM.zw;
+	float3 TexDiffuse = Splatting(SplatMap.Sample(SplatSampler, UV), In.SplatDetUV.xy);
+	return  float4(TexDiffuse, 1.f);
+	//return float4(frac(0.6 * In.PosWorld.y), frac(0.6 * In.PosWorld.y), frac(0.6 * In.PosWorld.y), 1);
 }
 //---------------------------------------------------------------------

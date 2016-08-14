@@ -46,13 +46,12 @@ RenderStates
 		FrontCCW = false
 		DepthEnable = true
 		DepthWriteEnable = false
+		DepthFunc = "E"				// Depth pre-pass allows us to render colour without alpha-testing this way
 	}
 	
 	Model50
 	{
 		Base = 'Common'
-
-		DepthFunc = "E"
 
 		VS
 		{
@@ -72,9 +71,6 @@ RenderStates
 	Model30
 	{
 		Base = 'Common'
-
-		//DepthFunc = "LE"
-		DepthFunc = "E"
 
 		VS
 		{

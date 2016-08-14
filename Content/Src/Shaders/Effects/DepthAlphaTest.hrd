@@ -1,4 +1,4 @@
-// Physically based rendering with a microfacet model
+// Depth-only rendering of alpha-tested objects
 
 Type = "AlphaTest"
 
@@ -10,12 +10,36 @@ Techniques
 		InputSet = 'Model'
 		MaxLights = 0
 	}
+	ModelUSMInst
+	{
+		Passes = [ 'ModelUSMInst' ]
+		InputSet = 'ModelInstanced'
+		MaxLights = 0
+	}
+	/*ModelUSMSkinned
+	{
+		Passes = [ 'ModelUSMSkinned' ]
+		InputSet = 'ModelSkinned'
+		MaxLights = 0
+	}*/
 	Model30
 	{
 		Passes = [ 'Model30' ]
 		InputSet = 'Model'
 		MaxLights = 0
 	}
+	Model30Inst
+	{
+		Passes = [ 'Model30Inst' ]
+		InputSet = 'ModelInstanced'
+		MaxLights = 0
+	}
+	/*Model30Skinned
+	{
+		Passes = [ 'Model30Skinned' ]
+		InputSet = 'ModelSkinned'
+		MaxLights = 0
+	}*/
 	/*TerrainUSM
 	{
 		Passes = [ 'TerrainUSM' ]
@@ -82,6 +106,26 @@ RenderStates
 			Entry = "PSMainAlphaTest"
 		}
 	}
+
+	ModelUSMInst
+	{
+		Base = 'Common'
+
+		VS
+		{
+			In = "SrcShaders:USM/Depth.hlsl"
+			Target = 0x0500
+			Entry = "VSMainInstancedConstAlphaTest"
+			Defines = "MAX_INSTANCE_COUNT=32"
+		}
+
+		PS
+		{
+			In = "SrcShaders:USM/Depth.hlsl"
+			Target = 0x0500
+			Entry = "PSMainAlphaTest"
+		}
+	}
 	
 	Model30
 	{
@@ -92,6 +136,26 @@ RenderStates
 			In = "SrcShaders:SM_3_0/Depth.hlsl"
 			Target = 0x0300
 			Entry = "VSMainAlphaTest"
+		}
+
+		PS
+		{
+			In = "SrcShaders:SM_3_0/Depth.hlsl"
+			Target = 0x0300
+			Entry = "PSMainAlphaTest"
+		}
+	}
+
+	Model30Inst
+	{
+		Base = 'Common'
+
+		VS
+		{
+			In = "SrcShaders:SM_3_0/Depth.hlsl"
+			Target = 0x0300
+			Entry = "VSMainInstancedAlphaTest"
+			Defines = "MAX_INSTANCE_COUNT=32"
 		}
 
 		PS

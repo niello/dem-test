@@ -34,17 +34,17 @@ MaterialParams
 	SplatTex2 = null
 	SplatTex3 = null
 	SplatTex4 = null
+	SplatSampler
+	{
+		AddressU = "Clamp"
+		AddressV = "Clamp"
+		Filter = "MinMagMip_Linear"
+	}
 	LinearSampler
 	{
 		AddressU = "Wrap"
 		AddressV = "Wrap"
 		Filter = "MinMagMip_Linear"
-	}
-	VSHeightSampler
-	{
-		AddressU  = "Clamp"
-		AddressV  = "Clamp"
-		Filter = "minmag_linear_mip_point"
 	}
 }
 

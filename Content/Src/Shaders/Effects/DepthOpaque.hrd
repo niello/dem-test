@@ -1,4 +1,4 @@
-// Physically based rendering with a microfacet model
+// Depth-only rendering of opaque objects
 
 Type = "Opaque"
 
@@ -8,6 +8,12 @@ Techniques
 	{
 		Passes = [ 'ModelUSM' ]
 		InputSet = 'Model'
+		MaxLights = 0
+	}
+	ModelUSMInst
+	{
+		Passes = [ 'ModelUSMInst' ]
+		InputSet = 'ModelInstanced'
 		MaxLights = 0
 	}
 	ModelUSMSkinned
@@ -20,6 +26,12 @@ Techniques
 	{
 		Passes = [ 'Model30' ]
 		InputSet = 'Model'
+		MaxLights = 0
+	}
+	Model30Inst
+	{
+		Passes = [ 'Model30Inst' ]
+		InputSet = 'ModelInstanced'
 		MaxLights = 0
 	}
 	Model30Skinned
@@ -75,6 +87,19 @@ RenderStates
 		}
 	}
 
+	ModelUSMInst
+	{
+		Base = 'Common'
+
+		VS
+		{
+			In = "SrcShaders:USM/Depth.hlsl"
+			Target = 0x0500
+			Entry = "VSMainInstancedConstOpaque"
+			Defines = "MAX_INSTANCE_COUNT=32"
+		}
+	}
+
 	ModelUSMSkinned
 	{
 		Base = 'Common'
@@ -100,6 +125,19 @@ RenderStates
 		}
 	}
 
+	Model30Inst
+	{
+		Base = 'Common'
+
+		VS
+		{
+			In = "SrcShaders:SM_3_0/Depth.hlsl"
+			Target = 0x0300
+			Entry = "VSMainInstancedOpaque"
+			Defines = "MAX_INSTANCE_COUNT=32"
+		}
+	}
+
 	Model30Skinned
 	{
 		Base = 'Common'
@@ -115,6 +153,7 @@ RenderStates
 	TerrainUSM
 	{
 		Base = 'Common'
+		FrontCCW = false
 
 		VS
 		{
@@ -127,6 +166,7 @@ RenderStates
 	Terrain30
 	{
 		Base = 'Common'
+		FrontCCW = false
 
 		VS
 		{

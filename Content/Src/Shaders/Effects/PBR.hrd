@@ -6,19 +6,19 @@ Techniques
 {
 	ModelUSM
 	{
-		Passes = [ 'Model50' ]
+		Passes = [ 'ModelUSM' ]
 		InputSet = 'Model'
 		MaxLights = 0
 	}
 	ModelUSMInst
 	{
-		Passes = [ 'Model50Inst' ]
+		Passes = [ 'ModelUSMInst' ]
 		InputSet = 'ModelInstanced'
 		MaxLights = 0
 	}
 	ModelUSMSkinned
 	{
-		Passes = [ 'Model50Skinned' ]
+		Passes = [ 'ModelUSMSkinned' ]
 		InputSet = 'ModelSkinned'
 		MaxLights = 0
 	}
@@ -72,7 +72,7 @@ RenderStates
 		DepthFunc = "LE" //???With depth pre-pass use "E"?
 	}
 	
-	Model50
+	ModelUSM
 	{
 		Base = 'Common'
 
@@ -91,7 +91,7 @@ RenderStates
 		}
 	}
 	
-	Model50Inst
+	ModelUSMInst
 	{
 		Base = 'Common'
 
@@ -111,7 +111,7 @@ RenderStates
 		}
 	}
 
-	Model50Skinned
+	ModelUSMSkinned
 	{
 		Base = 'Common'
 

@@ -74,13 +74,14 @@ PSSceneIn VSMainSkinned(float4	Pos:		POSITION,
 texture HeightMap;
 sampler VSHeightSampler { Texture = HeightMap; };
 
+float2 GridConsts: register(c5) <string CBuffer = "CDLODParams"; int SlotIndex = 2;>; // x - grid halfsize, y - inv. grid halfsize
+
 struct
 {
 	float4 WorldToHM;
 	float4 TerrainYInvSplat;	// x - Y scale, y - Y offset, zw - inv. splat size XZ
-	float4 GridConsts;			// x - grid halfsize, y - inv. grid halfsize, zw - texel size
-	//float2 HMTextureSize;			// xy - texture size for manual bilinear filtering (change to float4 for this case)
-} CDLODParams: register(c5) <string CBuffer = "CDLODParams"; int SlotIndex = 2;>;
+	float2 HMTexelSize;			// xy - height map texel size, zw - texture size for manual bilinear filtering (change to float4 for this case)
+} CDLODParams: register(c6) <string CBuffer = "CDLODParams"; int SlotIndex = 2;>;
 
 /*
 float4 WorldToHM: register(c5) <string CBuffer = "CDLODParams"; int SlotIndex = 2;>;
@@ -92,7 +93,7 @@ float2 HMTexInfo: register(c8) <string CBuffer = "CDLODParams"; int SlotIndex = 
 //???height map can be loaded with mips?
 float SampleHeightMap(float2 UV) //, float MipLevel)
 {
-	return tex2Dlod(VSHeightSampler, float4(UV + CDLODParams.GridConsts.zw * 0.5, 0, 0)).x;
+	return tex2Dlod(VSHeightSampler, float4(UV + CDLODParams.HMTexelSize.xy * 0.5, 0, 0)).x;
 }
 //---------------------------------------------------------------------
 
@@ -110,7 +111,7 @@ void VSMainCDLOD(	float2	Pos:			POSITION,
 	Vertex.y = SampleHeightMap(HMapUV) * CDLODParams.TerrainYInvSplat.x + CDLODParams.TerrainYInvSplat.y;
 
 	float MorphK  = 1.0f - clamp(MorphConsts.x - distance(Vertex, EyePos) * MorphConsts.y, 0.0f, 1.0f);
-	float2 FracPart = frac(Pos * CDLODParams.GridConsts.xx) * CDLODParams.GridConsts.yy;
+	float2 FracPart = frac(Pos * GridConsts.xx) * GridConsts.yy;
 	const float2 PosMorphed = Pos - FracPart * MorphK;
 
 	Vertex.xz = PosMorphed * PatchXZ.xy + PatchXZ.zw;
