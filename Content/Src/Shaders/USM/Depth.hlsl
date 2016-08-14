@@ -108,14 +108,14 @@ PSSceneIn VSMainInstancedConstAlphaTest(float3 Pos: POSITION, float2 Tex: TEXCOO
 Texture2D HeightMap;
 sampler VSHeightSampler;
 
-cbuffer CDLODParams: register(b2)
+cbuffer VSCDLODParams: register(b2)
 {
 	struct
 	{
 		float4 WorldToHM;
 		float4 TerrainYInvSplat;	// x - Y scale, y - Y offset, zw - inv. splat size XZ
 		float2 HMTexelSize;			// xy - height map texel size, zw - texture size for manual bilinear filtering (change to float4 for this case)
-	} CDLODParams;
+	} VSCDLODParams;
 }
 
 cbuffer GridParams: register(b3)
@@ -126,7 +126,7 @@ cbuffer GridParams: register(b3)
 //???height map can be loaded with mips?
 float SampleHeightMap(float2 UV) //, float MipLevel)
 {
-	return HeightMap.SampleLevel(VSHeightSampler, UV + CDLODParams.HMTexelSize.xy * 0.5, 0).x;
+	return HeightMap.SampleLevel(VSHeightSampler, UV + VSCDLODParams.HMTexelSize.xy * 0.5, 0).x;
 }
 //---------------------------------------------------------------------
 
@@ -137,16 +137,16 @@ void VSMainCDLOD(	float2	Pos:			POSITION,
 {
 	float3 Vertex;
 	Vertex.xz = Pos * PatchXZ.xy + PatchXZ.zw;
-	float2 HMapUV = Vertex.xz * CDLODParams.WorldToHM.xy + CDLODParams.WorldToHM.zw;
-	Vertex.y = SampleHeightMap(HMapUV) * CDLODParams.TerrainYInvSplat.x + CDLODParams.TerrainYInvSplat.y;
+	float2 HMapUV = Vertex.xz * VSCDLODParams.WorldToHM.xy + VSCDLODParams.WorldToHM.zw;
+	Vertex.y = SampleHeightMap(HMapUV) * VSCDLODParams.TerrainYInvSplat.x + VSCDLODParams.TerrainYInvSplat.y;
 
 	float MorphK  = 1.0f - clamp(MorphConsts.x - distance(Vertex, EyePos) * MorphConsts.y, 0.0f, 1.0f);
 	float2 FracPart = frac(Pos * GridConsts.xx) * GridConsts.yy;
 	const float2 PosMorphed = Pos - FracPart * MorphK;
 
 	Vertex.xz = PosMorphed * PatchXZ.xy + PatchXZ.zw;
-	HMapUV = Vertex.xz * CDLODParams.WorldToHM.xy + CDLODParams.WorldToHM.zw;
-	Vertex.y = SampleHeightMap(HMapUV) * CDLODParams.TerrainYInvSplat.x + CDLODParams.TerrainYInvSplat.y;
+	HMapUV = Vertex.xz * VSCDLODParams.WorldToHM.xy + VSCDLODParams.WorldToHM.zw;
+	Vertex.y = SampleHeightMap(HMapUV) * VSCDLODParams.TerrainYInvSplat.x + VSCDLODParams.TerrainYInvSplat.y;
 
 	oPos = mul(float4(Vertex, 1), ViewProj);
 }

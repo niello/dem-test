@@ -3,9 +3,9 @@ Params
 {
 	SplatMap = "Textures:Terrain/ECCY_SM.tga"
 	//NormalMap = 'Terrain/ECCY_NM.png'
-	SplatTex0 = "Textures:Terrain/Grass.dds"
+	SplatTex0 = "Textures:Terrain/Rock.dds"
 	//SplatTex1 = "Textures:Terrain/Cobblestone.png"
-	SplatTex1 = "Textures:Terrain/Rock.dds"
+	SplatTex1 = "Textures:Terrain/Grass.dds"
 	SplatTex2 = "Textures:Terrain/Sand.dds"
 	SplatTex3 = "Textures:Terrain/Rock.dds"
 	SplatTex4 = "Textures:Terrain/Ground.dds"

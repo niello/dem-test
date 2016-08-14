@@ -91,7 +91,7 @@ RenderStates
 
 		PS
 		{
-			In = "SrcShaders:SM_3_0/PBR.hlsl"
+			In = "SrcShaders:SM_3_0/PBR_PSSplatted.hlsl"
 			Target = 0x0300
 			Entry = "PSMainSplatted"
 		}
