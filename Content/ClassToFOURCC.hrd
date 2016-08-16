@@ -10,6 +10,8 @@ List
 	{ Name = "Render::CModelRenderer"			Code = "MDLR" },
 	{ Name = "Render::CTerrain"					Code = "TERR" },
 	{ Name = "Render::CTerrainRenderer"			Code = "TRNR" },
+	{ Name = "Render::CSkybox"					Code = "SKBX" },
+	{ Name = "Render::CSkyboxRenderer"			Code = "SBXR" },
 	{ Name = "Prop::CPropActorBrain"			Code = "PRAB" },
 	{ Name = "Prop::CPropAIHints"				Code = "PRAH" },
 	{ Name = "Prop::CPropSmartObject"			Code = "PRSO" },

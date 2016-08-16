@@ -36,8 +36,10 @@
 #include <UI/RenderPhaseGUI.h>
 #include <Render/Model.h>
 #include <Render/Terrain.h>
+#include <Render/Skybox.h>
 #include <Render/ModelRenderer.h>
 #include <Render/TerrainRenderer.h>
+#include <Render/SkyboxRenderer.h>
 
 // OTHER ===========================================
 
@@ -56,8 +58,10 @@ void ForceFactoryRegistration()
 	Frame::CRenderPhaseGUI::ForceFactoryRegistration();
 	Render::CModel::ForceFactoryRegistration();
 	Render::CTerrain::ForceFactoryRegistration();
+	Render::CSkybox::ForceFactoryRegistration();
 	Render::CModelRenderer::ForceFactoryRegistration();
 	Render::CTerrainRenderer::ForceFactoryRegistration();
+	Render::CSkyboxRenderer::ForceFactoryRegistration();
 
 	AI::CActionTplIdle::ForceFactoryRegistration();
 	AI::CActionTplWander::ForceFactoryRegistration();

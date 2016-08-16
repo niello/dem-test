@@ -95,7 +95,7 @@ Entities
 	}
 	ECCY_Skybox
 	{
-		LoadingGroup = 'Static'
+		//LoadingGroup = 'Static'
 		Attrs
 		{
 			Transform = (1.0, 0.0, 0.0, 0.0,

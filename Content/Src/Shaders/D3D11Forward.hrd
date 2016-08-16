@@ -56,7 +56,7 @@ Phases
 		Renderers
 		[
 			{ Object = "Render::CModel" Renderer = "Render::CModelRenderer" },
-			//{ Object = "Render::CSkybox" Renderer = "Render::CSkyboxRenderer" },
+			{ Object = "Render::CSkybox" Renderer = "Render::CSkyboxRenderer" },
 			{ Object = "Render::CTerrain" Renderer = "Render::CTerrainRenderer" }
 		]
 	}

@@ -1,5 +1,5 @@
 Effect = 'Skybox'
 Params
 {
-	TexCubeMap = "Textures:Test/Terrain/Skybox.dds"
+	TexCubeMap = "Textures:Terrain/Skybox.dds"
 }
