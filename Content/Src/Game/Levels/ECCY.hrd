@@ -93,6 +93,19 @@ Entities
 		}
 		Props [ "Prop::CPropSceneNode", "Prop::CPropPhysics" ] //!!!no need in phys if collision only and it is a scene node attr!
 	}
+	ECCY_Skybox
+	{
+		LoadingGroup = 'Static'
+		Attrs
+		{
+			Transform = (1.0, 0.0, 0.0, 0.0,
+						 0.0, 1.0, 0.0, 0.0,
+						 0.0, 0.0, 1.0, 0.0,
+						 0.0, 0.0, 0.0, 1.0)
+			SceneFile = "Terrain/Skybox"
+		}
+		Props [ "Prop::CPropSceneNode" ]
+	}
 	ECCY_Obelisk
 	{
 		LoadingGroup = 'Static'

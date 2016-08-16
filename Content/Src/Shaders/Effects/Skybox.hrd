@@ -1,0 +1,87 @@
+// Simple skybox without lighting and animation, texture only
+
+Type = "Skybox"
+
+Techniques
+{
+	SkyboxUSM
+	{
+		Passes = [ 'SkyboxUSM' ]
+		InputSet = 'Skybox'
+		MaxLights = 0
+	}
+	Skybox30
+	{
+		Passes = [ 'Skybox30' ]
+		InputSet = 'Skybox'
+		MaxLights = 0
+	}
+}
+
+//!!!no need in default values!
+GlobalParams
+{
+	ViewProj = null
+	EyePos = null
+}
+
+MaterialParams
+{
+	TexCubeMap = null
+	CubeMapSampler
+	{
+		AddressU = "Mirror"
+		AddressV = "Mirror"
+		Filter = "MinMagMip_Linear"
+	}
+}
+
+RenderStates
+{
+	Common
+	{
+		Cull = "back"
+		FrontCCW = false
+		DepthEnable = true
+		DepthWriteEnable = false
+		DepthFunc = "LE"
+	}
+	
+	SkyboxUSM
+	{
+		Base = 'Common'
+
+		VS
+		{
+			In = "SrcShaders:USM/Skybox.hlsl"
+			Target = 0x0400
+			Entry = "VSMain"
+		}
+
+		PS
+		{
+			In = "SrcShaders:USM/Skybox.hlsl"
+			Target = 0x0400
+			Entry = "PSMain"
+		}
+	}
+
+	Skybox30
+	{
+		Base = 'Common'
+
+		VS
+		{
+			In = "SrcShaders:SM_3_0/Skybox.hlsl"
+			Target = 0x0300
+			Entry = "VSMain"
+		}
+
+		PS
+		{
+			In = "SrcShaders:SM_3_0/Skybox.hlsl"
+			Target = 0x0300
+			Entry = "PSMain"
+		}
+	}
+}

@@ -1,0 +1,9 @@
+Attrs
+[
+	{
+		Class = "Frame::CNodeAttrRenderable"
+		RenderableClass = "Render::CSkybox"
+
+		Material = 'Terrain/Skybox'
+	}
+]
