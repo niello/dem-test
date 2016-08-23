@@ -29,11 +29,6 @@
 #include <Physics/PhysicsServer.h>
 #include <Video/VideoServer.h>
 #include <Input/InputServer.h>
-#include <Input/Events/MouseMoveRaw.h>
-#include <Input/Events/MouseWheel.h>
-#include <Input/Events/MouseBtnDown.h>
-#include <Input/Events/MouseBtnUp.h>
-#include <Input/Events/MouseDoubleClick.h>
 #include <Data/DataArray.h>
 #include <IO/PathUtils.h>
 #include <App/IPGApplication.h>
@@ -201,11 +196,11 @@ void CAppStateGame::OnStateEnter(CStrID PrevState, Data::PParams Params)
 		IPGApp->GPU->EndFrame();
 	}
 
-	SUBSCRIBE_INPUT_EVENT(MouseMoveRaw, CAppStateGame, OnMouseMoveRaw, Input::InputPriority_Raw);
-	SUBSCRIBE_INPUT_EVENT(MouseWheel, CAppStateGame, OnMouseWheel, Input::InputPriority_Raw);
-	SUBSCRIBE_INPUT_EVENT(MouseBtnDown, CAppStateGame, OnMouseBtnDown, Input::InputPriority_Raw);
-	SUBSCRIBE_INPUT_EVENT(MouseBtnUp, CAppStateGame, OnMouseBtnUp, Input::InputPriority_Raw);
-	SUBSCRIBE_INPUT_EVENT(MouseDoubleClick, CAppStateGame, OnMouseDoubleClick, Input::InputPriority_Raw);
+	//SUBSCRIBE_INPUT_EVENT(MouseMoveRaw, CAppStateGame, OnMouseMoveRaw, Input::InputPriority_Raw);
+	//SUBSCRIBE_INPUT_EVENT(MouseWheel, CAppStateGame, OnMouseWheel, Input::InputPriority_Raw);
+	//SUBSCRIBE_INPUT_EVENT(MouseBtnDown, CAppStateGame, OnMouseBtnDown, Input::InputPriority_Raw);
+	//SUBSCRIBE_INPUT_EVENT(MouseBtnUp, CAppStateGame, OnMouseBtnUp, Input::InputPriority_Raw);
+	//SUBSCRIBE_INPUT_EVENT(MouseDoubleClick, CAppStateGame, OnMouseDoubleClick, Input::InputPriority_Raw);
 	SUBSCRIBE_PEVENT(OnWorldTransitionRequested, CAppStateGame, OnWorldTransitionRequested);
 	SUBSCRIBE_PEVENT(QuickSave, CAppStateGame, OnQuickSave);
 	SUBSCRIBE_PEVENT(QuickLoad, CAppStateGame, OnQuickLoad);
@@ -427,27 +422,27 @@ bool CAppStateGame::OnMouseWheel(Events::CEventDispatcher* pDispatcher, const Ev
 
 bool CAppStateGame::OnMouseBtnDown(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
-	Input::EMouseButton Button = ((const Event::MouseBtnDown&)Event).Button;
-	switch (Button)
-	{
-		case Input::MBLeft:
-		{
-			//???how to handle double-click without issuing an action twice, first walking and then running?
-			//!!!don't resend action each tick, but once at near 1/4 sec can update task if mouse is pressed,
-			//for smooth movement. Formation may support it badly!
-			bool ShiftPressed =
-				InputSrv->CheckKeyState(Input::LeftShift, KEY_IS_PRESSED) ||
-				InputSrv->CheckKeyState(Input::RightShift, KEY_IS_PRESSED);
-			return IssueActorCommand(false, !ShiftPressed);
-		}
-		case Input::MBMiddle:
-		{
-			CameraRotate = true;
-			OK;
-		}
-		case Input::MBRight:
-		{
-			NOT_IMPLEMENTED;
+	//Input::EMouseButton Button = ((const Event::MouseBtnDown&)Event).Button;
+	//switch (Button)
+	//{
+	//	case Input::MBLeft:
+	//	{
+	//		//???how to handle double-click without issuing an action twice, first walking and then running?
+	//		//!!!don't resend action each tick, but once at near 1/4 sec can update task if mouse is pressed,
+	//		//for smooth movement. Formation may support it badly!
+	//		bool ShiftPressed =
+	//			InputSrv->CheckKeyState(Input::LeftShift, KEY_IS_PRESSED) ||
+	//			InputSrv->CheckKeyState(Input::RightShift, KEY_IS_PRESSED);
+	//		return IssueActorCommand(false, !ShiftPressed);
+	//	}
+	//	case Input::MBMiddle:
+	//	{
+	//		CameraRotate = true;
+	//		OK;
+	//	}
+	//	case Input::MBRight:
+	//	{
+			//NOT_IMPLEMENTED;
 			/*
 			CStrID ID = CStrID::Empty; //FactionMgr->GetFaction(CStrID("Party"))->GetGroupLeader(GameSrv->GetActiveLevel()->GetSelection());
 			Game::CEntity* pActorEntity = EntityMgr->GetEntity(ID);
@@ -458,35 +453,35 @@ bool CAppStateGame::OnMouseBtnDown(Events::CEventDispatcher* pDispatcher, const 
 			if (!pCtl) FAIL;
 			pCtl->ShowPopup(pActorEntity);
 			*/
-			OK;
-		}
-	}
+	//		OK;
+	//	}
+	//}
 	FAIL;
 }
 //---------------------------------------------------------------------
 
 bool CAppStateGame::OnMouseBtnUp(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
-	Input::EMouseButton Button = ((const Event::MouseBtnDown&)Event).Button;
-	if (Button == Input::MBMiddle)
-	{
-		CameraRotate = false;
-		OK;
-	}
+	//Input::EMouseButton Button = ((const Event::MouseBtnDown&)Event).Button;
+	//if (Button == Input::MBMiddle)
+	//{
+	//	CameraRotate = false;
+	//	OK;
+	//}
 	FAIL;
 }
 //---------------------------------------------------------------------
 
 bool CAppStateGame::OnMouseDoubleClick(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
-	Input::EMouseButton Button = ((const Event::MouseBtnDown&)Event).Button;
-	if (Button == Input::MBLeft)
-	{
-		bool ShiftPressed =
-			InputSrv->CheckKeyState(Input::LeftShift, KEY_IS_PRESSED) ||
-			InputSrv->CheckKeyState(Input::RightShift, KEY_IS_PRESSED);
-		return IssueActorCommand(true, !ShiftPressed);
-	}
+	//Input::EMouseButton Button = ((const Event::MouseBtnDown&)Event).Button;
+	//if (Button == Input::MBLeft)
+	//{
+	//	bool ShiftPressed =
+	//		InputSrv->CheckKeyState(Input::LeftShift, KEY_IS_PRESSED) ||
+	//		InputSrv->CheckKeyState(Input::RightShift, KEY_IS_PRESSED);
+	//	return IssueActorCommand(true, !ShiftPressed);
+	//}
 	FAIL;
 }
 //---------------------------------------------------------------------
