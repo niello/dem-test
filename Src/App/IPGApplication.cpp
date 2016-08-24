@@ -95,9 +95,7 @@ bool CIPGApplication::Open()
 		for (UPTR i = 0; i < PathList->GetCount(); ++i)
 			IOSrv->SetAssign(PathList->Get(i).GetName().CStr(), IOSrv->ResolveAssigns(PathList->Get<CString>(i)));
 
-	// Store reference just in case. It is a dispatcher and may be assigned to a smart ptr somewhere.
-	EventServer = n_new(Events::CEventServer);
-
+	n_new(Events::CEventServer);
 	n_new(Time::CTimeServer);
 
 	DebugServer = n_new(Debug::CDebugServer);
@@ -253,8 +251,8 @@ bool CIPGApplication::Open()
 	Resources::PSceneNodeLoaderSCN SceneNodeLoaderSCN = n_new(Resources::CSceneNodeLoaderSCN);
 	ResourceMgr->RegisterDefaultLoader("scn", &Scene::CSceneNode::RTTI, SceneNodeLoaderSCN);
 
-	InputServer = n_new(Input::CInputServer);
-	InputServer->Open();
+	n_new(Input::CInputServer);
+	InputSrv->Open();
 
 	VideoServer = n_new(Video::CVideoServer);
 	VideoServer->Open();
@@ -525,10 +523,8 @@ void CIPGApplication::Close()
 	EngineWindowClass->Destroy();
 	EngineWindowClass = NULL;
 
-	if (InputServer.IsValidPtr() && InputServer->IsOpen()) InputServer->Close();
-	InputServer = NULL;
-
-//	n_delete(FrameSrv);
+	if (InputSrv->HasInstance() && InputSrv->IsOpen()) InputSrv->Close();
+	n_delete(InputSrv);
 
 	//if (LoaderServer.IsValid() && LoaderServer->IsOpen()) LoaderServer->Close();
 	//LoaderServer = NULL;
@@ -538,9 +534,7 @@ void CIPGApplication::Close()
 
 	n_delete(TimeSrv);
 	n_delete(ScriptSrv);
-
-	EventServer = NULL;
-
+	n_delete(EventSrv);
 	n_delete(DataSrv);
 	n_delete(ResourceMgr);
 	n_delete(IOSrv);

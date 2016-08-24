@@ -66,13 +66,9 @@ private:
 
 	CString								ProjDir;
 
-	Ptr<Events::CEventServer>			EventServer;
-
-	//Ptr<Time::CTimeServer>				TimeServer;
 	Ptr<Debug::CDebugServer>			DebugServer;
 	Ptr<Debug::CDebugDraw>				DD;
 	Ptr<Physics::CPhysicsServer>		PhysicsServer;
-	Ptr<Input::CInputServer>			InputServer;
 	Ptr<Video::CVideoServer>			VideoServer;
 	Ptr<AI::CAIServer>					AIServer;
 	Ptr<UI::CUIServer>					UIServer;
