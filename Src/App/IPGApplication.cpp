@@ -7,6 +7,7 @@
 #include <Scripting/PropScriptable.h>
 #include <Animation/PropAnimation.h>
 #include <UI/PropUIControl.h>
+#include <Input/OSWindowMouse.h>
 #include <Render/GPUDriver.h>
 #include <Render/Shader.h>
 #include <Render/Texture.h>
@@ -132,6 +133,12 @@ bool CIPGApplication::Open()
 	Wnd2->Open();
 	SCIdx2 = -1;
 ///////////////////////
+
+	// Input
+
+	//!!!must be attached to all windows or to the current active window or to windows associated with a player!
+	pMouseDevice = n_new(Input::COSWindowMouse);
+	((Input::COSWindowMouse*)pMouseDevice)->Attach(MainWindow.GetUnsafe(), 50);
 
 	// Rendering
 
@@ -513,6 +520,8 @@ void CIPGApplication::Close()
 
 	GPU = NULL;
 	VideoDrvFct = NULL;
+
+	SAFE_DELETE(pMouseDevice);
 
 	Wnd2->Close();
 	Wnd2 = NULL;

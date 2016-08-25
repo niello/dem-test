@@ -24,6 +24,7 @@
 //#include <Audio/AudioServer.h>
 #include <Physics/PhysicsServer.h>
 #include <Input/InputServer.h>
+#include <Input/InputDevice.h>
 #include <Game/GameServer.h>
 #include <AI/AIServer.h>
 #include <UI/UIServer.h>
@@ -82,6 +83,9 @@ private:
 	Ptr<Items::CItemManager>			ItemManager;
 	Ptr<RPG::CFactionManager>			FactionManager;
 
+	//!!!TMP!
+	Input::IInputDevice*				pMouseDevice;
+
 	DECLARE_EVENT_HANDLER(OnClosing, OnOSWindowClosing);
 
 public:
@@ -96,7 +100,7 @@ public:
 	//!!!DBG TMP!
 	Sys::POSWindow Wnd2; int SCIdx2;
 
-	CIPGApplication() { __ConstructSingleton; }
+	CIPGApplication(): pMouseDevice(NULL) { __ConstructSingleton; }
 	~CIPGApplication() { __DestructSingleton; }
 
 	const char*	GetAppName() const { return "Insane Poet"; }
