@@ -85,6 +85,7 @@ private:
 
 	//!!!TMP!
 	Input::IInputDevice*				pMouseDevice;
+	Input::IInputDevice*				pKeyboardDevice;
 
 	DECLARE_EVENT_HANDLER(OnClosing, OnOSWindowClosing);
 
@@ -100,7 +101,7 @@ public:
 	//!!!DBG TMP!
 	Sys::POSWindow Wnd2; int SCIdx2;
 
-	CIPGApplication(): pMouseDevice(NULL) { __ConstructSingleton; }
+	CIPGApplication(): pMouseDevice(NULL), pKeyboardDevice(NULL) { __ConstructSingleton; }
 	~CIPGApplication() { __DestructSingleton; }
 
 	const char*	GetAppName() const { return "Insane Poet"; }
