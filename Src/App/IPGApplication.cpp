@@ -7,6 +7,7 @@
 #include <Scripting/PropScriptable.h>
 #include <Animation/PropAnimation.h>
 #include <UI/PropUIControl.h>
+#include <Input/InputTranslator.h>
 #include <Input/OSWindowMouse.h>
 #include <Input/OSWindowKeyboard.h>
 #include <Render/GPUDriver.h>
@@ -135,14 +136,6 @@ bool CIPGApplication::Open()
 	SCIdx2 = -1;
 ///////////////////////
 
-	// Input
-
-	//!!!must be attached to all windows or to the current active window or to windows associated with a player!
-	pMouseDevice = n_new(Input::COSWindowMouse);
-	((Input::COSWindowMouse*)pMouseDevice)->Attach(MainWindow.GetUnsafe(), 50);
-	pKeyboardDevice = n_new(Input::COSWindowKeyboard);
-	((Input::COSWindowKeyboard*)pKeyboardDevice)->Attach(MainWindow.GetUnsafe(), 50);
-
 	// Rendering
 
 	const bool UseD3D9 = false;
@@ -261,9 +254,6 @@ bool CIPGApplication::Open()
 	Resources::PSceneNodeLoaderSCN SceneNodeLoaderSCN = n_new(Resources::CSceneNodeLoaderSCN);
 	ResourceMgr->RegisterDefaultLoader("scn", &Scene::CSceneNode::RTTI, SceneNodeLoaderSCN);
 
-	n_new(Input::CInputServer);
-	InputSrv->Open();
-
 	VideoServer = n_new(Video::CVideoServer);
 	VideoServer->Open();
 
@@ -323,10 +313,22 @@ bool CIPGApplication::Open()
 	
 	Sys::Log("Engine SI registration - OK\n");
 	
-	InputSrv->SetContextLayout(CStrID("Debug"), CStrID("Debug"));
-	InputSrv->SetContextLayout(CStrID("Game"), CStrID("Game"));
 
-	InputSrv->EnableContext(CStrID("Debug"));
+	// Input
+
+	//!!!must be attached to all windows or to the current active window or to windows associated with a player!
+	pMouseDevice = n_new(Input::COSWindowMouse);
+	((Input::COSWindowMouse*)pMouseDevice)->Attach(MainWindow.GetUnsafe(), 50);
+	pKeyboardDevice = n_new(Input::COSWindowKeyboard);
+	((Input::COSWindowKeyboard*)pKeyboardDevice)->Attach(MainWindow.GetUnsafe(), 50);
+
+	pInputTranslator = n_new(Input::CInputTranslator(0));
+
+	//load mappings, associate with contexts
+
+	pInputTranslator->EnableContext(CStrID("Debug"));
+	pInputTranslator->ConnectToDevice(pMouseDevice);
+	pInputTranslator->ConnectToDevice(pKeyboardDevice);
 
 	Sys::Log("Setup input - OK\n");
 
@@ -524,6 +526,7 @@ void CIPGApplication::Close()
 	GPU = NULL;
 	VideoDrvFct = NULL;
 
+	SAFE_DELETE(pInputTranslator);
 	SAFE_DELETE(pKeyboardDevice);
 	SAFE_DELETE(pMouseDevice);
 
@@ -535,9 +538,6 @@ void CIPGApplication::Close()
 
 	EngineWindowClass->Destroy();
 	EngineWindowClass = NULL;
-
-	if (InputSrv->HasInstance() && InputSrv->IsOpen()) InputSrv->Close();
-	n_delete(InputSrv);
 
 	//if (LoaderServer.IsValid() && LoaderServer->IsOpen()) LoaderServer->Close();
 	//LoaderServer = NULL;

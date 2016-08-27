@@ -12,7 +12,6 @@
 #include <Time/TimeServer.h>
 #include <Events/EventServer.h>
 #include <Video/VideoServer.h>
-#include <Input/InputServer.h>
 #include <IO/PathUtils.h>
 #include <Core/CoreServer.h>
 
@@ -73,7 +72,6 @@ CStrID CAppStateMenu::OnFrame()
 
 	TimeSrv->Trigger();
 	EventSrv->ProcessPendingEvents();
-	InputSrv->Trigger();
 	DbgSrv->Trigger();
 	if (UI::CUIServer::HasInstance()) UISrv->Trigger((float)TimeSrv->GetFrameTime());
 

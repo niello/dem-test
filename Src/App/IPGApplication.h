@@ -23,8 +23,6 @@
 #include <Debug/DebugDraw.h>
 //#include <Audio/AudioServer.h>
 #include <Physics/PhysicsServer.h>
-#include <Input/InputServer.h>
-#include <Input/InputDevice.h>
 #include <Game/GameServer.h>
 #include <AI/AIServer.h>
 #include <UI/UIServer.h>
@@ -55,6 +53,12 @@ namespace UI
 	typedef Ptr<class CUIContext> PUIContext;
 }
 
+namespace Input
+{
+	class IInputDevice;
+	class CInputTranslator;
+}
+
 namespace App
 {
 #define IPGApp App::CIPGApplication::Instance()
@@ -83,10 +87,6 @@ private:
 	Ptr<Items::CItemManager>			ItemManager;
 	Ptr<RPG::CFactionManager>			FactionManager;
 
-	//!!!TMP!
-	Input::IInputDevice*				pMouseDevice;
-	Input::IInputDevice*				pKeyboardDevice;
-
 	DECLARE_EVENT_HANDLER(OnClosing, OnOSWindowClosing);
 
 public:
@@ -98,10 +98,15 @@ public:
 	int									MainSwapChainIndex; //???or get by window?
 	UI::PUIContext						MainUIContext;
 
+	//!!!TMP! Management must be more sophisticated to support multiple players.
+	Input::IInputDevice*				pMouseDevice;
+	Input::IInputDevice*				pKeyboardDevice;
+	Input::CInputTranslator*			pInputTranslator;	// For player 0
+
 	//!!!DBG TMP!
 	Sys::POSWindow Wnd2; int SCIdx2;
 
-	CIPGApplication(): pMouseDevice(NULL), pKeyboardDevice(NULL) { __ConstructSingleton; }
+	CIPGApplication(): pMouseDevice(NULL), pKeyboardDevice(NULL), pInputTranslator(NULL) { __ConstructSingleton; }
 	~CIPGApplication() { __DestructSingleton; }
 
 	const char*	GetAppName() const { return "Insane Poet"; }

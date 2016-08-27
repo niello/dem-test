@@ -28,7 +28,7 @@
 //#include <Audio/AudioServer.h>
 #include <Physics/PhysicsServer.h>
 #include <Video/VideoServer.h>
-#include <Input/InputServer.h>
+#include <Input/InputTranslator.h>
 #include <Data/DataArray.h>
 #include <IO/PathUtils.h>
 #include <App/IPGApplication.h>
@@ -60,7 +60,7 @@ void CAppStateGame::OnStateEnter(CStrID PrevState, Data::PParams Params)
 	RenderDbgPhysics = false;
 	RenderDbgGfx = false;
 
-	InputSrv->EnableContext(CStrID("Game"));
+	IPGApp->pInputTranslator->EnableContext(CStrID("Game"));
 
 	const char* pRenderPathURI = "RenderPathes:D3D11Forward.rp";
 	Resources::PResource RRP = ResourceMgr->RegisterResource(pRenderPathURI);
@@ -233,7 +233,7 @@ void CAppStateGame::OnStateLeave(CStrID NextState)
 	GameSrv->DestroyLevelView(hMainLevelView);
 	hMainLevelView = INVALID_HANDLE;
 
-	InputSrv->DisableContext(CStrID("Game"));
+	IPGApp->pInputTranslator->DisableContext(CStrID("Game"));
 }
 //---------------------------------------------------------------------
 
@@ -243,7 +243,6 @@ CStrID CAppStateGame::OnFrame()
 
 	TimeSrv->Trigger();
 	EventSrv->ProcessPendingEvents();
-	InputSrv->Trigger();
 	DbgSrv->Trigger();
 	UISrv->Trigger((float)TimeSrv->GetFrameTime());
 
