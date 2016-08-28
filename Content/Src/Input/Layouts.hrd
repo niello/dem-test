@@ -1,73 +1,55 @@
+// Condition types:
+// Down			-	generates event once when ButtonDown received
+// Up			-	generates event once when ButtonUp received
+// Move			-	generates event once when AxisMove received
+// Hold			-	starts timer on ButtonDown, stops and resets on ButtonUp, generates event when timer reaches Time value, if Repeat, resets timer,
+//					else switches to dead state until ButtonUp
+// Pressed		-	generates event every frame between ButtonDown and ButtonUp received
+// Combination	-	generates event when all Elements are true
+// Sequence		-	evaluates Elements from the first on, remembering the first false one, generates event when all Elements are true, resets if
+//					[one of earlier elements switches to false / event received that breaks the sequence (for Up support etc)]
+
 Debug
-{
-	Events
-	{
-		ShowDebugConsole		= 0x29			// Grave or tilde
-		ShowDebugWatcher		= 0x41			// F7
-		DebugBreak				= 0x43			// F9
-		
-		// Game-only, can move to separate context
-		ToggleRenderDbgAI		= 0x3B			// F1
-		ToggleRenderDbgPhysics	= 0x3C			// F2
-		ToggleRenderDbgGfx		= 0x3D			// F3
-		ToggleRenderDbgScene	= 0x3E			// F4
-		ToggleRenderDbgEntities	= 0x40			// F6
-		TeleportSelected		= 0x14			// T
-	}
-}
+[
+	{ Event = "ShowDebugConsole"			Type = "Down"	Device = "KB"	Button = "~" /*0x29*/ },
+	{ Event = "ShowDebugWatcher"			Type = "Down"	Device = "KB"	Button = "F7" /*0x41*/ },
+	{ Event = "DebugBreak"					Type = "Down"	Device = "KB"	Button = "F9" /*0x43*/ },
+
+	{ Event = "ToggleRenderDbgAI"			Type = "Down"	Device = "KB"	Button = "F1" /*0x3B*/ },
+	{ Event = "ToggleRenderDbgPhysics"		Type = "Down"	Device = "KB"	Button = "F2" /*0x3C*/ },
+	{ Event = "ToggleRenderDbgGfx"			Type = "Down"	Device = "KB"	Button = "F3" /*0x3D*/ },
+	{ Event = "ToggleRenderDbgScene"		Type = "Down"	Device = "KB"	Button = "F4" /*0x3E*/ },
+	{ Event = "ToggleRenderDbgEntities"		Type = "Down"	Device = "KB"	Button = "F6" /*0x40*/ },
+	{ Event = "TeleportSelected"			Type = "Up"		Device = "KB"	Button = "T" /*0x14*/ },
+
+	{ Event = "TestEvent"					Type = "Hold"	Device = "KB"	Button = "Q"	Time = 0.5	Repeat = true }
+]
 
 Game
-{
-	Events
+[
 	{
-		ToggleGamePause			= 0x39			// Space
-		QuickSave				= 0x3F			// F5
-		QuickLoad				= 0x42			// F8
-	}
-}
+		Event = "CameraRotateH"
+		Type = "Combination"
+		Elements
+		[
+			{ Type = "Pressed"	Device = "Mouse"	Button = "MMB" /*2*/ },
+			{ Type = "Move"		Device = "Mouse"	Axis = "X" /*0*/ }
+		]
+	},
+	{
+		Event = "CameraRotateV"
+		Type = "Combination"
+		Elements
+		[
+			{ Type = "Pressed"	Device = "Mouse"	Button = "MMB" /*2*/ },
+			{ Type = "Move"		Device = "Mouse"	Axis = "Y" /*1*/ }
+		]
+	},
+	{ Event = "CameraMoveX"					Type = "Move"	Device = "Mouse"	Axis = "X" /*0*/ },
+	{ Event = "CameraMoveY"					Type = "Move"	Device = "Mouse"	Axis = "Y" /*1*/ },
+	{ Event = "CameraZoom"					Type = "Move"	Device = "Mouse"	Axis = "Wheel1" /*2*/ },
 
-Editor
-{
-	Events
-	{
-	}
-}
-
-/*
-Game
-{
-	Events
-	{
-		ToggleGamePause
-		{
-			InEvent = "KeyUp"
-			Key = 0x39			// Space
-		}
-	}
-
-	States
-	{
-		GamePause
-		{
-			SendEvent = true	// So it will fire GamePauseOn & GamePauseOff
-			Conditions =
-			[
-				{
-					Key = 0x39		// Space
-					State = 2		// 1 - Down, 2 - Up, 4 - Pressed, 8 - DoubleClicked (mouse only), can combine
-				}
-			]
-		}
-		
-		OR
-		
-		GamePause
-		{
-			SendEvent = true	// So it will fire GamePauseOn & GamePauseOff
-			Key = 0x39			// Space
-			State = 2			// 1 - Down, 2 - Up, 4 - Pressed, 8 - DoubleClicked (mouse only), can combine
-		}
-		
-	}
-}
-*/
+	{ Event = "ToggleGamePause"				Type = "Down"	Device = "KB"		Button = "Space" /*0x39*/ },
+	{ Event = "QuickSave"					Type = "Up"		Device = "KB"		Button = "F5" /*0x3F*/ },
+	{ Event = "QuickLoad"					Type = "Up"		Device = "KB"		Button = "F8" /*0x42*/ }
+]
