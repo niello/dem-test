@@ -28,6 +28,18 @@
 #include <AI/Movement/Actions/ActionSteerToPosition.h>
 #include <AI/Planning/WorldStateSourceScript.h>
 
+// INPUT =======================================
+
+#include <Input/InputConditionComboEvent.h>
+#include <Input/InputConditionComboState.h>
+#include <Input/InputConditionDown.h>
+#include <Input/InputConditionHold.h>
+#include <Input/InputConditionMove.h>
+#include <Input/InputConditionPressed.h>
+#include <Input/InputConditionReleased.h>
+#include <Input/InputConditionSequence.h>
+#include <Input/InputConditionUp.h>
+
 // RENDERING =======================================
 
 #include <Frame/NodeAttrLight.h>
@@ -80,6 +92,16 @@ void ForceFactoryRegistration()
 	AI::CStimulusVisible::ForceFactoryRegistration();
 	AI::CStimulusSound::ForceFactoryRegistration();
 	AI::CWorldStateSourceScript::ForceFactoryRegistration();
+
+	Input::CInputConditionComboEvent::ForceFactoryRegistration();
+	Input::CInputConditionComboState::ForceFactoryRegistration();
+	Input::CInputConditionDown::ForceFactoryRegistration();
+	Input::CInputConditionHold::ForceFactoryRegistration();
+	Input::CInputConditionMove::ForceFactoryRegistration();
+	Input::CInputConditionPressed::ForceFactoryRegistration();
+	Input::CInputConditionReleased::ForceFactoryRegistration();
+	Input::CInputConditionSequence::ForceFactoryRegistration();
+	Input::CInputConditionUp::ForceFactoryRegistration();
 
 	Items::CItemTplWeapon::ForceFactoryRegistration();
 }

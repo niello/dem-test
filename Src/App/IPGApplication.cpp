@@ -324,7 +324,8 @@ bool CIPGApplication::Open()
 
 	pInputTranslator = n_new(Input::CInputTranslator(0));
 
-	//load mappings, associate with contexts
+	Data::PParams Desc = DataSrv->LoadPRM("Input:Layouts.prm");
+	pInputTranslator->LoadSettings(*Desc.GetUnsafe());
 
 	pInputTranslator->EnableContext(CStrID("Debug"));
 	pInputTranslator->ConnectToDevice(pMouseDevice);

@@ -4,10 +4,15 @@
 // Move			-	generates event once when AxisMove received
 // Hold			-	starts timer on ButtonDown, stops and resets on ButtonUp, generates event when timer reaches Time value, if Repeat, resets timer,
 //					else switches to dead state until ButtonUp
-// Pressed		-	generates event every frame between ButtonDown and ButtonUp received
-// Combination	-	generates event when all Elements are true
-// Sequence		-	evaluates Elements from the first on, remembering the first false one, generates event when all Elements are true, resets if
-//					[one of earlier elements switches to false / event received that breaks the sequence (for Up support etc)]
+// Pressed		-	is On between ButtonDown and ButtonUp
+// Released		-	is On between ButtonUp and ButtonDown
+// ComboEvent	-	generates event when the State is On and the Event is triggered
+// ComboState	-	is On when all Elements are On
+// Sequence		-	evaluates Elements from the first on, remembering the first false one, generates event when all Elements are triggered, is reset if
+//					event received that breaks the sequence
+
+Contexts
+{
 
 Debug
 [
@@ -22,28 +27,24 @@ Debug
 	{ Event = "ToggleRenderDbgEntities"		Type = "Down"	Device = "KB"	Button = "F6" /*0x40*/ },
 	{ Event = "TeleportSelected"			Type = "Up"		Device = "KB"	Button = "T" /*0x14*/ },
 
-	{ Event = "TestEvent"					Type = "Hold"	Device = "KB"	Button = "Q"	Time = 0.5	Repeat = true }
+	{ Event = "TestEvent"					Type = "Hold"		Device = "KB"	Button = "Q"	Time = 0.5	Repeat = true },
+	{ State = "TestState"					Type = "Released"	Device = "KB"	Button = "W" },
+	{ State = "TestState2"					Type = "Pressed"	Device = "M"	Button = "RMB" }
 ]
 
 Game
 [
 	{
 		Event = "CameraRotateH"
-		Type = "Combination"
-		Elements
-		[
-			{ Type = "Pressed"	Device = "Mouse"	Button = "MMB" /*2*/ },
-			{ Type = "Move"		Device = "Mouse"	Axis = "X" /*0*/ }
-		]
+		Type = "ComboEvent"
+		ChildState = { Type = "Pressed"	Device = "Mouse"	Button = "MMB" /*2*/ }
+		ChildEvent = { Type = "Move"		Device = "Mouse"	Axis = "X" /*0*/ }
 	},
 	{
 		Event = "CameraRotateV"
-		Type = "Combination"
-		Elements
-		[
-			{ Type = "Pressed"	Device = "Mouse"	Button = "MMB" /*2*/ },
-			{ Type = "Move"		Device = "Mouse"	Axis = "Y" /*1*/ }
-		]
+		Type = "ComboEvent"
+		ChildState = { Type = "Pressed"	Device = "Mouse"	Button = "MMB" /*2*/ }
+		ChildEvent = { Type = "Move"		Device = "Mouse"	Axis = "Y" /*1*/ }
 	},
 	{ Event = "CameraMoveX"					Type = "Move"	Device = "Mouse"	Axis = "X" /*0*/ },
 	{ Event = "CameraMoveY"					Type = "Move"	Device = "Mouse"	Axis = "Y" /*1*/ },
@@ -53,3 +54,5 @@ Game
 	{ Event = "QuickSave"					Type = "Up"		Device = "KB"		Button = "F5" /*0x3F*/ },
 	{ Event = "QuickLoad"					Type = "Up"		Device = "KB"		Button = "F8" /*0x42*/ }
 ]
+
+}
