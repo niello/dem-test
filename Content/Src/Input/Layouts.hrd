@@ -16,19 +16,19 @@ Contexts
 
 Debug
 [
-	{ Event = "ShowDebugConsole"			Type = "Down"	Device = "KB"	Button = "~" /*0x29*/ },
-	{ Event = "ShowDebugWatcher"			Type = "Down"	Device = "KB"	Button = "F7" /*0x41*/ },
-	{ Event = "DebugBreak"					Type = "Down"	Device = "KB"	Button = "F9" /*0x43*/ },
+	{ Event = "ShowDebugConsole"			Type = "Down"		Device = "KB"		Button = "~" /*0x29*/ },
+	{ Event = "ShowDebugWatcher"			Type = "Down"		Device = "KB"		Button = "F7" /*0x41*/ },
+	{ Event = "DebugBreak"					Type = "Down"		Device = "KB"		Button = "F9" /*0x43*/ },
 
-	{ Event = "ToggleRenderDbgAI"			Type = "Down"	Device = "KB"	Button = "F1" /*0x3B*/ },
-	{ Event = "ToggleRenderDbgPhysics"		Type = "Down"	Device = "KB"	Button = "F2" /*0x3C*/ },
-	{ Event = "ToggleRenderDbgGfx"			Type = "Down"	Device = "KB"	Button = "F3" /*0x3D*/ },
-	{ Event = "ToggleRenderDbgScene"		Type = "Down"	Device = "KB"	Button = "F4" /*0x3E*/ },
-	{ Event = "ToggleRenderDbgEntities"		Type = "Down"	Device = "KB"	Button = "F6" /*0x40*/ },
-	{ Event = "TeleportSelected"			Type = "Up"		Device = "KB"	Button = "T" /*0x14*/ },
+	{ Event = "ToggleRenderDbgAI"			Type = "Down"		Device = "KB"		Button = "F1" /*0x3B*/ },
+	{ Event = "ToggleRenderDbgPhysics"		Type = "Down"		Device = "KB"		Button = "F2" /*0x3C*/ },
+	{ Event = "ToggleRenderDbgGfx"			Type = "Down"		Device = "KB"		Button = "F3" /*0x3D*/ },
+	{ Event = "ToggleRenderDbgScene"		Type = "Down"		Device = "KB"		Button = "F4" /*0x3E*/ },
+	{ Event = "ToggleRenderDbgEntities"		Type = "Down"		Device = "KB"		Button = "F6" /*0x40*/ },
+	{ Event = "TeleportSelected"			Type = "Down"		Device = "KB"		Button = "T" /*0x14*/ },
 
-	{ Event = "TestEvent"					Type = "Hold"		Device = "KB"	Button = "Q"	Time = 0.5	Repeat = true },
-	{ State = "TestState"					Type = "Released"	Device = "KB"	Button = "W" },
+	{ Event = "TestEvent"					Type = "Hold"		Device = "KB"		Button = "Q"	Time = 0.5	Repeat = true },
+	{ State = "TestState"					Type = "Released"	Device = "KB"		Button = "W" },
 	{ State = "TestState2"					Type = "Pressed"	Device = "Mouse"	Button = "RMB" }
 ]
 
@@ -46,13 +46,26 @@ Game
 		ChildState = { Type = "Pressed"	Device = "Mouse"	Button = "MMB" /*2*/ }
 		ChildEvent = { Type = "Move"	Device = "Mouse"	Axis = "Y" /*1*/ }
 	},
-	{ Event = "CameraMoveX"			Type = "Move"	Device = "Mouse"	Axis = "X" /*0*/ },
-	{ Event = "CameraMoveY"			Type = "Move"	Device = "Mouse"	Axis = "Y" /*1*/ },
-	{ Event = "CameraZoom"			Type = "Move"	Device = "Mouse"	Axis = "Wheel1" /*2*/ },
+	{ Event = "CameraZoom"			Type = "Move"		Device = "Mouse"	Axis = "Wheel1" /*2*/ },
+	{ State = "CameraRotationOn"	Type = "Pressed"	Device = "Mouse"	Button = "MMB" /*2*/ },
 
-	{ Event = "ToggleGamePause"		Type = "Down"	Device = "KB"		Button = "Space" /*0x39*/ },
-	{ Event = "QuickSave"			Type = "Up"		Device = "KB"		Button = "F5" /*0x3F*/ },
-	{ Event = "QuickLoad"			Type = "Up"		Device = "KB"		Button = "F8" /*0x42*/ }
+	{
+		Event = "QueueAction"
+		Type = "ComboEvent"
+		ChildState = { Type = "Pressed"	Device = "KB"		Button = "Shift" }
+		ChildEvent = { Type = "Down"	Device = "Mouse"	Button = "LMB" }
+	},
+	{
+		Event = "QueueAction"
+		Type = "ComboEvent"
+		ChildState = { Type = "Pressed"	Device = "KB"		Button = "RightShift" }
+		ChildEvent = { Type = "Down"	Device = "Mouse"	Button = "LMB" }
+	},
+	{ Event = "DoAction"			Type = "Down"		Device = "Mouse"	Button = "LMB" },
+	{ Event = "ContextMenu"			Type = "Down"		Device = "Mouse"	Button = "RMB" },
+	{ Event = "ToggleGamePause"		Type = "Down"		Device = "KB"		Button = "Space" /*0x39*/ },
+	{ Event = "QuickSave"			Type = "Up"			Device = "KB"		Button = "F5" /*0x3F*/ },
+	{ Event = "QuickLoad"			Type = "Up"			Device = "KB"		Button = "F8" /*0x42*/ }
 ]
 
 }

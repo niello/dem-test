@@ -24,28 +24,25 @@ protected:
 	bool	RenderDbgGfx;
 	bool	RenderDbgEntities;
 
-	//???per-frame control to camera manager?
-	float	CameraMoveX;
-	float	CameraMoveZ;
-	bool	CameraRotate;
-
 	PROFILER_DECLARE(profCompleteFrame);
 	PROFILER_DECLARE(profRender);
 
 	bool IssueActorCommand(bool Run, bool ClearQueue);
 
-	DECLARE_EVENT_HANDLER(ShowDebugConsole, OnShowDebugConsole);
-	DECLARE_EVENT_HANDLER(ShowDebugWatcher, OnShowDebugWatcher);
-
-	DECLARE_EVENT_HANDLER(MouseMoveRaw, OnMouseMoveRaw);
-	DECLARE_EVENT_HANDLER(MouseWheel, OnMouseWheel);
-	DECLARE_EVENT_HANDLER(MouseBtnDown, OnMouseBtnDown);
-	DECLARE_EVENT_HANDLER(MouseBtnUp, OnMouseBtnUp);
-	DECLARE_EVENT_HANDLER(MouseDoubleClick, OnMouseDoubleClick);
 	DECLARE_EVENT_HANDLER(OnWorldTransitionRequested, OnWorldTransitionRequested);
 	DECLARE_EVENT_HANDLER(QuickSave, OnQuickSave);
 	DECLARE_EVENT_HANDLER(QuickLoad, OnQuickLoad);
 	DECLARE_EVENT_HANDLER(ToggleGamePause, OnToggleGamePause);
+	DECLARE_EVENT_HANDLER(QueueAction, OnQueueAction);
+	DECLARE_EVENT_HANDLER(DoAction, OnDoAction);
+	DECLARE_EVENT_HANDLER(ContextMenu, OnContextMenu);
+
+	DECLARE_EVENT_HANDLER(CameraRotateH, OnCameraRotateH);
+	DECLARE_EVENT_HANDLER(CameraRotateV, OnCameraRotateV);
+	DECLARE_EVENT_HANDLER(CameraZoom, OnCameraZoom);
+
+	DECLARE_EVENT_HANDLER(ShowDebugConsole, OnShowDebugConsole);
+	DECLARE_EVENT_HANDLER(ShowDebugWatcher, OnShowDebugWatcher);
 	DECLARE_EVENT_HANDLER(ToggleRenderDbgAI, OnToggleRenderDbgAI);
 	DECLARE_EVENT_HANDLER(ToggleRenderDbgPhysics, OnToggleRenderDbgPhysics);
 	DECLARE_EVENT_HANDLER(ToggleRenderDbgGfx, OnToggleRenderDbgGfx);

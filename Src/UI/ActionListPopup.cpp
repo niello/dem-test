@@ -106,7 +106,7 @@ bool CActionListPopup::OnClickOutsideRect(const CEGUI::EventArgs& e)
 		Hide();
 		Clear(); //???clear here???
 	}
-	OK;
+	FAIL; // Outside clicks must not be consumed
 }
 //---------------------------------------------------------------------
 
