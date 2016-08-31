@@ -29,7 +29,7 @@ Debug
 
 	{ Event = "TestEvent"					Type = "Hold"		Device = "KB"	Button = "Q"	Time = 0.5	Repeat = true },
 	{ State = "TestState"					Type = "Released"	Device = "KB"	Button = "W" },
-	{ State = "TestState2"					Type = "Pressed"	Device = "M"	Button = "RMB" }
+	{ State = "TestState2"					Type = "Pressed"	Device = "Mouse"	Button = "RMB" }
 ]
 
 Game
@@ -38,21 +38,21 @@ Game
 		Event = "CameraRotateH"
 		Type = "ComboEvent"
 		ChildState = { Type = "Pressed"	Device = "Mouse"	Button = "MMB" /*2*/ }
-		ChildEvent = { Type = "Move"		Device = "Mouse"	Axis = "X" /*0*/ }
+		ChildEvent = { Type = "Move"	Device = "Mouse"	Axis = "X" /*0*/ }
 	},
 	{
 		Event = "CameraRotateV"
 		Type = "ComboEvent"
 		ChildState = { Type = "Pressed"	Device = "Mouse"	Button = "MMB" /*2*/ }
-		ChildEvent = { Type = "Move"		Device = "Mouse"	Axis = "Y" /*1*/ }
+		ChildEvent = { Type = "Move"	Device = "Mouse"	Axis = "Y" /*1*/ }
 	},
-	{ Event = "CameraMoveX"					Type = "Move"	Device = "Mouse"	Axis = "X" /*0*/ },
-	{ Event = "CameraMoveY"					Type = "Move"	Device = "Mouse"	Axis = "Y" /*1*/ },
-	{ Event = "CameraZoom"					Type = "Move"	Device = "Mouse"	Axis = "Wheel1" /*2*/ },
+	{ Event = "CameraMoveX"			Type = "Move"	Device = "Mouse"	Axis = "X" /*0*/ },
+	{ Event = "CameraMoveY"			Type = "Move"	Device = "Mouse"	Axis = "Y" /*1*/ },
+	{ Event = "CameraZoom"			Type = "Move"	Device = "Mouse"	Axis = "Wheel1" /*2*/ },
 
-	{ Event = "ToggleGamePause"				Type = "Down"	Device = "KB"		Button = "Space" /*0x39*/ },
-	{ Event = "QuickSave"					Type = "Up"		Device = "KB"		Button = "F5" /*0x3F*/ },
-	{ Event = "QuickLoad"					Type = "Up"		Device = "KB"		Button = "F8" /*0x42*/ }
+	{ Event = "ToggleGamePause"		Type = "Down"	Device = "KB"		Button = "Space" /*0x39*/ },
+	{ Event = "QuickSave"			Type = "Up"		Device = "KB"		Button = "F5" /*0x3F*/ },
+	{ Event = "QuickLoad"			Type = "Up"		Device = "KB"		Button = "F8" /*0x42*/ }
 ]
 
 }

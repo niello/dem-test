@@ -204,12 +204,14 @@ void CAppStateGame::OnStateEnter(CStrID PrevState, Data::PParams Params)
 	SUBSCRIBE_PEVENT(OnWorldTransitionRequested, CAppStateGame, OnWorldTransitionRequested);
 	SUBSCRIBE_PEVENT(QuickSave, CAppStateGame, OnQuickSave);
 	SUBSCRIBE_PEVENT(QuickLoad, CAppStateGame, OnQuickLoad);
-	SUBSCRIBE_PEVENT(ToggleGamePause, CAppStateGame, OnToggleGamePause);
+	DISP_SUBSCRIBE_PEVENT(IPGApp->pInputTranslator, ToggleGamePause, CAppStateGame, OnToggleGamePause);
 	SUBSCRIBE_PEVENT(ToggleRenderDbgAI, CAppStateGame, OnToggleRenderDbgAI);
 	SUBSCRIBE_PEVENT(ToggleRenderDbgPhysics, CAppStateGame, OnToggleRenderDbgPhysics);
 	SUBSCRIBE_PEVENT(ToggleRenderDbgGfx, CAppStateGame, OnToggleRenderDbgGfx);
 	SUBSCRIBE_PEVENT(ToggleRenderDbgEntities, CAppStateGame, OnToggleRenderDbgEntities);
 	SUBSCRIBE_PEVENT(TeleportSelected, CAppStateGame, OnTeleportSelected);
+	DISP_SUBSCRIBE_PEVENT(IPGApp->pInputTranslator, ShowDebugConsole, CAppStateGame, OnShowDebugConsole);
+	DISP_SUBSCRIBE_PEVENT(IPGApp->pInputTranslator, ShowDebugWatcher, CAppStateGame, OnShowDebugWatcher);
 }
 //---------------------------------------------------------------------
 
@@ -229,6 +231,8 @@ void CAppStateGame::OnStateLeave(CStrID NextState)
 	UNSUBSCRIBE_EVENT(ToggleRenderDbgGfx);
 	UNSUBSCRIBE_EVENT(ToggleRenderDbgEntities);
 	UNSUBSCRIBE_EVENT(TeleportSelected);
+	UNSUBSCRIBE_EVENT(ShowDebugConsole);
+	UNSUBSCRIBE_EVENT(ShowDebugWatcher);
 
 	GameSrv->DestroyLevelView(hMainLevelView);
 	hMainLevelView = INVALID_HANDLE;
@@ -241,10 +245,14 @@ CStrID CAppStateGame::OnFrame()
 {
 	PROFILER_START(profCompleteFrame);
 
+	float FrameTime = (float)TimeSrv->GetFrameTime();
+
 	TimeSrv->Trigger();
 	EventSrv->ProcessPendingEvents();
 	DbgSrv->Trigger();
-	UISrv->Trigger((float)TimeSrv->GetFrameTime());
+	UISrv->Trigger(FrameTime);
+	IPGApp->pInputTranslator->Trigger(FrameTime);
+	IPGApp->pInputTranslator->FireQueuedEvents();
 
 	GameSrv->Trigger();
 
@@ -577,6 +585,20 @@ bool CAppStateGame::OnQuickLoad(Events::CEventDispatcher* pDispatcher, const Eve
 		IPGApp->FSM.RequestState(CStrID("Loading"), P);
 	}
 
+	OK;
+}
+//---------------------------------------------------------------------
+
+bool CAppStateGame::OnShowDebugConsole(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
+{
+	DbgSrv->TogglePluginWindow(CStrID("Console"));
+	OK;
+}
+//---------------------------------------------------------------------
+
+bool CAppStateGame::OnShowDebugWatcher(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
+{
+	DbgSrv->TogglePluginWindow(CStrID("Watcher"));
 	OK;
 }
 //---------------------------------------------------------------------

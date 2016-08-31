@@ -34,6 +34,9 @@ protected:
 
 	bool IssueActorCommand(bool Run, bool ClearQueue);
 
+	DECLARE_EVENT_HANDLER(ShowDebugConsole, OnShowDebugConsole);
+	DECLARE_EVENT_HANDLER(ShowDebugWatcher, OnShowDebugWatcher);
+
 	DECLARE_EVENT_HANDLER(MouseMoveRaw, OnMouseMoveRaw);
 	DECLARE_EVENT_HANDLER(MouseWheel, OnMouseWheel);
 	DECLARE_EVENT_HANDLER(MouseBtnDown, OnMouseBtnDown);

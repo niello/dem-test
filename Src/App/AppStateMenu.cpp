@@ -5,6 +5,7 @@
 #include <Debug/DebugServer.h>
 #include <UI/UIContext.h>
 #include <UI/MainMenu.h>
+#include <Input/InputTranslator.h>
 #include <Frame/RenderPath.h>
 #include <Render/GPUDriver.h>
 #include <Resources/ResourceManager.h>
@@ -49,11 +50,17 @@ void CAppStateMenu::OnStateEnter(CStrID PrevState, Data::PParams Params)
 		MenuView.RTs[0] = IPGApp->GPU->GetSwapChainRenderTarget(IPGApp->MainSwapChainIndex);
 		MenuView.UIContext = IPGApp->MainUIContext;
 	}
+
+	DISP_SUBSCRIBE_PEVENT(IPGApp->pInputTranslator, ShowDebugConsole, CAppStateMenu, OnShowDebugConsole);
+	DISP_SUBSCRIBE_PEVENT(IPGApp->pInputTranslator, ShowDebugWatcher, CAppStateMenu, OnShowDebugWatcher);
 }
 //---------------------------------------------------------------------
 
 void CAppStateMenu::OnStateLeave(CStrID NextState)
 {
+	UNSUBSCRIBE_EVENT(ShowDebugConsole);
+	UNSUBSCRIBE_EVENT(ShowDebugWatcher);
+
 	if (MenuView.UIContext.IsValidPtr())
 	{
 		MenuView.UIContext->UnsubscribeFromInput();
@@ -70,10 +77,14 @@ CStrID CAppStateMenu::OnFrame()
 {
 	if (!IPGApp->MainWindow->IsOpen()) return CStrID::Empty;
 
+	float FrameTime = (float)TimeSrv->GetFrameTime();
+
 	TimeSrv->Trigger();
 	EventSrv->ProcessPendingEvents();
 	DbgSrv->Trigger();
-	if (UI::CUIServer::HasInstance()) UISrv->Trigger((float)TimeSrv->GetFrameTime());
+	if (UI::CUIServer::HasInstance()) UISrv->Trigger(FrameTime);
+	IPGApp->pInputTranslator->Trigger(FrameTime);
+	IPGApp->pInputTranslator->FireQueuedEvents();
 
 	//AudioSrv->Trigger();
 	VideoSrv->Trigger();
@@ -98,6 +109,20 @@ CStrID CAppStateMenu::OnFrame()
 	CoreSrv->Trigger();
 
 	return GetID();
+}
+//---------------------------------------------------------------------
+
+bool CAppStateMenu::OnShowDebugConsole(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
+{
+	DbgSrv->TogglePluginWindow(CStrID("Console"));
+	OK;
+}
+//---------------------------------------------------------------------
+
+bool CAppStateMenu::OnShowDebugWatcher(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
+{
+	DbgSrv->TogglePluginWindow(CStrID("Watcher"));
+	OK;
 }
 //---------------------------------------------------------------------
 

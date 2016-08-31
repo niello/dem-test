@@ -4,6 +4,7 @@
 
 #include <App/StateHandler.h>
 #include <Frame/View.h>
+#include <Events/EventsFwd.h>
 
 // Main menu handler
 
@@ -17,6 +18,9 @@ class CAppStateMenu: public CStateHandler
 protected:
 
 	Frame::CView	MenuView;
+
+	DECLARE_EVENT_HANDLER(ShowDebugConsole, OnShowDebugConsole);
+	DECLARE_EVENT_HANDLER(ShowDebugWatcher, OnShowDebugWatcher);
 
 public:
 
