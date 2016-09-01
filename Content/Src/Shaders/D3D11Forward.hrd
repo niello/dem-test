@@ -26,6 +26,20 @@ DepthStencilBuffers
 
 Phases
 {
+	GUIOpaque
+	{
+		Type = "GUI"
+		Mode = "Opaque"
+		RenderTarget = 0
+	}
+
+	GlobalSetup
+	{
+		Type = "GlobalSetup"
+		ViewProjectionName = 'ViewProj'
+		CameraPositionName = 'EyePos'
+	}
+
 	Depth
 	{
 		Type = "Geometry"
@@ -61,9 +75,10 @@ Phases
 		]
 	}
 
-	GUI
+	GUITransparent
 	{
 		Type = "GUI"
+		Mode = "Transparent"
 		RenderTarget = 0
 	}
 }
