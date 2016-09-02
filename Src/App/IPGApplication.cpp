@@ -102,7 +102,7 @@ bool CIPGApplication::Open()
 	n_new(Time::CTimeServer);
 
 	DebugServer = n_new(Debug::CDebugServer);
-	DebugServer->RegisterPlugin(CStrID("Console"), "Debug::CLuaConsole", "Console.layout");
+	DebugServer->RegisterPlugin(CStrID("Console"), "Debug::CLuaConsole", "DebugConsole.layout");
 	DebugServer->RegisterPlugin(CStrID("Watcher"), "Debug::CWatcherWindow", "Watcher.layout");
 
 	DD = n_new(Debug::CDebugDraw);

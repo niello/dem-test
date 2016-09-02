@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <GUILayout version="4" >
-    <Window type="TaharezLook/FrameWindow" name="Console" >
+    <Window type="TaharezLook/FrameWindow" name="DebugConsole" >
         <Property name="Area" value="{{0.0720703,0},{0.0284024,0},{0.664844,0},{0.40469,0}}" />
         <Property name="Text" value="Console" />
         <Window type="TaharezLook/Editbox" name="InputLine" >
