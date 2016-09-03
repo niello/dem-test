@@ -78,10 +78,6 @@ bool CIPGApplication::Open()
 	if (!ProjDir.IsValid()) ProjDir = IOSrv->GetAssign("Home");
 	IOSrv->SetAssign("Proj", ProjDir);
 
-	//!!!DBG TMP!
-	//Check refcount
-	Data::CData Data = Data::PParams(n_new(Data::CParams));
-
 	CString AppData;
 	AppData.Format("AppData:%s/%s", GetVendorName(), GetAppName());
 	IOSrv->SetAssign("AppData", IOSrv->ResolveAssigns(AppData));
@@ -89,7 +85,6 @@ bool CIPGApplication::Open()
 	IOSrv->MountNPK("Proj:Export.npk"); //???only add CFileSystemNPK here?
 
 	n_new(Resources::CResourceManager);
-	//!!!register loaders!
 
 	n_new(Data::CDataServer); //???need at all? can store DSS as rsrc!
 
@@ -265,7 +260,8 @@ bool CIPGApplication::Open()
 		UI::CUISettings UISettings;
 		UISettings.GPUDriver = GPU;
 		UISettings.VertexShader = ShaderLib->GetShaderByID((U32)ShadersDesc->Get<int>(CStrID("VS"), 0));
-		UISettings.PixelShader = ShaderLib->GetShaderByID((U32)ShadersDesc->Get<int>(CStrID("PS"), 0));
+		UISettings.PixelShaderRegular = ShaderLib->GetShaderByID((U32)ShadersDesc->Get<int>(CStrID("PS"), 0));
+		UISettings.PixelShaderOpaque = ShaderLib->GetShaderByID((U32)ShadersDesc->Get<int>(CStrID("PSOpaque"), 0));
 		UISettings.SwapChainID = MainSwapChainIndex;
 		UISettings.DefaultContextWidth = (float)RealBackBufDesc.Width;
 		UISettings.DefaultContextHeight = (float)RealBackBufDesc.Height;

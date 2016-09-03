@@ -29,6 +29,7 @@ PSSceneIn VSMain(VSSceneIn In)
 
 	Out.Pos = mul(float4(In.Pos, 1), WorldMatrix);
 	Out.Pos = mul(Out.Pos, ProjectionMatrix);
+	Out.Pos.z = 0; // Render on the near plane
 	Out.Tex = In.Tex;
 	Out.Colour.rgba = In.Colour.bgra;
 

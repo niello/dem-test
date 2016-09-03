@@ -65,9 +65,11 @@ void CIngameScreen::Init(CEGUI::Window* pWindow)
 	//!!!tmp!
 	CEGUI::Window* pConsoleWnd = pWnd->getChild("Console");
 	Console = (CEGUI::Listbox*)pConsoleWnd->getChild("TextArea");
+	Console->setDrawMode(DrawModeFlagWindowOpaque);
 	n_assert(Console);
 
 	CEGUI::PushButton* pBtn = (CEGUI::PushButton*)pWnd->getChild("BtnDbgExit");
+	pBtn->setDrawMode(DrawModeFlagWindowOpaque);
 	pBtn->subscribeEvent(CEGUI::PushButton::EventClicked,
 		CEGUI::Event::Subscriber(&CIngameScreen::OnDbgExitBtnClick, this));
 

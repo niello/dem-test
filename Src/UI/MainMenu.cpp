@@ -26,11 +26,12 @@ void CMainMenu::Init(CEGUI::Window* pWindow)
 	CString WndName(pWindow->getName().c_str());
 
 	pNewGameBtn = (CEGUI::PushButton*)pWnd->getChild("BtnNewGame");
-	//ConnOnNewGameBtnClick = 
+	pNewGameBtn->setDrawMode(DrawModeFlagWindowOpaque);
 	pNewGameBtn->subscribeEvent(CEGUI::PushButton::EventClicked,
 		CEGUI::Event::Subscriber(&CMainMenu::OnNewGameBtnClick, this));
 
 	CEGUI::PushButton* pBtn = (CEGUI::PushButton*)pWnd->getChild("BtnQuit");
+	pBtn->setDrawMode(DrawModeFlagWindowOpaque);
 	pBtn->subscribeEvent(CEGUI::PushButton::EventClicked,
 		CEGUI::Event::Subscriber(&CMainMenu::OnQuitBtnClick, this));
 }

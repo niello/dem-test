@@ -45,6 +45,15 @@ Shaders
 			Target = 0x0400
 			Entry = "PSMain"
 		}
+
+		PSOpaque
+		{
+			In = "SrcShaders:USM/CEGUI_PS.hlsl"
+			//Out = "Shaders:Bin/CEGUI_40.psh"
+			Type = 'Pixel'
+			Target = 0x0400
+			Entry = "PSMainOpaque"
+		}
 	}
 
 	D3D9
@@ -65,6 +74,15 @@ Shaders
 			Type = 'Pixel'
 			Target = 0x0300
 			Entry = "PSMain"
+		}
+
+		PSOpaque
+		{
+			In = "SrcShaders:SM_3_0/CEGUI_PS.hlsl"
+			//Out = "Shaders:Bin/CEGUI_30.psh"
+			Type = 'Pixel'
+			Target = 0x0300
+			Entry = "PSMainOpaque"
 		}
 	}
 }

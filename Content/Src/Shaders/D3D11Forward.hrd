@@ -45,6 +45,7 @@ Phases
 		Type = "Geometry"
 		RenderTarget = null
 		DepthStencilBuffer = 0
+		EnableLighting = false
 		Sort = "FtB"
 		Effects
 		{
@@ -66,6 +67,7 @@ Phases
 		Type = "Geometry"
 		RenderTarget = 0 // Array for MRT, like [ 2, 0, 1 ]
 		DepthStencilBuffer = 0
+		EnableLighting = true
 		Sort = "Material"
 		Renderers
 		[
