@@ -48,6 +48,8 @@
 #include <Items/Prop/PropItem.h>
 #include <IO/IOServer.h>
 #include <Data/DataArray.h>
+#include <Data/ParamsUtils.h>
+#include <Data/DataServer.h>
 #include <SI/SI_L1.h>
 #include <SI/SI_L2.h>
 #include <SI/SI_L3.h>
@@ -88,7 +90,8 @@ bool CIPGApplication::Open()
 
 	n_new(Data::CDataServer); //???need at all? can store DSS as rsrc!
 
-	Data::PParams PathList = DataSrv->LoadHRD("Proj:PathList.hrd", false);
+	Data::PParams PathList;
+	ParamsUtils::LoadParamsFromHRD("Proj:PathList.hrd", PathList);
 	if (PathList.IsValidPtr())
 		for (UPTR i = 0; i < PathList->GetCount(); ++i)
 			IOSrv->SetAssign(PathList->Get(i).GetName().CStr(), IOSrv->ResolveAssigns(PathList->Get<CString>(i)));
@@ -252,7 +255,8 @@ bool CIPGApplication::Open()
 	VideoServer = n_new(Video::CVideoServer);
 	VideoServer->Open();
 
-	Data::PParams UIDesc = DataSrv->LoadPRM("UI:UI.prm", false);
+	Data::PParams UIDesc;
+	ParamsUtils::LoadParamsFromPRM("UI:UI.prm", UIDesc);
 	if (UIDesc.IsValidPtr())
 	{
 		Data::PParams ShadersDesc = UIDesc->Get<Data::PParams>(CStrID("Shaders"))->Get<Data::PParams>(GfxAPI);
@@ -320,8 +324,9 @@ bool CIPGApplication::Open()
 
 	pInputTranslator = n_new(Input::CInputTranslator(0));
 
-	Data::PParams Desc = DataSrv->LoadPRM("Input:Layouts.prm");
-	pInputTranslator->LoadSettings(*Desc.GetUnsafe());
+	Data::PParams Desc;
+	if (ParamsUtils::LoadParamsFromPRM("Input:Layouts.prm", Desc) && Desc.IsValidPtr())
+		pInputTranslator->LoadSettings(*Desc.GetUnsafe());
 
 	pInputTranslator->EnableContext(CStrID("Debug"));
 	pInputTranslator->ConnectToDevice(pMouseDevice);
@@ -340,7 +345,8 @@ bool CIPGApplication::Open()
 	AIServer = n_new(AI::CAIServer);
 
 	// Actor action templates
-	Data::PParams ActTpls = DataSrv->LoadPRM("AI:AIActionTpls.prm");
+	Data::PParams ActTpls;
+	ParamsUtils::LoadParamsFromPRM("AI:AIActionTpls.prm", ActTpls);
 	if (ActTpls.IsValidPtr())
 	{
 		for (UPTR i = 0; i < ActTpls->GetCount(); ++i)
@@ -352,7 +358,8 @@ bool CIPGApplication::Open()
 	}
 
 	// Smart object action templates
-	Data::PParams SOActTpls = DataSrv->LoadPRM("AI:AISOActionTpls.prm");
+	Data::PParams SOActTpls;
+	ParamsUtils::LoadParamsFromPRM("AI:AISOActionTpls.prm", SOActTpls);
 	if (SOActTpls.IsValidPtr())
 		for (UPTR i = 0; i < SOActTpls->GetCount(); ++i)
 		{

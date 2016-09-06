@@ -17,7 +17,6 @@
 //#include <Time/TimeServer.h>
 #include <Debug/DebugServer.h>
 #include <IO/IOServer.h>
-#include <Data/DataServer.h>
 #include <Events/EventServer.h>
 #include <Scripting/ScriptServer.h>
 #include <Debug/DebugDraw.h>

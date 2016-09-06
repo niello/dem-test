@@ -8,7 +8,7 @@
 #include <Frame/RenderPath.h>
 #include <Resources/ResourceManager.h>
 #include <Resources/Resource.h>
-#include <Data/DataServer.h>
+#include <Data/ParamsUtils.h>
 #include <Data/DataArray.h>
 #include <Debug/DebugServer.h>
 #include <Time/TimeServer.h>
@@ -134,7 +134,8 @@ CStrID CAppStateLoading::OnFrame()
 			CStrID LevelID = StateParams->Get<CStrID>(CStrID("LevelID"));
 			const CString& FileName = StateParams->Get<CString>(CStrID("FileName"));
 			n_assert(FileName.IsValid());
-			Data::PParams Desc = DataSrv->LoadPRM(FileName);
+			Data::PParams Desc;
+			ParamsUtils::LoadParamsFromPRM(FileName, Desc);
 			n_assert(Desc.IsValidPtr());
 			GameSrv->LoadLevel(LevelID, *Desc);
 			break;
