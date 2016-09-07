@@ -49,7 +49,6 @@
 #include <IO/IOServer.h>
 #include <Data/DataArray.h>
 #include <Data/ParamsUtils.h>
-#include <Data/DataServer.h>
 #include <SI/SI_L1.h>
 #include <SI/SI_L2.h>
 #include <SI/SI_L3.h>
@@ -87,8 +86,6 @@ bool CIPGApplication::Open()
 	IOSrv->MountNPK("Proj:Export.npk"); //???only add CFileSystemNPK here?
 
 	n_new(Resources::CResourceManager);
-
-	n_new(Data::CDataServer); //???need at all? can store DSS as rsrc!
 
 	Data::PParams PathList;
 	ParamsUtils::LoadParamsFromHRD("Proj:PathList.hrd", PathList);
@@ -521,9 +518,6 @@ void CIPGApplication::Close()
 	if (VideoServer.IsValidPtr() && VideoServer->IsOpen()) VideoServer->Close();
 	VideoServer = NULL;
 
-	//if (AudioServer.IsValid() && AudioServer->IsOpen()) AudioServer->Close();
-	//AudioServer = NULL;
-
 	DD->Close();
 	DD = NULL;
 
@@ -543,16 +537,11 @@ void CIPGApplication::Close()
 	EngineWindowClass->Destroy();
 	EngineWindowClass = NULL;
 
-	//if (LoaderServer.IsValid() && LoaderServer->IsOpen()) LoaderServer->Close();
-	//LoaderServer = NULL;
-
-	//DBServer = NULL;
 	DebugServer = NULL;
 
 	n_delete(TimeSrv);
 	n_delete(ScriptSrv);
 	n_delete(EventSrv);
-	n_delete(DataSrv);
 	n_delete(ResourceMgr);
 	n_delete(IOSrv);
 	n_delete(CoreSrv);

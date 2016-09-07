@@ -14,13 +14,11 @@
 
 //???!!!forward declarations?
 #include <Core/CoreServer.h>
-//#include <Time/TimeServer.h>
 #include <Debug/DebugServer.h>
 #include <IO/IOServer.h>
 #include <Events/EventServer.h>
 #include <Scripting/ScriptServer.h>
 #include <Debug/DebugDraw.h>
-//#include <Audio/AudioServer.h>
 #include <Physics/PhysicsServer.h>
 #include <Game/GameServer.h>
 #include <AI/AIServer.h>
@@ -28,6 +26,7 @@
 #include <Render/DisplayMode.h>
 #include <Render/VideoDriverFactory.h>
 #include <Video/VideoServer.h>
+
 //!!!move platform-specific code to separate module!
 #ifdef RegisterClass
 #undef RegisterClass
@@ -120,9 +119,9 @@ public:
 inline const char* CIPGApplication::GetAppVersion() const
 {
 #ifdef _DEBUG
-	return "0.2.0.0-d";
+	return "0.2.1-d";
 #else
-	return "0.2.0.0";
+	return "0.2.1";
 #endif
 }
 //---------------------------------------------------------------------
