@@ -1,0 +1,66 @@
+CPU-GPU shader params interface description. Any shader that is written for a particular renderer class must conform its interface.
+
+=== CModelRenderer per-instance data ===
+
+For single object:
+
+* InstanceData
+	float4x4 row-major WorldMatrix
+	//light indices
+	
+* SkinPalette
+	array of skin matrices, may be float4x4 row-major or float4xN column-major
+
+For multiple instances with constant-based instancing:
+
+* InstanceDataArray
+	array of InstanceData structures
+
+For multiple instances with vertex stream-based instancing:
+
+* TEXCOORD4, TEXCOORD5, TEXCOORD6, TEXCOORD7
+	rows of a float4x4 row-major WorldMatrix
+
+=== CSkyboxRenderer per-instance data ===
+
+For single object:
+
+* WorldMatrix
+	float4x4 row-major
+
+No instancing.
+
+=== CTerrainRenderer per-instance data ===
+
+No single-object mode, always uses instancing for terrain patches.
+
+Common:
+
+* VSCDLODParams
+	float4 WorldToHM;			// xy - scale, zw - offset
+	float4 TerrainYInvSplat;	// x - Y scale, y - Y offset, zw - inv. splat size XZ
+	float2 HMTexelSize;			// xy - height map texel size, zw - texture size for manual bilinear filtering (change to float4 for this case)
+
+* PSCDLODParams
+	float4 WorldToHM - same as in VSCDLODParams, but for use in a pixel shader
+
+* GridConsts
+	params for morphing, set twice, separately for full sized patches and quarter-patches
+
+* HeightMap
+	height map texture, one channel unorm
+
+* VSHeightSampler
+	inbuilt sampler for a height map
+
+For multiple instances with constant-based instancing:
+
+* InstanceDataArray
+	NOT IMPLEMENTED YET
+
+For multiple instances with vertex stream-based instancing:
+
+* TEXCOORD0
+	xy - patch scale, zw - patch offset from the terrain origin
+* TEXCOORD1
+	per-patch morph constants: x = end / (end - start), y = 1 / (end - start)

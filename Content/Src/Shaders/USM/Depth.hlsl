@@ -16,11 +16,7 @@ struct PSSceneIn
 
 struct CInstanceData
 {
-	matrix	WorldMatrix;
-//#if DEM_MAX_LIGHTS > 0
-//	uint4	LightIndices;
-//#endif
-	//static uint LightIndices[DEM_MAX_LIGHTS] = (uint[DEM_MAX_LIGHTS])array; // for tight packing
+	matrix WorldMatrix;
 };
 
 // Per-instance data
