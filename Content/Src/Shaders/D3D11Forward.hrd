@@ -68,6 +68,7 @@ Phases
 		RenderTarget = 0 // Array for MRT, like [ 2, 0, 1 ]
 		DepthStencilBuffer = 0
 		EnableLighting = true
+		GlobalLightBufferName = 'Lights'
 		Sort = "Material"
 		Renderers
 		[

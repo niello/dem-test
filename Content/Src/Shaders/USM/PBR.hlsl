@@ -1,146 +1,13 @@
-sampler LinearSampler;
+#include "Globals.hlsl"
+#include "Skinning.hlsl"
+#include "CDLOD.hlsl"
+#include "Splatting.hlsl"
 
-struct PSSceneIn
+struct PSInSimple
 {
 	float4 Pos: SV_Position;
 	float2 Tex: TEXCOORD;
 };
-
-cbuffer CameraParams: register(b0)
-{
-	matrix	ViewProj;
-	float3	EyePos;
-}
-
-cbuffer MaterialParams: register(b1)
-{
-	float4 MtlDiffuse;
-}
-
-cbuffer InstanceParams: register(b2)
-{
-	matrix WorldMatrix;
-}
-
-#ifndef MAX_INSTANCE_COUNT
-#define MAX_INSTANCE_COUNT 64
-#endif
-
-cbuffer InstanceParams: register(b2)
-{
-	matrix InstanceData[MAX_INSTANCE_COUNT];
-}
-
-PSSceneIn VSMain(float3 Pos: POSITION, float2 Tex: TEXCOORD)
-{
-	PSSceneIn Out = (PSSceneIn)0.0;
-	Out.Pos = mul(float4(Pos, 1), WorldMatrix);
-	Out.Pos = mul(Out.Pos, ViewProj);
-	Out.Tex = Tex;
-	return Out;
-}
-//---------------------------------------------------------------------
-
-PSSceneIn VSMainInstanced(	float3 Pos: POSITION,
-							float2 Tex: TEXCOORD,
-							float4 World1: TEXCOORD4,
-							float4 World2: TEXCOORD5,
-							float4 World3: TEXCOORD6,
-							float4 World4: TEXCOORD7)
-{
-	float4x4 InstWorld = float4x4(World1, World2, World3, World4);
-
-	PSSceneIn Out = (PSSceneIn)0.0;
-	Out.Pos = mul(float4(Pos, 1), InstWorld);
-	Out.Pos = mul(Out.Pos, ViewProj);
-	Out.Tex = Tex;
-	return Out;
-}
-//---------------------------------------------------------------------
-
-PSSceneIn VSMainInstancedConst(float3 Pos: POSITION, float2 Tex: TEXCOORD, uint InstanceID: SV_InstanceID)
-{
-	float4x4 InstWorld = InstanceData[InstanceID];
-
-	PSSceneIn Out = (PSSceneIn)0.0;
-	Out.Pos = mul(float4(Pos, 1), InstWorld);
-	Out.Pos = mul(Out.Pos, ViewProj);
-	Out.Tex = Tex;
-	return Out;
-}
-//---------------------------------------------------------------------
-
-#ifndef MAX_BONES_PER_PALETTE
-#define MAX_BONES_PER_PALETTE 72
-#endif
-#ifndef MAX_BONES_PER_VERTEX
-#define MAX_BONES_PER_VERTEX 4
-#endif
-//matrix<float,4,3> SkinPalette[MAX_BONES_PER_PALETTE];
-
-tbuffer SkinParams: register(t0)
-{
-	matrix SkinPalette[MAX_BONES_PER_PALETTE];
-}
-
-//???why indices are float? use uint4
-float4 SkinnedPosition(const float4 InPos, const float4 Weights, const float4 Indices)
-{
-	//// need to re-normalize weights because of compression
-	//float4 NormWeights = Weights / dot(Weights, float4(1.0, 1.0, 1.0, 1.0));
-
-	float3 OutPos = mul(InPos, SkinPalette[Indices[0]]).xyz * Weights[0];
-	for (int i = 1; i < MAX_BONES_PER_VERTEX; i++)
-		OutPos += mul(InPos, SkinPalette[Indices[i]]).xyz * Weights[i];
-	return float4(OutPos, 1.0f);
-}
-//---------------------------------------------------------------------
-
-PSSceneIn VSMainSkinned(float4	Pos:		POSITION,
-						float4	Weights:	BLENDWEIGHT,
-						float4	Indices:	BLENDINDICES,
-						float2	Tex:		TEXCOORD0)
-{
-	PSSceneIn Out = (PSSceneIn)0.0;
-	Out.Pos = SkinnedPosition(Pos, Weights, Indices);
-	Out.Pos = mul(Out.Pos, ViewProj);
-	Out.Tex = Tex;
-	return Out;
-}
-//---------------------------------------------------------------------
-
-Texture2D HeightMap;
-sampler VSHeightSampler;
-
-cbuffer VSCDLODParams: register(b2)
-{
-	struct
-	{
-		float4 WorldToHM;
-		float4 TerrainYInvSplat;	// x - Y scale, y - Y offset, zw - inv. splat size XZ
-		float2 HMTexelSize;			// xy - height map texel size, zw - texture size for manual bilinear filtering (change to float4 for this case)
-	} VSCDLODParams;
-}
-
-cbuffer PSCDLODParams: register(b2)
-{
-	struct
-	{
-		float4 WorldToHM;
-	} PSCDLODParams;
-}
-
-cbuffer GridParams: register(b3)
-{
-	float2 GridConsts;				// x - grid halfsize, y - inv. grid halfsize
-}
-
-//???height map can be loaded with mips?
-float SampleHeightMap(float2 UV) //, float MipLevel)
-{
-	return HeightMap.SampleLevel(VSHeightSampler, UV + VSCDLODParams.HMTexelSize.xy * 0.5, 0).x;
-}
-//---------------------------------------------------------------------
 
 struct PSInSplatted
 {
@@ -149,6 +16,91 @@ struct PSInSplatted
 	float4 SplatDetUV:		TEXCOORD1;
 	float4 PosWorld:		TEXCOORD2;
 };
+
+struct CInstanceData
+{
+	matrix	WorldMatrix;
+//#if DEM_MAX_LIGHTS > 0
+//	uint4	LightIndices;
+//#endif
+	//static uint LightIndices[DEM_MAX_LIGHTS] = (uint[DEM_MAX_LIGHTS])array; // for tight packing
+};
+
+// Per-material data
+
+cbuffer MaterialParams: register(b1)
+{
+	float4 MtlDiffuse;
+}
+
+// Per-instance data
+
+cbuffer InstanceParams: register(b2)
+{
+	CInstanceData InstanceData;
+}
+
+#ifndef MAX_INSTANCE_COUNT
+#define MAX_INSTANCE_COUNT 64
+#endif
+
+cbuffer InstanceParams: register(b2)
+{
+	CInstanceData InstanceDataArray[MAX_INSTANCE_COUNT];
+}
+
+Texture2D TexAlbedo;
+sampler LinearSampler;
+
+// Vertex shaders
+
+PSInSimple StandardVS(float3 Pos, float2 Tex, matrix World)
+{
+	PSInSimple Out = (PSInSimple)0.0;
+	Out.Pos = mul(float4(Pos, 1), World);
+	Out.Pos = mul(Out.Pos, ViewProj);
+	Out.Tex = Tex;
+	return Out;
+}
+//---------------------------------------------------------------------
+
+PSInSimple VSMain(float3 Pos: POSITION, float2 Tex: TEXCOORD)
+{
+	return StandardVS(Pos, Tex, InstanceData.WorldMatrix);
+}
+//---------------------------------------------------------------------
+
+PSInSimple VSMainInstanced(	float3 Pos: POSITION,
+							float2 Tex: TEXCOORD,
+							float4 World1: TEXCOORD4,
+							float4 World2: TEXCOORD5,
+							float4 World3: TEXCOORD6,
+							float4 World4: TEXCOORD7)
+{
+	float4x4 InstWorld = float4x4(World1, World2, World3, World4);
+	return StandardVS(Pos, Tex, InstWorld);
+}
+//---------------------------------------------------------------------
+
+PSInSimple VSMainInstancedConst(float3 Pos: POSITION, float2 Tex: TEXCOORD, uint InstanceID: SV_InstanceID)
+{
+	CInstanceData InstData = InstanceDataArray[InstanceID];
+	return StandardVS(Pos, Tex, InstData.WorldMatrix);
+}
+//---------------------------------------------------------------------
+
+PSInSimple VSMainSkinned(float4	Pos:		POSITION,
+						float4	Weights:	BLENDWEIGHT,
+						float4	Indices:	BLENDINDICES,
+						float2	Tex:		TEXCOORD0)
+{
+	PSInSimple Out = (PSInSimple)0.0;
+	Out.Pos = SkinnedPosition(Pos, Weights, Indices);
+	Out.Pos = mul(Out.Pos, ViewProj);
+	Out.Tex = Tex;
+	return Out;
+}
+//---------------------------------------------------------------------
 
 PSInSplatted VSMainCDLOD(	float2	Pos:			POSITION,
 							float4	PatchXZ:		TEXCOORD0,	// xy - scale, zw - offset
@@ -188,16 +140,16 @@ PSInSplatted VSMainCDLOD(	float2	Pos:			POSITION,
 }
 //---------------------------------------------------------------------
 
-Texture2D TexAlbedo;
+// Pixel shaders
 
-float4 PSMain(PSSceneIn In): SV_Target
+float4 PSMain(PSInSimple In): SV_Target
 {
-	return TexAlbedo.Sample(LinearSampler, In.Tex) * MtlDiffuse;
+	return TexAlbedo.Sample(LinearSampler, In.Tex) * MtlDiffuse * float4(Lights[0].ColorIntensity.xyz, 1) * Lights[0].ColorIntensity.w;
 }
 //---------------------------------------------------------------------
 
 /*
-float4 PSMainAlphaTest(PSSceneIn In): SV_Target
+float4 PSMainAlphaTest(PSInSimple In): SV_Target
 {
 	float4 Albedo = TexAlbedo.Sample(LinearSampler, In.Tex);
 	clip(Albedo.a - 0.5);
@@ -206,39 +158,11 @@ float4 PSMainAlphaTest(PSSceneIn In): SV_Target
 //---------------------------------------------------------------------
 */
 
-Texture2D SplatMap;
-Texture2D SplatTex0;
-Texture2D SplatTex1;
-Texture2D SplatTex2;
-Texture2D SplatTex3;
-Texture2D SplatTex4;
-sampler SplatSampler;
-
-// Version with normals can be found in old code
-float3 Splatting(float4 SplatWeights, float2 SplatTexUV)
-{
-	float4 SplatColors[5];
-	SplatColors[0] = SplatTex0.Sample(LinearSampler, SplatTexUV);
-	SplatColors[1] = SplatTex1.Sample(LinearSampler, SplatTexUV);
-	SplatColors[2] = SplatTex2.Sample(LinearSampler, SplatTexUV);
-	SplatColors[3] = SplatTex3.Sample(LinearSampler, SplatTexUV);
-	SplatColors[4] = SplatTex4.Sample(LinearSampler, SplatTexUV);
-
-	float WeightRemain = saturate(1.f - SplatWeights.x - SplatWeights.y - SplatWeights.z - SplatWeights.w);
-	float3 Color = SplatColors[4].xyz * WeightRemain;
-	//!!!need splat texture with 0 alpha channel, my ECCY_SM is with 1 now!
-	//for (int i = 0; i < 4; i++)
-	for (int i = 0; i < 3; i++)
-		Color += SplatWeights[i] * SplatColors[i].xyz;
-	return Color;
-}
-//---------------------------------------------------------------------
-
 //!!!see old code version for more code!
 float4 PSMainSplatted(PSInSplatted In): SV_Target
 {
 	float2 UV = In.PosWorld.xz * PSCDLODParams.WorldToHM.xy + PSCDLODParams.WorldToHM.zw;
-	float3 TexDiffuse = Splatting(SplatMap.Sample(SplatSampler, UV), In.SplatDetUV.xy);
+	float3 TexDiffuse = Splatting(SplatMap.Sample(SplatSampler, UV), In.SplatDetUV.xy, LinearSampler);
 	return  float4(TexDiffuse, 1.f);
 	//return float4(frac(0.6 * In.PosWorld.y), frac(0.6 * In.PosWorld.y), frac(0.6 * In.PosWorld.y), 1.f);
 }

@@ -47,6 +47,7 @@ GlobalParams
 {
 	ViewProj = null
 	EyePos = null
+	Lights = null
 }
 
 MaterialParams
