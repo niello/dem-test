@@ -1,3 +1,6 @@
+#include "Globals.hlsl"
+#include "CDLOD.hlsl"
+#include "Skinning.hlsl"
 
 struct VSSceneIn
 {
@@ -11,14 +14,20 @@ struct PSSceneIn
 	float2 Tex: TEXCOORD;
 };
 
-matrix ViewProj: register(c0) <string CBuffer = "CameraParams"; int SlotIndex = 0;>;
-float3 EyePos: register(c4) <string CBuffer = "CameraParams"; int SlotIndex = 0;>;
-matrix WorldMatrix: register(c5) <string CBuffer = "InstanceParams"; int SlotIndex = 2;>;
+struct CInstanceData
+{
+	matrix WorldMatrix;
+};
+
+CInstanceData InstanceData: register(c5) <string CBuffer = "InstanceParams"; int SlotIndex = 2;>;
+
+Texture2D TexAlbedo;
+sampler LinearSampler { Texture = TexAlbedo; };
 
 //!!!may premultiply and pass WVP instead of WorldMatrix!
 float4 VSMainOpaque(float3 Pos: POSITION): POSITION
 {
-	float4 OutPos = mul(float4(Pos, 1), WorldMatrix);
+	float4 OutPos = mul(float4(Pos, 1), InstanceData.WorldMatrix);
 	OutPos = mul(OutPos, ViewProj);
 	return OutPos;
 }
@@ -38,27 +47,6 @@ float4 VSMainInstancedOpaque(	float3 Pos: POSITION,
 }
 //---------------------------------------------------------------------
 
-#ifndef MAX_BONES_PER_PALETTE
-#define MAX_BONES_PER_PALETTE 72
-#endif
-#ifndef MAX_BONES_PER_VERTEX
-#define MAX_BONES_PER_VERTEX 4
-#endif
-column_major float4x3 SkinPalette[MAX_BONES_PER_PALETTE]: register(c40) <string CBuffer = "SkinParams"; int SlotIndex = 2;>;
-
-//???why indices are float? use uint4
-float4 SkinnedPosition(const float4 InPos, const float4 Weights, const float4 Indices)
-{
-	//// need to re-normalize weights because of compression
-	//float4 NormWeights = Weights / dot(Weights, float4(1.0, 1.0, 1.0, 1.0));
-
-	float3 OutPos = mul(InPos, SkinPalette[Indices[0]]).xyz * Weights[0];
-	for (int i = 1; i < MAX_BONES_PER_VERTEX; i++)
-		OutPos += mul(InPos, SkinPalette[Indices[i]]).xyz * Weights[i];
-	return float4(OutPos, 1.0f);
-}
-//---------------------------------------------------------------------
-
 float4 VSMainSkinnedOpaque(	float4	Pos:		POSITION,
 							float4	Weights:	BLENDWEIGHT,
 							float4	Indices:	BLENDINDICES): POSITION
@@ -72,7 +60,7 @@ float4 VSMainSkinnedOpaque(	float4	Pos:		POSITION,
 PSSceneIn VSMainAlphaTest(VSSceneIn In)
 {
 	PSSceneIn Out = (PSSceneIn)0.0;
-	Out.Pos = mul(float4(In.Pos, 1), WorldMatrix);
+	Out.Pos = mul(float4(In.Pos, 1), InstanceData.WorldMatrix);
 	Out.Pos = mul(Out.Pos, ViewProj);
 	Out.Tex = In.Tex;
 	return Out;
@@ -93,25 +81,6 @@ PSSceneIn VSMainInstancedAlphaTest(	float3 Pos: POSITION,
 	Out.Pos = mul(Out.Pos, ViewProj);
 	Out.Tex = Tex;
 	return Out;
-}
-//---------------------------------------------------------------------
-
-texture HeightMap;
-sampler VSHeightSampler { Texture = HeightMap; };
-
-float2 GridConsts: register(c5) <string CBuffer = "VSCDLODParams"; int SlotIndex = 2;>; // x - grid halfsize, y - inv. grid halfsize
-
-struct
-{
-	float4 WorldToHM;
-	float4 TerrainYInvSplat;	// x - Y scale, y - Y offset, zw - inv. splat size XZ
-	float2 HMTexelSize;			// xy - height map texel size, zw - texture size for manual bilinear filtering (change to float4 for this case)
-} VSCDLODParams: register(c6) <string CBuffer = "VSCDLODParams"; int SlotIndex = 2;>;
-
-//???height map can be loaded with mips?
-float SampleHeightMap(float2 UV) //, float MipLevel)
-{
-	return tex2Dlod(VSHeightSampler, float4(UV + VSCDLODParams.HMTexelSize.xy * 0.5, 0, 0)).x;
 }
 //---------------------------------------------------------------------
 
@@ -136,9 +105,6 @@ void VSMainCDLOD(	float2	Pos:			POSITION,
 	oPos = mul(float4(Vertex, 1), ViewProj);
 }
 //---------------------------------------------------------------------
-
-Texture2D TexAlbedo;
-sampler LinearSampler { Texture = TexAlbedo; };
 
 float4 PSMainAlphaTest(PSSceneIn In): COLOR
 {

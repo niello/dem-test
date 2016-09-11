@@ -144,7 +144,7 @@ PSInSplatted VSMainCDLOD(	float2	Pos:			POSITION,
 
 float4 PSMain(PSInSimple In): SV_Target
 {
-	return TexAlbedo.Sample(LinearSampler, In.Tex) * MtlDiffuse * float4(Lights[0].ColorIntensity.xyz, 1) * Lights[0].ColorIntensity.w;
+	return TexAlbedo.Sample(LinearSampler, In.Tex) * MtlDiffuse * float4(Lights[0].Color, 1) * Lights[0].Intensity;
 }
 //---------------------------------------------------------------------
 

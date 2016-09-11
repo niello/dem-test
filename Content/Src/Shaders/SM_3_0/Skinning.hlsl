@@ -8,10 +8,7 @@
 #define MAX_BONES_PER_VERTEX 4
 #endif
 
-tbuffer SkinParams: register(t0)
-{
-	matrix SkinPalette[MAX_BONES_PER_PALETTE]; //!!!can use float4x3 column_major!
-}
+column_major float4x3 SkinPalette[MAX_BONES_PER_PALETTE]: register(c40) <string CBuffer = "SkinParams"; int SlotIndex = 2;>;
 
 //???why indices are float? use uint4
 float4 SkinnedPosition(const float4 InPos, const float4 Weights, const float4 Indices)

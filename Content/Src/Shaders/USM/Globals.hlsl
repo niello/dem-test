@@ -15,10 +15,12 @@ cbuffer CameraParams: register(b0)
 
 struct CLight
 {
-	float4	ColorIntensity;		// xyz, w //???or pre-multiply on intensity?
-	float4	PositionInvRange;	// xyz, w
-	float3	Direction;			// Pre-inverted for directional lights
+	float3	Color;
+	float	Intensity;			//???or pre-multiply color on intensity?
+	float3	Position;
+	float	InvRange;
 	float4	Params;				// Spot: x - cos inner, y - cos outer
+	float3	Direction;			// Pre-inverted for directional lights
 	uint	Type;
 };
 

@@ -1,4 +1,6 @@
 
+// CDLOD terrain rendering data and functions
+
 cbuffer VSCDLODParams: register(b2)
 {
 	struct
