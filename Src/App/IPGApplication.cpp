@@ -133,7 +133,7 @@ bool CIPGApplication::Open()
 
 	// Rendering
 
-	const bool UseD3D9 = true;
+	const bool UseD3D9 = false;
 	CStrID GfxAPI; //???to GPUDrv? GetAPIID()
 	Resources::PShaderLoader ShaderLoader;
 	if (UseD3D9)
