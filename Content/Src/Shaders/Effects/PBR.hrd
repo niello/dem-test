@@ -118,7 +118,7 @@ RenderStates
 
 		VS
 		{
-			In = "SrcShaders:USM/PBR.hlsl"
+			In = "SrcShaders:USM/PBR_Skinned.hlsl"
 			Target = 0x0500
 			Entry = "VSMainSkinned"
 			Defines = "MAX_BONES_PER_PALETTE=1024"

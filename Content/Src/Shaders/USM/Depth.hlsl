@@ -36,8 +36,8 @@ cbuffer InstanceParams: register(b2)
 }
 
 // For alpha-test
-Texture2D TexAlbedo;
-sampler LinearSampler;
+Texture2D TexAlbedo: register(t0);
+sampler LinearSampler: register(s0);
 
 // Vertex shaders
 

@@ -1,12 +1,12 @@
 #include "Globals.hlsl"
-#include "Skinning.hlsl"
 #include "CDLOD.hlsl"
 #include "Splatting.hlsl"
 
 struct PSInSimple
 {
-	float4 Pos: SV_Position;
-	float2 Tex: TEXCOORD;
+	float4	Pos:		SV_Position;
+	float2	Tex:		TEXCOORD;
+	uint4	LightInfo:	LIGHTINFO;
 };
 
 struct PSInSplatted
@@ -20,6 +20,8 @@ struct PSInSplatted
 struct CInstanceData
 {
 	matrix	WorldMatrix;
+	uint	LightCount;
+	uint3	LightIndices;
 //#if DEM_MAX_LIGHTS > 0
 //	uint4	LightIndices;
 //#endif
@@ -49,24 +51,26 @@ cbuffer InstanceParams: register(b2)
 	CInstanceData InstanceDataArray[MAX_INSTANCE_COUNT];
 }
 
-Texture2D TexAlbedo;
-sampler LinearSampler;
+Texture2D TexAlbedo: register(t0);
+sampler LinearSampler: register(s0);
 
 // Vertex shaders
 
-PSInSimple StandardVS(float3 Pos, float2 Tex, matrix World)
+PSInSimple StandardVS(float3 Pos, float2 Tex, matrix World, uint LightCount, uint3 LightIndices)
 {
 	PSInSimple Out = (PSInSimple)0.0;
 	Out.Pos = mul(float4(Pos, 1), World);
 	Out.Pos = mul(Out.Pos, ViewProj);
 	Out.Tex = Tex;
+	Out.LightInfo.x = LightCount;
+	Out.LightInfo.yzw = LightIndices;
 	return Out;
 }
 //---------------------------------------------------------------------
 
 PSInSimple VSMain(float3 Pos: POSITION, float2 Tex: TEXCOORD)
 {
-	return StandardVS(Pos, Tex, InstanceData.WorldMatrix);
+	return StandardVS(Pos, Tex, InstanceData.WorldMatrix, InstanceData.LightCount, InstanceData.LightIndices);
 }
 //---------------------------------------------------------------------
 
@@ -78,27 +82,14 @@ PSInSimple VSMainInstanced(	float3 Pos: POSITION,
 							float4 World4: TEXCOORD7)
 {
 	float4x4 InstWorld = float4x4(World1, World2, World3, World4);
-	return StandardVS(Pos, Tex, InstWorld);
+	return StandardVS(Pos, Tex, InstWorld, 0, uint3(0, 0, 0));
 }
 //---------------------------------------------------------------------
 
 PSInSimple VSMainInstancedConst(float3 Pos: POSITION, float2 Tex: TEXCOORD, uint InstanceID: SV_InstanceID)
 {
 	CInstanceData InstData = InstanceDataArray[InstanceID];
-	return StandardVS(Pos, Tex, InstData.WorldMatrix);
-}
-//---------------------------------------------------------------------
-
-PSInSimple VSMainSkinned(float4	Pos:		POSITION,
-						float4	Weights:	BLENDWEIGHT,
-						float4	Indices:	BLENDINDICES,
-						float2	Tex:		TEXCOORD0)
-{
-	PSInSimple Out = (PSInSimple)0.0;
-	Out.Pos = SkinnedPosition(Pos, Weights, Indices);
-	Out.Pos = mul(Out.Pos, ViewProj);
-	Out.Tex = Tex;
-	return Out;
+	return StandardVS(Pos, Tex, InstData.WorldMatrix, InstData.LightCount, InstData.LightIndices);
 }
 //---------------------------------------------------------------------
 
@@ -144,7 +135,13 @@ PSInSplatted VSMainCDLOD(	float2	Pos:			POSITION,
 
 float4 PSMain(PSInSimple In): SV_Target
 {
-	return TexAlbedo.Sample(LinearSampler, In.Tex) * MtlDiffuse * float4(Lights[0].Color, 1) * Lights[0].Intensity;
+	float3 LightColor = float3(0, 0, 0);
+	for (uint i = 0; i < In.LightInfo[0]; ++i)
+	{
+		CLight CurrLight = Lights[In.LightInfo[i + 1]];
+		LightColor += CurrLight.Color * CurrLight.Intensity;
+	}
+	return TexAlbedo.Sample(LinearSampler, In.Tex) * MtlDiffuse * float4(LightColor, 1);
 }
 //---------------------------------------------------------------------
 
