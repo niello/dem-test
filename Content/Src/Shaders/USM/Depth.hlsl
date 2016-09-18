@@ -60,7 +60,7 @@ float4 VSMainInstancedConstOpaque(float3 Pos: POSITION, uint InstanceID: SV_Inst
 
 float4 VSMainSkinnedOpaque(float4 Pos: POSITION, float4 Weights: BLENDWEIGHT, float4 Indices: BLENDINDICES): SV_Position
 {
-	float4 OutPos = SkinnedPosition(Pos, Weights, Indices);
+	float4 OutPos = SkinnedPoint(Pos, Weights, Indices);
 	OutPos = mul(OutPos, ViewProj);
 	return OutPos;
 }

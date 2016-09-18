@@ -4,6 +4,9 @@
 struct PSInSimple
 {
 	float4	Pos:		SV_Position;
+	float3	PosWorld:	TEXCOORD1;
+	float3	Normal:		NORMAL;
+	float3	View:		VIEW;
 	float2	Tex:		TEXCOORD;
 	uint4	LightInfo:	LIGHTINFO;
 };
@@ -12,9 +15,6 @@ struct CInstanceData
 {
 	uint	LightCount;
 	uint3	LightIndices;
-//#if DEM_MAX_LIGHTS > 0
-//	uint4	LightIndices;
-//#endif
 	//static uint LightIndices[DEM_MAX_LIGHTS] = (uint[DEM_MAX_LIGHTS])array; // for tight packing
 };
 
@@ -27,15 +27,18 @@ cbuffer InstanceParams: register(b2)
 
 // Vertex shaders
 
-
-PSInSimple VSMainSkinned(float4	Pos:		POSITION,
-						float4	Weights:	BLENDWEIGHT,
-						float4	Indices:	BLENDINDICES,
-						float2	Tex:		TEXCOORD0)
+PSInSimple VSMainSkinned(	float4 Pos:		POSITION,
+							float3 Normal:	NORMAL,
+							float4 Weights:	BLENDWEIGHT,
+							float4 Indices:	BLENDINDICES,
+							float2 Tex:		TEXCOORD0)
 {
 	PSInSimple Out = (PSInSimple)0.0;
-	Out.Pos = SkinnedPosition(Pos, Weights, Indices);
-	Out.Pos = mul(Out.Pos, ViewProj);
+	float4 WorldPos = SkinnedPoint(Pos, Weights, Indices);
+	Out.Pos = mul(WorldPos, ViewProj);
+	Out.PosWorld = WorldPos.xyz;
+	Out.Normal = SkinnedVector(Normal, Weights, Indices);
+	Out.View = EyePos - WorldPos.xyz;
 	Out.Tex = Tex;
 	Out.LightInfo.x = InstanceData.LightCount;
 	Out.LightInfo.yzw = InstanceData.LightIndices;

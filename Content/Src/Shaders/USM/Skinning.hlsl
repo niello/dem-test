@@ -14,14 +14,21 @@ tbuffer SkinParams: register(t0)
 }
 
 //???why indices are float? use uint4
-float4 SkinnedPosition(const float4 InPos, const float4 Weights, const float4 Indices)
+float4 SkinnedPoint(const float4 Point, const float4 Weights, const float4 Indices)
 {
-	//// need to re-normalize weights because of compression
-	//float4 NormWeights = Weights / dot(Weights, float4(1.0, 1.0, 1.0, 1.0));
+	float3 Result = mul(Point, SkinPalette[Indices[0]]).xyz * Weights[0];
+	for (int i = 1; i < MAX_BONES_PER_VERTEX; ++i)
+		Result += mul(Point, SkinPalette[Indices[i]]).xyz * Weights[i];
+	return float4(Result, 1.0f);
+}
+//---------------------------------------------------------------------
 
-	float3 OutPos = mul(InPos, SkinPalette[Indices[0]]).xyz * Weights[0];
-	for (int i = 1; i < MAX_BONES_PER_VERTEX; i++)
-		OutPos += mul(InPos, SkinPalette[Indices[i]]).xyz * Weights[i];
-	return float4(OutPos, 1.0f);
+//???why indices are float? use uint4
+float3 SkinnedVector(const float3 Vector, const float4 Weights, const float4 Indices)
+{
+	float3 Result = mul(Vector, (float3x3)SkinPalette[Indices[0]]) * Weights[0];
+	for (int i = 1; i < MAX_BONES_PER_VERTEX; ++i)
+		Result += mul(Vector, (float3x3)SkinPalette[Indices[i]]) * Weights[i];
+	return Result;
 }
 //---------------------------------------------------------------------

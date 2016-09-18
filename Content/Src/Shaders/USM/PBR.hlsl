@@ -1,11 +1,15 @@
 #include "Globals.hlsl"
 #include "CDLOD.hlsl"
 #include "Splatting.hlsl"
+#include "Lighting.hlsl"
 
 struct PSInSimple
 {
 	float4	Pos:		SV_Position;
-	float2	Tex:		TEXCOORD;
+	float3	PosWorld:	TEXCOORD1;
+	float3	Normal:		NORMAL;
+	float3	View:		VIEW;
+	float2	UV:			TEXCOORD;
 	uint4	LightInfo:	LIGHTINFO;
 };
 
@@ -22,9 +26,6 @@ struct CInstanceData
 	matrix	WorldMatrix;
 	uint	LightCount;
 	uint3	LightIndices;
-//#if DEM_MAX_LIGHTS > 0
-//	uint4	LightIndices;
-//#endif
 	//static uint LightIndices[DEM_MAX_LIGHTS] = (uint[DEM_MAX_LIGHTS])array; // for tight packing
 };
 
@@ -56,40 +57,44 @@ sampler LinearSampler: register(s0);
 
 // Vertex shaders
 
-PSInSimple StandardVS(float3 Pos, float2 Tex, matrix World, uint LightCount, uint3 LightIndices)
+PSInSimple StandardVS(float3 Pos, float3 Normal, float2 UV, matrix World, uint LightCount, uint3 LightIndices)
 {
 	PSInSimple Out = (PSInSimple)0.0;
-	Out.Pos = mul(float4(Pos, 1), World);
-	Out.Pos = mul(Out.Pos, ViewProj);
-	Out.Tex = Tex;
+	float4 WorldPos = mul(float4(Pos, 1), World);
+	Out.Pos = mul(WorldPos, ViewProj);
+	Out.PosWorld = WorldPos.xyz;
+	Out.Normal = mul(Normal, (float3x3)World);
+	Out.View = EyePos - WorldPos.xyz;
+	Out.UV = UV;
 	Out.LightInfo.x = LightCount;
 	Out.LightInfo.yzw = LightIndices;
 	return Out;
 }
 //---------------------------------------------------------------------
 
-PSInSimple VSMain(float3 Pos: POSITION, float2 Tex: TEXCOORD)
+PSInSimple VSMain(float3 Pos: POSITION, float3 Normal: NORMAL, float2 UV: TEXCOORD)
 {
-	return StandardVS(Pos, Tex, InstanceData.WorldMatrix, InstanceData.LightCount, InstanceData.LightIndices);
+	return StandardVS(Pos, Normal, UV, InstanceData.WorldMatrix, InstanceData.LightCount, InstanceData.LightIndices);
 }
 //---------------------------------------------------------------------
 
 PSInSimple VSMainInstanced(	float3 Pos: POSITION,
-							float2 Tex: TEXCOORD,
+							float3 Normal: NORMAL,
+							float2 UV: TEXCOORD,
 							float4 World1: TEXCOORD4,
 							float4 World2: TEXCOORD5,
 							float4 World3: TEXCOORD6,
 							float4 World4: TEXCOORD7)
 {
 	float4x4 InstWorld = float4x4(World1, World2, World3, World4);
-	return StandardVS(Pos, Tex, InstWorld, 0, uint3(0, 0, 0));
+	return StandardVS(Pos, Normal, UV, InstWorld, 0, uint3(0, 0, 0));
 }
 //---------------------------------------------------------------------
 
-PSInSimple VSMainInstancedConst(float3 Pos: POSITION, float2 Tex: TEXCOORD, uint InstanceID: SV_InstanceID)
+PSInSimple VSMainInstancedConst(float3 Pos: POSITION, float3 Normal: NORMAL, float2 UV: TEXCOORD, uint InstanceID: SV_InstanceID)
 {
 	CInstanceData InstData = InstanceDataArray[InstanceID];
-	return StandardVS(Pos, Tex, InstData.WorldMatrix, InstData.LightCount, InstData.LightIndices);
+	return StandardVS(Pos, Normal, UV, InstData.WorldMatrix, InstData.LightCount, InstData.LightIndices);
 }
 //---------------------------------------------------------------------
 
@@ -135,20 +140,31 @@ PSInSplatted VSMainCDLOD(	float2	Pos:			POSITION,
 
 float4 PSMain(PSInSimple In): SV_Target
 {
+	float3 N = normalize(In.Normal);
+
+	// Normal mapping
+	// NB: In.View must be not normalized
+	N = PerturbNormal(N, In.View, In.UV);
+
 	float3 LightColor = float3(0, 0, 0);
 	for (uint i = 0; i < In.LightInfo[0]; ++i)
 	{
 		CLight CurrLight = Lights[In.LightInfo[i + 1]];
-		LightColor += CurrLight.Color * CurrLight.Intensity;
+
+		float3 L = (CurrLight.Type == LIGHT_TYPE_DIR) ? CurrLight.Direction : CurrLight.Position - In.PosWorld;
+		L = normalize(L);
+
+		LightColor += CurrLight.Color/* * CurrLight.Intensity*/ * max(dot(N, L), 0.0f);
 	}
-	return TexAlbedo.Sample(LinearSampler, In.Tex) * MtlDiffuse * float4(LightColor, 1);
+
+	return TexAlbedo.Sample(LinearSampler, In.UV) * MtlDiffuse * float4(LightColor, 1);
 }
 //---------------------------------------------------------------------
 
 /*
 float4 PSMainAlphaTest(PSInSimple In): SV_Target
 {
-	float4 Albedo = TexAlbedo.Sample(LinearSampler, In.Tex);
+	float4 Albedo = TexAlbedo.Sample(LinearSampler, In.UV);
 	clip(Albedo.a - 0.5);
 	return Albedo * MtlDiffuse;
 }
