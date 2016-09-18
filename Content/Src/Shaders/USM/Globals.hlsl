@@ -20,7 +20,7 @@ struct CLight
 	float3	Position;
 	float	InvRange;
 	float4	Params;				// Spot: x - cos inner, y - cos outer
-	float3	Direction;			// Pre-inverted for directional lights
+	float3	InvDirection;
 	uint	Type;
 };
 

@@ -143,16 +143,35 @@ float4 PSMain(PSInSimple In): SV_Target
 	// Normal mapping
 	// NB: In.View must be not normalized
 	float3 N = PerturbNormal(In.Normal, -In.View, In.UV);
+	float3 V = normalize(In.View);
 
 	float3 LightColor = float3(0, 0, 0);
 	for (uint i = 0; i < In.LightInfo[0]; ++i)
 	{
 		CLight CurrLight = Lights[In.LightInfo[i + 1]];
 
-		float3 L = (CurrLight.Type == LIGHT_TYPE_DIR) ? CurrLight.Direction : CurrLight.Position - In.PosWorld;
-		L = normalize(L);
+		float Intensity; // = CurrLight.Intensity //!!!or pre-multiply on color!
+		float3 L;
+		if (CurrLight.Type == LIGHT_TYPE_DIR)
+		{
+			L = CurrLight.InvDirection;
+			Intensity = DiffuseLambert(N, L);
+		}
+		else
+		{
+			L = CurrLight.Position - In.PosWorld;
+			float DistanceToLight = length(L);
+			L /= DistanceToLight;
+			Intensity = DiffuseLambert(N, L) * Attenuation(DistanceToLight, CurrLight.InvRange);
+			if (CurrLight.Type == LIGHT_TYPE_SPOT)
+				Intensity *= SpotlightFalloff(dot(CurrLight.InvDirection, L), CurrLight.Params.x, CurrLight.Params.y);
+		}
 
-		LightColor += CurrLight.Color/* * CurrLight.Intensity*/ * max(dot(N, L), 0.0f);
+		LightColor += CurrLight.Color * Intensity;
+
+		/*
+		Result += Intensity * LightColor[i] * (SurfaceDiffuse + SpecularPhong(N, L, V) * MtlSpecular);
+		*/
 	}
 
 	return TexAlbedo.Sample(LinearSampler, In.UV) * MtlDiffuse * float4(LightColor, 1);

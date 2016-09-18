@@ -292,19 +292,20 @@ CStrID CAppStateGame::OnFrame()
 		else if (YRel > 0.95f) CameraMoveZ = (YRel - 0.95f) / 0.05f;
 		else CameraMoveZ = 0.f;
 
+		const float CameraMoveSpeed = 0.5f;
 		if (CameraMoveX != 0.f)
 		{
 			vector3 Axis = pCameraNode->GetWorldMatrix().AxisX();
 			Axis.y = 0.f;
 			Axis.norm();
-			pCtlr->Move(Axis * CameraMoveX);
+			pCtlr->Move(Axis * CameraMoveX * CameraMoveSpeed);
 		}
 		if (CameraMoveZ != 0.f)
 		{
 			vector3 Axis = pCameraNode->GetWorldMatrix().AxisZ();
 			Axis.y = 0.f;
 			Axis.norm();
-			pCtlr->Move(Axis * CameraMoveZ);
+			pCtlr->Move(Axis * CameraMoveZ * CameraMoveSpeed);
 		}
 	}
 

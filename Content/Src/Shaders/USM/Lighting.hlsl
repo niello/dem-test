@@ -1,9 +1,25 @@
 
 // Lighting and related functions
 
+// Naming conventions for this file:
+// N - surface normal vector
+// L - surface point to the ligth direction
+// V - surface point to the viewer direction
+// R - reflection vector that is vector opposite to light (L) against surface normal (N)
+//     normalize(2.0f * dot(N, L) * N - L) or normalize(-reflect(L, N))
+// H - half-vector between viewer (V) and light (L) vectors
+//     normalize(L + V)
+// CT - Cook-Torrance model
+// ON - Oren-Nayar model
+
 #define LIGHT_TYPE_DIR		0
 #define LIGHT_TYPE_POINT	1
 #define LIGHT_TYPE_SPOT		2
+
+#define Attenuation			AttenuationQuad
+#define SpotlightFalloff	SpotlightFalloffLinear
+
+// Normal mapping
 
 // http://www.thetenthplanet.de/archives/1180
 float3x3 CotangentFrame(float3 N, float3 Pos, float2 UV)
@@ -48,3 +64,58 @@ float3 PerturbNormal(float3 N, float3 V, float2 UV)
     float3x3 TBN = CotangentFrame(N, V, UV);
     return normalize(mul(SampledNormal, TBN));
 }
+
+// Light attenuation and falloff
+
+float AttenuationLinear(float Distance, float InvRange)
+{
+	return saturate(1 - Distance * InvRange);
+}
+//---------------------------------------------------------------------
+
+// The most realistic
+float AttenuationQuad(float Distance, float InvRange)
+{
+	float Factor = Distance * InvRange;
+	return saturate(1 - Factor * Factor);
+	// return 1 / (Distance * Distance); - not normalized
+}
+//---------------------------------------------------------------------
+
+float AttenuationExp(float Distance, float InvRange, float Exp)
+{
+	return pow(saturate(1 - Distance * InvRange), Exp);
+}
+//---------------------------------------------------------------------
+
+// CosAlpha = dot(LightDir, SurfacePos - LightPos)
+
+// Simple case with a falloff exponent = 1
+float SpotlightFalloffLinear(float CosAlpha, float CosHalfTheta, float CosHalfPhi)
+{
+//!!!can precompute InvDenominator on CPU!
+	return saturate((CosAlpha - CosHalfPhi) / (CosHalfTheta - CosHalfPhi));
+}
+//---------------------------------------------------------------------
+
+float SpotlightFalloffHermite(float CosAlpha, float CosHalfTheta, float CosHalfPhi)
+{
+	// -2 * x^3 + 3 * x^2 (from shader asm code)
+	return smoothstep(CosHalfPhi, CosHalfTheta, CosAlpha);
+}
+//---------------------------------------------------------------------
+
+float SpotlightFalloffExp(float CosAlpha, float CosHalfTheta, float CosHalfPhi, float Exp)
+{
+	return pow(SpotlightFalloffLinear(CosAlpha, CosHalfTheta, CosHalfPhi), Exp);
+}
+//---------------------------------------------------------------------
+
+// BRDF
+
+float DiffuseLambert(float3 N, float3 L)
+{
+	return max(dot(N, L), 0.0f);
+}   
+//---------------------------------------------------------------------
+
