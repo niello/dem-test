@@ -140,11 +140,9 @@ PSInSplatted VSMainCDLOD(	float2	Pos:			POSITION,
 
 float4 PSMain(PSInSimple In): SV_Target
 {
-	float3 N = normalize(In.Normal);
-
 	// Normal mapping
 	// NB: In.View must be not normalized
-	N = PerturbNormal(N, In.View, In.UV);
+	float3 N = PerturbNormal(In.Normal, -In.View, In.UV);
 
 	float3 LightColor = float3(0, 0, 0);
 	for (uint i = 0; i < In.LightInfo[0]; ++i)

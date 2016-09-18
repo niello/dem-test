@@ -5,7 +5,8 @@
 #define LIGHT_TYPE_POINT	1
 #define LIGHT_TYPE_SPOT		2
 
-float3x3 CotangentFrame(float3 Pos, float3 N, float2 UV)
+// http://www.thetenthplanet.de/archives/1180
+float3x3 CotangentFrame(float3 N, float3 Pos, float2 UV)
 {
 	// get edge vectors of the pixel triangle
 	float3 dp1 = ddx(Pos);
@@ -24,11 +25,12 @@ float3x3 CotangentFrame(float3 Pos, float3 N, float2 UV)
 	return float3x3(T * invmax, B * invmax, N);
 }
 
+// http://www.thetenthplanet.de/archives/1180
 // N - interpolated vertex normal, V - interpolated vertex to eye vector
 float3 PerturbNormal(float3 N, float3 V, float2 UV)
 {
 //!!!TMP!
-	float3 SampledNormal = float3(0, 1, 0);
+	float3 SampledNormal = float3(0, 0, 1);
 
     //float3 SampledNormal = tex2D(TexNormalMap, UV).xyz;
 //#ifdef WITH_NORMALMAP_UNSIGNED
@@ -41,6 +43,8 @@ float3 PerturbNormal(float3 N, float3 V, float2 UV)
 //    SampledNormal.y = -SampledNormal.y;
 //#endif
 
-    float3x3 TBN = CotangentFrame(-V, N, UV);
-    return normalize(mul(TBN, SampledNormal));
+//???use V or -V? EyePos - Pos or inverse? text states Vertex subtracted by Camera (Pos - EyePos)
+
+    float3x3 TBN = CotangentFrame(N, V, UV);
+    return normalize(mul(SampledNormal, TBN));
 }
