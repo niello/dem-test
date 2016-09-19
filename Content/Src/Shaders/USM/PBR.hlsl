@@ -155,14 +155,16 @@ float4 PSMain(PSInSimple In): SV_Target
 		if (CurrLight.Type == LIGHT_TYPE_DIR)
 		{
 			L = CurrLight.InvDirection;
-			Intensity = DiffuseLambert(N, L);
+			//Intensity = DiffuseLambert(N, L);
+			Intensity = DiffuseOrenNayar(N, L, V, 0.5f);
 		}
 		else
 		{
 			L = CurrLight.Position - In.PosWorld;
 			float DistanceToLight = length(L);
 			L /= DistanceToLight;
-			Intensity = DiffuseLambert(N, L) * Attenuation(DistanceToLight, CurrLight.InvRange);
+			//Intensity = DiffuseLambert(N, L) * Attenuation(DistanceToLight, CurrLight.InvRange);
+			Intensity = DiffuseOrenNayar(N, L, V, 0.5f) * Attenuation(DistanceToLight, CurrLight.InvRange);
 			if (CurrLight.Type == LIGHT_TYPE_SPOT)
 				Intensity *= SpotlightFalloff(dot(CurrLight.InvDirection, L), CurrLight.Params.x, CurrLight.Params.y);
 		}

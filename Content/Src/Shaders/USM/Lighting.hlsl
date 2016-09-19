@@ -119,3 +119,31 @@ float DiffuseLambert(float3 N, float3 L)
 }   
 //---------------------------------------------------------------------
 
+// An useful table with roughness values: https://wiki.blender.org/index.php/User:Guiseppe/Oren_Nayar
+float DiffuseOrenNayar(float3 N, float3 L, float3 V, float Roughness)
+{
+	float NdotL = dot(N, L);
+	float ClampedNdotL = max(NdotL, 0.f);
+
+	// A = 1, B = 0 - simplifies to lambertian model
+	if (Roughness == 0) return ClampedNdotL;
+
+	float NdotV = dot(N, V);
+
+	float SqRgh = Roughness * Roughness; //???pre-square?
+	float A = 1.0f - 0.5f * (SqRgh / (SqRgh + 0.57f));
+	float B = 0.45f * (SqRgh / (SqRgh + 0.09f));
+
+	float Gamma = dot(V - N * NdotV, L - N * NdotL);
+
+	// Can use lookup texture:
+	// float C = tex2D(LookupMap, float2(NdotV, NdotL) * 0.5f + 0.5f).x; // map -1..1 to 0..1
+	float2 Angles = acos(float2(NdotV, NdotL)); //???does "float2(NdotV, NdotL)" cost something? mb initially store in float2?
+	float C = sin(max(Angles.x, Angles.y)) * tan(min(Angles.x, Angles.y));
+
+	//!!!result = light * (albedo / pi) * result!
+
+	return ClampedNdotL * (A + B * max(Gamma, 0.f) * C);
+}
+//---------------------------------------------------------------------
+
