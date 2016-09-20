@@ -116,23 +116,12 @@ float SpotlightFalloffExp(float CosAlpha, float CosHalfTheta, float CosHalfPhi, 
 
 // BRDF
 
-float DiffuseLambert(float3 N, float3 L)
-{
-	return max(dot(N, L), 0.0f);
-}   
-//---------------------------------------------------------------------
-
 // An useful table with roughness values: https://wiki.blender.org/index.php/User:Guiseppe/Oren_Nayar
-//???send dots as args? saturate?
-float DiffuseOrenNayar(float3 N, float3 L, float3 V, float SqRoughness)
+//NB: doesn't mul NdotL
+float DiffuseOrenNayar(float3 N, float3 L, float3 V, float NdotL, float NdotV, float SqRoughness)
 {
-	float NdotL = dot(N, L);
-	float ClampedNdotL = max(NdotL, 0.f);
-
 	// A = 1, B = 0 - simplifies to lambertian model
-	if (SqRoughness == 0) return ClampedNdotL;
-
-	float NdotV = dot(N, V);
+	//if (SqRoughness == 0) return 1.f;
 
 	float A = 1.0f - 0.5f * (SqRoughness / (SqRoughness + 0.57f));
 	float B = 0.45f * (SqRoughness / (SqRoughness + 0.09f));
@@ -140,13 +129,13 @@ float DiffuseOrenNayar(float3 N, float3 L, float3 V, float SqRoughness)
 	float Gamma = dot(V - N * NdotV, L - N * NdotL);
 
 	// Can use lookup texture:
-	// float C = tex2D(LookupMap, float2(NdotV, NdotL) * 0.5f + 0.5f).x; // map -1..1 to 0..1
+	// float C = tex2D(LookupMap, float2(NdotV, NdotL) * 0.5f + 0.5f).x; // map -1..1 to 0..1 if not saturated
 	float2 Angles = acos(float2(NdotV, NdotL)); //???does "float2(NdotV, NdotL)" cost something? mb initially store in float2?
 	float C = sin(max(Angles.x, Angles.y)) * tan(min(Angles.x, Angles.y));
 
 	//!!!result = light * (albedo / pi) * result!
 
-	return ClampedNdotL * (A + B * max(Gamma, 0.f) * C);
+	return (A + B * max(Gamma, 0.f) * C);
 }
 //---------------------------------------------------------------------
 
@@ -174,26 +163,26 @@ float GeometricSmithSchlickGGX(float SqRoughness, float NdotV, float NdotL)
 
 // For conductors
 // Dot products must be saturated
-float3 FresnelSchlick(float3 SpecularColor, float VdotH)
+float3 FresnelSchlick(float3 Reflectivity, float VdotH)
 {
-	return SpecularColor + (1.0f - SpecularColor) * pow((1.0f - VdotH), 5);
+	return Reflectivity + (1.0f - Reflectivity) * pow((1.0f - VdotH), 5);
 }
 //---------------------------------------------------------------------
 
 // For dielectrics
 // Dot products must be saturated
-float FresnelSchlickSingleChannel(float SpecularColor, float VdotH)
+float FresnelSchlickSingleChannel(float Reflectivity, float VdotH)
 {
-	return SpecularColor + (1.0f - SpecularColor) * pow((1.0f - VdotH), 5);
+	return Reflectivity + (1.0f - Reflectivity) * pow((1.0f - VdotH), 5);
 }
 //---------------------------------------------------------------------
 
 //???is correct? produces strange results in PBRViewer!
 // Dot products must be saturated
-float3 FresnelCookTorrance(float3 SpecularColor, float VdotH)
+float3 FresnelCookTorrance(float3 Reflectivity, float VdotH)
 {
-	float3 SqrtSpecularColor = sqrt(SpecularColor);
-	float3 n = (1.0f + SqrtSpecularColor) / (1.0f - SqrtSpecularColor);
+	float3 SqrtReflectivity = sqrt(Reflectivity);
+	float3 n = (1.0f + SqrtReflectivity) / (1.0f - SqrtReflectivity);
 	float c = VdotH;
 	float3 g = sqrt(n * n + c * c - 1.0f);
 
@@ -222,11 +211,11 @@ float NormalDistributionGGX(float SqRoughness, float NdotH)
 //---------------------------------------------------------------------
 
 // Dot products must be saturated
-float3 SpecularCookTorrance(float3 SpecularColor, float SqRoughness, float NdotV, float NdotL, float NdotH, float VdotH)
+float3 SpecularCookTorrance(float3 Reflectivity, float SqRoughness, float NdotV, float NdotL, float NdotH, float VdotH)
 {
 	float D = NormalDistributionGGX(SqRoughness, NdotH);
 	float G = GeometricSmithSchlickGGX(SqRoughness, NdotV, NdotL);
-	float3 F = FresnelSchlick(SpecularColor, VdotH);
+	float3 F = FresnelSchlick(Reflectivity, VdotH);
 	return (D * G * F) / (4.0f * NdotL * NdotV);
 	//return (D * G * F) / (3.9999f * NdotL * NdotV + 0.0001f);
 }

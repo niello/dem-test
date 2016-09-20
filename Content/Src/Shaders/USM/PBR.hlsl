@@ -140,13 +140,24 @@ PSInSplatted VSMainCDLOD(	float2	Pos:			POSITION,
 
 float4 PSMain(PSInSimple In): SV_Target
 {
-	// Normal mapping
+	// Sample normal map and calculate per-pixel normal
 	// NB: In.View must be not normalized
 	float3 N = PerturbNormal(In.Normal, -In.View, In.UV);
 	float3 V = normalize(In.View);
 
-	float Roughness = 0.9f;
+	// Sample albedo
+	float4 Albedo = TexAlbedo.Sample(LinearSampler, In.UV);
+	float3 AlbedoRGB = Albedo.rgb;
+
+	// Sample reflectivity (common one-channel value 0.02-0.04 for all insulators)
+	float3 Reflectivity = 0.03f.xxx;
+
+	// Sample roughness
+	float Roughness = 0.75f;
 	float SqRoughness = Roughness * Roughness;
+
+	static const float PI = 3.14159265359f;
+	static const float INV_PI = 0.318309886f;
 
 	float3 LightColor = float3(0, 0, 0);
 	for (uint i = 0; i < In.LightInfo[0]; ++i)
@@ -158,38 +169,35 @@ float4 PSMain(PSInSimple In): SV_Target
 		if (CurrLight.Type == LIGHT_TYPE_DIR)
 		{
 			L = CurrLight.InvDirection;
-			Intensity = DiffuseOrenNayar(N, L, V, SqRoughness);
+			Intensity = PI; //???why mul PI? see PBRViewer!
 		}
 		else
 		{
 			L = CurrLight.Position - In.PosWorld;
-
 			float SqDistanceToLight = dot(L, L);
 			L *= rsqrt(SqDistanceToLight);
+
+			// Calculate attenuation and falloff
 			//???!!!pre-square inv. range on CPU if no other uses? if there are, pass both InvRange and SqInvRange!
-			float Attenuation = saturate(1.f - SqDistanceToLight * CurrLight.InvRange * CurrLight.InvRange);
-
-			//float DistanceToLight = length(L);
-			//L /= DistanceToLight;
-			//float Attenuation = AttenuationFunction(DistanceToLight, CurrLight.InvRange);
-
-			Intensity = DiffuseOrenNayar(N, L, V, SqRoughness) * Attenuation;
+			//???why mul PI? see PBRViewer!
+			//???what attenuation formula to use?
+			Intensity = PI * saturate(1.f - SqDistanceToLight * CurrLight.InvRange * CurrLight.InvRange);
 			if (CurrLight.Type == LIGHT_TYPE_SPOT)
 				Intensity *= SpotlightFalloffFunction(dot(CurrLight.InvDirection, L), CurrLight.Params.x, CurrLight.Params.y);
 		}
 
-		float3 SpecularAtNormalIncidence = 0.03f.xxx;
 		float3 H = normalize(L + V);
 		float NdotV = saturate(dot(N, V));
 		float NdotL = saturate(dot(N, L));
 		float NdotH = saturate(dot(N, H));
 		float VdotH = saturate(dot(V, H));
-		float3 SpecularColor = SpecularCookTorrance(SpecularAtNormalIncidence, SqRoughness, NdotV, NdotL, NdotH, VdotH);
+		float3 DiffuseColor = AlbedoRGB * INV_PI * DiffuseOrenNayar(N, L, V, NdotL, NdotV, SqRoughness);
+		float3 SpecularColor = SpecularCookTorrance(Reflectivity, SqRoughness, NdotV, NdotL, NdotH, VdotH);
 
-		LightColor += CurrLight.Color * Intensity;
+		LightColor += CurrLight.Color * Intensity * NdotL * (DiffuseColor * (1.f - SpecularColor) + SpecularColor);
 	}
 
-	return TexAlbedo.Sample(LinearSampler, In.UV) * MtlDiffuse * float4(LightColor, 1);
+	return MtlDiffuse * float4(LightColor, Albedo.a);
 }
 //---------------------------------------------------------------------
 
