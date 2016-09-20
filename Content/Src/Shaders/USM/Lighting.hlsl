@@ -19,6 +19,25 @@
 #define AttenuationFunction			AttenuationQuad
 #define SpotlightFalloffFunction	SpotlightFalloffLinear
 
+#ifndef MAX_LIGHT_COUNT
+#define MAX_LIGHT_COUNT 256
+#endif
+
+struct CLight
+{
+	float3	Color;			// Intensity of r, g and b radiance
+	float3	Position;
+	float	SqInvRange;
+	float4	Params;			// Spot: x - cos inner, y - cos outer
+	float3	InvDirection;
+	uint	Type;
+};
+
+cbuffer LightBuffer: register(b3)
+{
+	CLight Lights[MAX_LIGHT_COUNT];
+}
+
 // Normal mapping
 
 // http://www.thetenthplanet.de/archives/1180
@@ -111,6 +130,30 @@ float SpotlightFalloffHermite(float CosAlpha, float CosHalfTheta, float CosHalfP
 float SpotlightFalloffExp(float CosAlpha, float CosHalfTheta, float CosHalfPhi, float Exp)
 {
 	return pow(SpotlightFalloffLinear(CosAlpha, CosHalfTheta, CosHalfPhi), Exp);
+}
+//---------------------------------------------------------------------
+
+// Light source handling
+
+void GetLightSourceParams(CLight LightSource, float3 WorldPosition, out float3 Intensity, out float3 L)
+{
+	if (LightSource.Type == LIGHT_TYPE_DIR)
+	{
+		L = LightSource.InvDirection;
+		Intensity = LightSource.Color;
+	}
+	else
+	{
+		L = LightSource.Position - WorldPosition;
+		float SqDistanceToLight = dot(L, L);
+		L *= rsqrt(SqDistanceToLight);
+
+		// Calculate attenuation and falloff
+		//???what attenuation formula to use?
+		Intensity = LightSource.Color * saturate(1.f - SqDistanceToLight * LightSource.SqInvRange);
+		if (LightSource.Type == LIGHT_TYPE_SPOT)
+			Intensity *= SpotlightFalloffFunction(dot(LightSource.InvDirection, L), LightSource.Params.x, LightSource.Params.y);
+	}
 }
 //---------------------------------------------------------------------
 

@@ -31,10 +31,8 @@ struct CInstanceData
 
 // Per-material data
 
-cbuffer MaterialParams: register(b1)
-{
-	float4 MtlDiffuse;
-}
+Texture2D TexAlbedo: register(t0);
+sampler LinearSampler: register(s0);
 
 // Per-instance data
 
@@ -51,9 +49,6 @@ cbuffer InstanceParams: register(b2)
 {
 	CInstanceData InstanceDataArray[MAX_INSTANCE_COUNT];
 }
-
-Texture2D TexAlbedo: register(t0);
-sampler LinearSampler: register(s0);
 
 // Vertex shaders
 
@@ -143,7 +138,6 @@ float4 PSMain(PSInSimple In): SV_Target
 	// Sample normal map and calculate per-pixel normal
 	// NB: In.View must be not normalized
 	float3 N = PerturbNormal(In.Normal, -In.View, In.UV);
-	float3 V = normalize(In.View);
 
 	// Sample albedo
 	float4 Albedo = TexAlbedo.Sample(LinearSampler, In.UV);
@@ -153,51 +147,37 @@ float4 PSMain(PSInSimple In): SV_Target
 	float3 Reflectivity = 0.03f.xxx;
 
 	// Sample roughness
-	float Roughness = 0.75f;
+	float Roughness = 0.35f;
 	float SqRoughness = Roughness * Roughness;
 
-	static const float PI = 3.14159265359f;
-	static const float INV_PI = 0.318309886f;
+	float3 V = normalize(In.View);
+	float NdotV = saturate(dot(N, V));
 
-	float3 LightColor = float3(0, 0, 0);
+	float3 LightingResult = float3(0, 0, 0);
 	for (uint i = 0; i < In.LightInfo[0]; ++i)
 	{
 		CLight CurrLight = Lights[In.LightInfo[i + 1]];
 
-		float Intensity; // = CurrLight.Intensity //!!!or pre-multiply on color!
+		float3 LightIntensity;
 		float3 L;
-		if (CurrLight.Type == LIGHT_TYPE_DIR)
-		{
-			L = CurrLight.InvDirection;
-			Intensity = PI; //???why mul PI? see PBRViewer!
-		}
-		else
-		{
-			L = CurrLight.Position - In.PosWorld;
-			float SqDistanceToLight = dot(L, L);
-			L *= rsqrt(SqDistanceToLight);
-
-			// Calculate attenuation and falloff
-			//???!!!pre-square inv. range on CPU if no other uses? if there are, pass both InvRange and SqInvRange!
-			//???why mul PI? see PBRViewer!
-			//???what attenuation formula to use?
-			Intensity = PI * saturate(1.f - SqDistanceToLight * CurrLight.InvRange * CurrLight.InvRange);
-			if (CurrLight.Type == LIGHT_TYPE_SPOT)
-				Intensity *= SpotlightFalloffFunction(dot(CurrLight.InvDirection, L), CurrLight.Params.x, CurrLight.Params.y);
-		}
+		GetLightSourceParams(CurrLight, In.PosWorld, LightIntensity, L);
 
 		float3 H = normalize(L + V);
-		float NdotV = saturate(dot(N, V));
 		float NdotL = saturate(dot(N, L));
 		float NdotH = saturate(dot(N, H));
 		float VdotH = saturate(dot(V, H));
-		float3 DiffuseColor = AlbedoRGB * INV_PI * DiffuseOrenNayar(N, L, V, NdotL, NdotV, SqRoughness);
+
+		float3 DiffuseColor = AlbedoRGB;
+		if (SqRoughness > 0.f) DiffuseColor *= DiffuseOrenNayar(N, L, V, NdotL, NdotV, SqRoughness);
+
 		float3 SpecularColor = SpecularCookTorrance(Reflectivity, SqRoughness, NdotV, NdotL, NdotH, VdotH);
 
-		LightColor += CurrLight.Color * Intensity * NdotL * (DiffuseColor * (1.f - SpecularColor) + SpecularColor);
+		// Read this to learn why we don't divide diffuse color by PI:
+		// https://seblagarde.wordpress.com/2012/01/08/pi-or-not-to-pi-in-game-lighting-equation/
+		LightingResult += LightIntensity * NdotL * (DiffuseColor * (1.f - SpecularColor) + SpecularColor);
 	}
 
-	return MtlDiffuse * float4(LightColor, Albedo.a);
+	return float4(LightingResult, Albedo.a); // Add ambient, add env. map
 }
 //---------------------------------------------------------------------
 
