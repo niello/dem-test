@@ -53,6 +53,7 @@ GlobalParams
 MaterialParams
 {
 	TexAlbedo = null
+	TexNormalMap = "Textures:System/NoBump.dds"
 	LinearSampler // CEffect will create default CSampler instance at the load time
 	{
 		AddressU = "Wrap"

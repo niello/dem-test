@@ -2,9 +2,6 @@ Effect = 'PBR' // effect isn't identified by its file (libraries and partial def
 Params
 {
 	TexAlbedo = "Textures:Arch/ECCY_Obelisk_0_d.dds"
-	//NormalMap = 'Textures:Arch/ECCY_Obelisk_0_b.dds'
-	MtlDiffuse = (0.8, 0.731357, 0.467789, 1.0)
-	//MtlSpecular = (0.0, 0.0, 0.0, 1.0)
-	//SpecularExponent = 96.078431
-	LinearSampler = null
+	TexNormalMap = "Textures:Arch/ECCY_Obelisk_0_b.dds"
+	//MtlDiffuse = (0.8, 0.731357, 0.467789, 1.0)
 }

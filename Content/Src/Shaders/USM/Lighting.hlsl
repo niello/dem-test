@@ -40,8 +40,21 @@ cbuffer LightBuffer: register(b3)
 
 // Normal mapping
 
+// Normal sampling:
+//float3 SampledNormal = tex2D(TexNormalMap, UV).xyz;
+//#ifdef WITH_NORMALMAP_UNSIGNED
+    //SampledNormal = SampledNormal * 255./127. - 128./127.;
+//#endif
+//#ifdef WITH_NORMALMAP_2CHANNEL
+//    SampledNormal.z = sqrt(1.f - dot(SampledNormal.xy, SampledNormal.xy));
+//#endif
+//#ifdef WITH_NORMALMAP_GREEN_UP
+//    SampledNormal.y = -SampledNormal.y;
+//#endif
+
 // http://www.thetenthplanet.de/archives/1180
-float3x3 CotangentFrame(float3 N, float3 Pos, float2 UV)
+// N - interpolated vertex normal, Pos - interpolated unnormalized vertex to eye vector
+float3 PerturbNormal(float3 SampledNormal, float3 N, float3 Pos, float2 UV)
 {
 	// get edge vectors of the pixel triangle
 	float3 dp1 = ddx(Pos);
@@ -57,31 +70,9 @@ float3x3 CotangentFrame(float3 N, float3 Pos, float2 UV)
 
 	// construct a scale-invariant frame 
 	float invmax = rsqrt(max(dot(T, T), dot(B, B)));
-	return float3x3(T * invmax, B * invmax, N);
-}
+	float3x3 TBN = float3x3(T * invmax, B * invmax, N);
 
-// http://www.thetenthplanet.de/archives/1180
-// N - interpolated vertex normal, V - interpolated vertex to eye vector
-float3 PerturbNormal(float3 N, float3 V, float2 UV)
-{
-//!!!TMP!
-	float3 SampledNormal = float3(0, 0, 1);
-
-    //float3 SampledNormal = tex2D(TexNormalMap, UV).xyz;
-//#ifdef WITH_NORMALMAP_UNSIGNED
-    //SampledNormal = SampledNormal * 255./127. - 128./127.;
-//#endif
-//#ifdef WITH_NORMALMAP_2CHANNEL
-//    SampledNormal.z = sqrt(1.f - dot(SampledNormal.xy, SampledNormal.xy));
-//#endif
-//#ifdef WITH_NORMALMAP_GREEN_UP
-//    SampledNormal.y = -SampledNormal.y;
-//#endif
-
-//???use V or -V? EyePos - Pos or inverse? text states Vertex subtracted by Camera (Pos - EyePos)
-
-    float3x3 TBN = CotangentFrame(N, V, UV);
-    return normalize(mul(SampledNormal, TBN));
+	return normalize(mul(SampledNormal, TBN));
 }
 
 // Light attenuation and falloff
@@ -204,19 +195,12 @@ float GeometricSmithSchlickGGX(float SqRoughness, float NdotV, float NdotL)
 }
 //---------------------------------------------------------------------
 
-// For conductors
 // Dot products must be saturated
 float3 FresnelSchlick(float3 Reflectivity, float VdotH)
 {
-	return Reflectivity + (1.0f - Reflectivity) * pow((1.0f - VdotH), 5);
-}
-//---------------------------------------------------------------------
-
-// For dielectrics
-// Dot products must be saturated
-float FresnelSchlickSingleChannel(float Reflectivity, float VdotH)
-{
-	return Reflectivity + (1.0f - Reflectivity) * pow((1.0f - VdotH), 5);
+	static const float OneOnLN2_x6 = 8.656170f; // == 1/ln(2) * 6   (6 is SpecularPower of 5 + 1)
+	return Reflectivity + (1.0f - Reflectivity) * exp2(-OneOnLN2_x6 * VdotH);
+	//return Reflectivity + (1.0f - Reflectivity) * pow((1.0f - VdotH), 5);
 }
 //---------------------------------------------------------------------
 
@@ -235,7 +219,7 @@ float3 FresnelCookTorrance(float3 Reflectivity, float VdotH)
 	float3 part1 = GsubC / GaddC;
 	float3 part2 = (GaddC * c - 1.0f) / (GsubC * c + 1.0f);
 
-	return max(0.0f.xxx, 0.5f * part1 * part1 * ( 1 + part2 * part2));
+	return max(0.0f.xxx, 0.5f * part1 * part1 * (1.f + part2 * part2));
 }
 //---------------------------------------------------------------------
 
@@ -259,7 +243,6 @@ float3 SpecularCookTorrance(float3 Reflectivity, float SqRoughness, float NdotV,
 	float D = NormalDistributionGGX(SqRoughness, NdotH);
 	float G = GeometricSmithSchlickGGX(SqRoughness, NdotV, NdotL);
 	float3 F = FresnelSchlick(Reflectivity, VdotH);
-	return (D * G * F) / (4.0f * NdotL * NdotV);
-	//return (D * G * F) / (3.9999f * NdotL * NdotV + 0.0001f);
+	return (D * G * F) / (3.9999f * NdotL * NdotV + 0.0001f);
 }
 //---------------------------------------------------------------------

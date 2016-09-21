@@ -2,7 +2,5 @@ Effect = 'PBR' // effect isn't identified by its file (libraries and partial def
 Params
 {
 	TexAlbedo = "Textures:Test/materials/checker.dds"
-	//NormalMap = 'Textures:Test/materials/checker_bump.dds'
-	MtlDiffuse = (1.0, 1.0, 1.0)
-	LinearSampler = null
+	TexNormalMap = "Textures:Test/materials/checker_bump.dds"
 }

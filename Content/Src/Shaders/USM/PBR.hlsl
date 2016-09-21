@@ -32,6 +32,7 @@ struct CInstanceData
 // Per-material data
 
 Texture2D TexAlbedo: register(t0);
+Texture2D TexNormalMap: register(t1);
 sampler LinearSampler: register(s0);
 
 // Per-instance data
@@ -133,27 +134,34 @@ PSInSplatted VSMainCDLOD(	float2	Pos:			POSITION,
 
 // Pixel shaders
 
+//!!!DBG:!
+// 1. Lines on the bush at certain view angles
+// 2. Oren-Nayar sometimes returns > 1.f, test hand on the obelisk
+
 float4 PSMain(PSInSimple In): SV_Target
 {
 	// Sample normal map and calculate per-pixel normal
 	// NB: In.View must be not normalized
-	float3 N = PerturbNormal(In.Normal, -In.View, In.UV);
+	float3 InNormal = normalize(In.Normal.xyz);
+	float4 NM = TexNormalMap.Sample(LinearSampler, In.UV);
+	float3 SampledNormal = normalize(NM.xyz * 2.00787401574f - 128.f / 127.f); //!!! compare with * 2.f - 1.f // 255.f / 127.f = 2.00787401574f
+	float3 N = PerturbNormal(SampledNormal, InNormal, -In.View, In.UV);
 
 	// Sample albedo
 	float4 Albedo = TexAlbedo.Sample(LinearSampler, In.UV);
 	float3 AlbedoRGB = Albedo.rgb;
 
 	// Sample reflectivity (common one-channel value 0.02-0.04 for all insulators)
-	float3 Reflectivity = 0.03f.xxx;
+	float3 Reflectivity = 0.04f.xxx;
 
 	// Sample roughness
-	float Roughness = 0.35f;
+	float Roughness = 0.55f;
 	float SqRoughness = Roughness * Roughness;
 
 	float3 V = normalize(In.View);
-	float NdotV = saturate(dot(N, V));
+	float NdotV = max(0.f, dot(N, V));
 
-	float3 LightingResult = float3(0, 0, 0);
+	float3 LightingResult = float3(0.f, 0.f, 0.f);
 	for (uint i = 0; i < In.LightInfo[0]; ++i)
 	{
 		CLight CurrLight = Lights[In.LightInfo[i + 1]];
@@ -163,9 +171,9 @@ float4 PSMain(PSInSimple In): SV_Target
 		GetLightSourceParams(CurrLight, In.PosWorld, LightIntensity, L);
 
 		float3 H = normalize(L + V);
-		float NdotL = saturate(dot(N, L));
-		float NdotH = saturate(dot(N, H));
-		float VdotH = saturate(dot(V, H));
+		float NdotL = max(0.f, dot(N, L));
+		float NdotH = max(0.f, dot(N, H));
+		float VdotH = max(0.f, dot(V, H));
 
 		float3 DiffuseColor = AlbedoRGB;
 		if (SqRoughness > 0.f) DiffuseColor *= DiffuseOrenNayar(N, L, V, NdotL, NdotV, SqRoughness);
@@ -177,7 +185,10 @@ float4 PSMain(PSInSimple In): SV_Target
 		LightingResult += LightIntensity * NdotL * (DiffuseColor * (1.f - SpecularColor) + SpecularColor);
 	}
 
-	return float4(LightingResult, Albedo.a); // Add ambient, add env. map
+	// Calculate or sample from cubemap ambient irradiance
+	float3 AmbientIrradiance = 0.2f.xxx;
+
+	return float4(LightingResult + AlbedoRGB * AmbientIrradiance, Albedo.a); // Add env. map
 }
 //---------------------------------------------------------------------
 
