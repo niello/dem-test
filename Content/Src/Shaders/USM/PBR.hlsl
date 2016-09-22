@@ -146,20 +146,19 @@ float4 PSMain(PSInSimple In): SV_Target
 
 	// Sample albedo
 	float4 Albedo = TexAlbedo.Sample(LinearSampler, In.UV);
-	float3 AlbedoRGB = Albedo.rgb;
-	//float3 AlbedoRGB = 0.f.xxx;
+	//float3 AlbedoRGB = Albedo.rgb;
+	float3 AlbedoRGB = 0.f.xxx;
 
 	// Sample reflectivity (common one-channel value 0.02-0.04 for all insulators)
-	float3 Reflectivity = 0.04f.xxx; // Can use uniform material parameter
-	//float3 Reflectivity = float3(0.57f, 0.38f, 0.f);
+	//float3 Reflectivity = 0.04f.xxx; // Can use uniform material parameter
+	float3 Reflectivity = float3(1.0f, 0.71f, 0.29f);
 
 	// Sample roughness
 	float Roughness = 0.35f;
 	float SqRoughness = Roughness * Roughness;
 
 	float3 V = normalize(In.View);
-	float NdotV_Unsaturated = dot(N, V);
-	float NdotV = max(0.f, NdotV_Unsaturated);
+	float NdotV = max(0.f, dot(N, V));
 
 	float3 LightingResult = float3(0.f, 0.f, 0.f);
 	for (uint i = 0; i < In.LightInfo[0]; ++i)
@@ -171,13 +170,12 @@ float4 PSMain(PSInSimple In): SV_Target
 		GetLightSourceParams(CurrLight, In.PosWorld, LightIntensity, L);
 
 		float3 H = normalize(L + V);
-		float NdotL_Unsaturated = dot(N, L);
-		float NdotL = max(0.f, NdotL_Unsaturated);
+		float NdotL = max(0.f, dot(N, L));
 		float NdotH = max(0.f, dot(N, H));
 		float VdotH = max(0.f, dot(V, H));
 
 		float3 DiffuseColor = AlbedoRGB;
-		if (SqRoughness > 0.f) DiffuseColor *= DiffuseOrenNayar(N, L, V, NdotL_Unsaturated, NdotV_Unsaturated, SqRoughness);
+		if (SqRoughness > 0.f) DiffuseColor *= DiffuseOrenNayar(N, L, V, NdotL, NdotV, SqRoughness);
 
 		float3 SpecularColor = SpecularCookTorrance(Reflectivity, SqRoughness, NdotV, NdotL, NdotH, VdotH);
 
@@ -193,7 +191,7 @@ float4 PSMain(PSInSimple In): SV_Target
 	// Do image-based lighting from environment map, mipmapped to resemble different roughness
 	//float3 R = 2.f * N * NdotV - V; // reflect(-V, N)
 	//float MipIndex = SqRoughness * 8.0f; // 8 is mip level count - 1
-	float3 EnvColor = 0.4f.xxx; //TexEnvMap.SampleLevel(LinearSampler, R, MipIndex);
+	float3 EnvColor = 0.2f.xxx; //TexEnvMap.SampleLevel(LinearSampler, R, MipIndex);
 	float3 EnvFresnel = FresnelSchlickWithRoughness(Reflectivity, SqRoughness, NdotV);
 
 	return float4(LightingResult + AlbedoRGB * AmbientIrradiance + EnvColor * EnvFresnel, Albedo.a);
