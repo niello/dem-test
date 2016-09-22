@@ -23,19 +23,20 @@ GlobalParams
 {
 	ViewProj = null
 	EyePos = null
+	Lights = null
+	//TexEnvMap = null
 }
 
 MaterialParams
 {
 	TexAlbedo = null
+	TexNormalMap = "Textures:System/NoBump.dds"
 	LinearSampler // CEffect will create default CSampler instance at the load time
 	{
 		AddressU = "Wrap"
 		AddressV = "Wrap"
 		Filter = "MinMagMip_Linear"
 	}
-	MtlDiffuse = (1.0, 1.0, 1.0, 1.0)
-	//AlphaRef = 0.5
 }
 
 RenderStates

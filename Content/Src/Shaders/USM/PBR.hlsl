@@ -134,32 +134,32 @@ PSInSplatted VSMainCDLOD(	float2	Pos:			POSITION,
 
 // Pixel shaders
 
-//!!!DBG:!
-// 1. Lines on the bush at certain view angles
-// 2. Oren-Nayar sometimes returns > 1.f, test hand on the obelisk
-
 float4 PSMain(PSInSimple In): SV_Target
 {
 	// Sample normal map and calculate per-pixel normal
 	// NB: In.View must be not normalized
 	float3 InNormal = normalize(In.Normal.xyz);
 	float4 NM = TexNormalMap.Sample(LinearSampler, In.UV);
-	float3 SampledNormal = normalize(NM.xyz * 2.00787401574f - 128.f / 127.f); //!!! compare with * 2.f - 1.f // 255.f / 127.f = 2.00787401574f
-	float3 N = PerturbNormal(SampledNormal, InNormal, -In.View, In.UV);
+	float3 SampledNormal = normalize(NM.xyz * 2.f - 1.f); // (255.f / 127.f) - (128.f / 127.f));
+	SampledNormal.y = -SampledNormal.y; //!!!can save normal maps properly to avoid this!
+	float3 N = PerturbNormal(SampledNormal, InNormal, In.View, In.UV);
 
 	// Sample albedo
 	float4 Albedo = TexAlbedo.Sample(LinearSampler, In.UV);
 	float3 AlbedoRGB = Albedo.rgb;
+	//float3 AlbedoRGB = 0.f.xxx;
 
 	// Sample reflectivity (common one-channel value 0.02-0.04 for all insulators)
-	float3 Reflectivity = 0.04f.xxx;
+	float3 Reflectivity = 0.04f.xxx; // Can use uniform material parameter
+	//float3 Reflectivity = float3(0.57f, 0.38f, 0.f);
 
 	// Sample roughness
-	float Roughness = 0.55f;
+	float Roughness = 0.35f;
 	float SqRoughness = Roughness * Roughness;
 
 	float3 V = normalize(In.View);
-	float NdotV = max(0.f, dot(N, V));
+	float NdotV_Unsaturated = dot(N, V);
+	float NdotV = max(0.f, NdotV_Unsaturated);
 
 	float3 LightingResult = float3(0.f, 0.f, 0.f);
 	for (uint i = 0; i < In.LightInfo[0]; ++i)
@@ -171,24 +171,32 @@ float4 PSMain(PSInSimple In): SV_Target
 		GetLightSourceParams(CurrLight, In.PosWorld, LightIntensity, L);
 
 		float3 H = normalize(L + V);
-		float NdotL = max(0.f, dot(N, L));
+		float NdotL_Unsaturated = dot(N, L);
+		float NdotL = max(0.f, NdotL_Unsaturated);
 		float NdotH = max(0.f, dot(N, H));
 		float VdotH = max(0.f, dot(V, H));
 
 		float3 DiffuseColor = AlbedoRGB;
-		if (SqRoughness > 0.f) DiffuseColor *= DiffuseOrenNayar(N, L, V, NdotL, NdotV, SqRoughness);
+		if (SqRoughness > 0.f) DiffuseColor *= DiffuseOrenNayar(N, L, V, NdotL_Unsaturated, NdotV_Unsaturated, SqRoughness);
 
 		float3 SpecularColor = SpecularCookTorrance(Reflectivity, SqRoughness, NdotV, NdotL, NdotH, VdotH);
 
 		// Read this to learn why we don't divide diffuse color by PI:
 		// https://seblagarde.wordpress.com/2012/01/08/pi-or-not-to-pi-in-game-lighting-equation/
 		LightingResult += LightIntensity * NdotL * (DiffuseColor * (1.f - SpecularColor) + SpecularColor);
+		
 	}
 
 	// Calculate or sample from cubemap ambient irradiance
-	float3 AmbientIrradiance = 0.2f.xxx;
+	float3 AmbientIrradiance = 0.25f.xxx;
 
-	return float4(LightingResult + AlbedoRGB * AmbientIrradiance, Albedo.a); // Add env. map
+	// Do image-based lighting from environment map, mipmapped to resemble different roughness
+	//float3 R = 2.f * N * NdotV - V; // reflect(-V, N)
+	//float MipIndex = SqRoughness * 8.0f; // 8 is mip level count - 1
+	float3 EnvColor = 0.4f.xxx; //TexEnvMap.SampleLevel(LinearSampler, R, MipIndex);
+	float3 EnvFresnel = FresnelSchlickWithRoughness(Reflectivity, SqRoughness, NdotV);
+
+	return float4(LightingResult + AlbedoRGB * AmbientIrradiance + EnvColor * EnvFresnel, Albedo.a);
 }
 //---------------------------------------------------------------------
 

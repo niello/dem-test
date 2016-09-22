@@ -48,6 +48,7 @@ GlobalParams
 	ViewProj = null
 	EyePos = null
 	Lights = null
+	//TexEnvMap = null
 }
 
 MaterialParams
@@ -60,7 +61,6 @@ MaterialParams
 		AddressV = "Wrap"
 		Filter = "MinMagMip_Linear"
 	}
-	MtlDiffuse = (1.0, 1.0, 1.0, 1.0)
 }
 
 RenderStates

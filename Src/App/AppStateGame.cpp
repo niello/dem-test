@@ -292,7 +292,7 @@ CStrID CAppStateGame::OnFrame()
 		else if (YRel > 0.95f) CameraMoveZ = (YRel - 0.95f) / 0.05f;
 		else CameraMoveZ = 0.f;
 
-		const float CameraMoveSpeed = 0.5f;
+		const float CameraMoveSpeed = 0.2f;
 		if (CameraMoveX != 0.f)
 		{
 			vector3 Axis = pCameraNode->GetWorldMatrix().AxisX();
@@ -517,6 +517,7 @@ bool CAppStateGame::OnContextMenu(Events::CEventDispatcher* pDispatcher, const E
 }
 //---------------------------------------------------------------------
 
+//!!!hold cursor while rotating or remember on start and then restor its position!
 bool CAppStateGame::OnCameraRotateH(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
 	Game::CGameLevelView* pView = GameSrv->GetLevelView(hMainLevelView);

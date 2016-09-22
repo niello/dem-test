@@ -3,4 +3,5 @@ Params
 {
 	TexAlbedo = "Textures:Test/materials/checker.dds"
 	TexNormalMap = "Textures:Test/materials/checker_bump.dds"
+	//TexNormalMap = "Textures:System/NormalMapTest.tga"
 }

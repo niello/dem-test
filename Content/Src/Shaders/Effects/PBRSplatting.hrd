@@ -23,6 +23,8 @@ GlobalParams
 {
 	ViewProj = null
 	EyePos = null
+	Lights = null
+	//TexEnvMap = null
 }
 
 MaterialParams
