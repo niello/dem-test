@@ -24,12 +24,14 @@ cbuffer GridParams: register(b3)
 	float2 GridConsts;				// x - grid halfsize, y - inv. grid halfsize
 }
 
-Texture2D HeightMap;
+Texture2D HeightMapVS: register(t0);
+Texture2D NormalMapVS: register(t1);
 sampler VSHeightSampler;
+sampler VSLinearSampler;
 
 //???height map can be loaded with mips?
 float SampleHeightMap(float2 UV) //, float MipLevel)
 {
-	return HeightMap.SampleLevel(VSHeightSampler, UV + VSCDLODParams.HMTexelSize.xy * 0.5, 0).x;
+	return HeightMapVS.SampleLevel(VSHeightSampler, UV + VSCDLODParams.HMTexelSize.xy * 0.5, 0).x;
 }
 //---------------------------------------------------------------------

@@ -4,7 +4,7 @@
 
 struct VSSceneIn
 {
-	float3 Pos: POSITION;
+	float4 Pos: POSITION;
 	float2 Tex: TEXCOORD;
 };
 
@@ -21,7 +21,7 @@ struct CInstanceData
 
 // Per-instance data
 
-cbuffer InstanceParams: register(b2)
+cbuffer InstanceParams: register(b2)	// VS
 {
 	CInstanceData InstanceData;
 }
@@ -30,29 +30,29 @@ cbuffer InstanceParams: register(b2)
 #define MAX_INSTANCE_COUNT 64
 #endif
 
-cbuffer InstanceParams: register(b2)
+cbuffer InstanceParams: register(b2)	// VS
 {
 	CInstanceData InstanceDataArray[MAX_INSTANCE_COUNT];
 }
 
 // For alpha-test
-Texture2D TexAlbedo: register(t0);
-sampler LinearSampler: register(s0);
+Texture2D TexAlbedo: register(t0);		// PS
+sampler LinearSampler: register(s0);	// PS
 
 // Vertex shaders
 
 //!!!may premultiply and pass WVP instead of WorldMatrix!
-float4 VSMainOpaque(float3 Pos: POSITION): SV_Position
+float4 VSMainOpaque(float4 Pos: POSITION): SV_Position
 {
-	float4 OutPos = mul(float4(Pos, 1), InstanceData.WorldMatrix);
+	float4 OutPos = mul(Pos, InstanceData.WorldMatrix);
 	OutPos = mul(OutPos, ViewProj);
 	return OutPos;
 }
 //---------------------------------------------------------------------
 
-float4 VSMainInstancedConstOpaque(float3 Pos: POSITION, uint InstanceID: SV_InstanceID): SV_Position
+float4 VSMainInstancedConstOpaque(float4 Pos: POSITION, uint InstanceID: SV_InstanceID): SV_Position
 {
-	float4 OutPos = mul(float4(Pos, 1), InstanceDataArray[InstanceID].WorldMatrix);
+	float4 OutPos = mul(Pos, InstanceDataArray[InstanceID].WorldMatrix);
 	OutPos = mul(OutPos, ViewProj);
 	return OutPos;
 }
@@ -70,7 +70,7 @@ float4 VSMainSkinnedOpaque(float4 Pos: POSITION, float4 Weights: BLENDWEIGHT, fl
 PSSceneIn VSMainAlphaTest(VSSceneIn In)
 {
 	PSSceneIn Out = (PSSceneIn)0.0;
-	Out.Pos = mul(float4(In.Pos, 1), InstanceData.WorldMatrix);
+	Out.Pos = mul(In.Pos, InstanceData.WorldMatrix);
 	Out.Pos = mul(Out.Pos, ViewProj);
 	Out.Tex = In.Tex;
 	return Out;
@@ -78,12 +78,12 @@ PSSceneIn VSMainAlphaTest(VSSceneIn In)
 //---------------------------------------------------------------------
 
 //!!!DUPLICATE CODE, see PBR VSMainInstancedConst!
-PSSceneIn VSMainInstancedConstAlphaTest(float3 Pos: POSITION, float2 Tex: TEXCOORD, uint InstanceID: SV_InstanceID)
+PSSceneIn VSMainInstancedConstAlphaTest(float4 Pos: POSITION, float2 Tex: TEXCOORD, uint InstanceID: SV_InstanceID)
 {
 	float4x4 InstWorld = InstanceDataArray[InstanceID].WorldMatrix;
 
 	PSSceneIn Out = (PSSceneIn)0.0;
-	Out.Pos = mul(float4(Pos, 1), InstWorld);
+	Out.Pos = mul(Pos, InstWorld);
 	Out.Pos = mul(Out.Pos, ViewProj);
 	Out.Tex = Tex;
 	return Out;

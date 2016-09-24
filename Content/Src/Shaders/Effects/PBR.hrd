@@ -55,6 +55,8 @@ MaterialParams
 {
 	TexAlbedo = null
 	TexNormalMap = "Textures:System/NoBump.dds"
+	TexReflectance = "Textures:System/Dielectric_refl.dds"
+	TexRoughness = "Textures:System/Grey.dds"
 	LinearSampler // CEffect will create default CSampler instance at the load time
 	{
 		AddressU = "Wrap"
@@ -101,7 +103,7 @@ RenderStates
 		{
 			In = "SrcShaders:USM/PBR.hlsl"
 			Target = 0x0500
-			Entry = "VSMainInstancedConst"
+			Entry = "VSMainInstanced"
 			Defines = "MAX_INSTANCE_COUNT=32"
 		}
 

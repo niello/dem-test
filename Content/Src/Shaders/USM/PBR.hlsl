@@ -16,9 +16,10 @@ struct PSInSimple
 struct PSInSplatted
 {
 	float4 Pos:				SV_Position;
+	float4 PosWorld:		TEXCOORD1;
+	float3 Normal:			NORMAL;
 	float4 VertexConsts:	TEXCOORD0;
-	float4 SplatDetUV:		TEXCOORD1;
-	float4 PosWorld:		TEXCOORD2;
+	float4 SplatDetUV:		TEXCOORD2;
 };
 
 struct CInstanceData
@@ -31,13 +32,16 @@ struct CInstanceData
 
 // Per-material data
 
-Texture2D TexAlbedo: register(t0);
-Texture2D TexNormalMap: register(t1);
-sampler LinearSampler: register(s0);
+Texture2D TexAlbedo: register(t0);		// PS
+Texture2D TexNormalMap: register(t1);	// PS
+Texture2D TexReflectance: register(t2);	// PS
+Texture2D TexRoughness: register(t3);	// PS
+sampler LinearSampler: register(s0);	// PS
 
 // Per-instance data
 
-cbuffer InstanceParams: register(b2)
+//???!!!move light info to PS per-instance buffer?! no need to interpolate them!
+cbuffer InstanceParams: register(b2)	// VS
 {
 	CInstanceData InstanceData;
 }
@@ -46,7 +50,7 @@ cbuffer InstanceParams: register(b2)
 #define MAX_INSTANCE_COUNT 64
 #endif
 
-cbuffer InstanceParams: register(b2)
+cbuffer InstanceParams: register(b2)	// VS
 {
 	CInstanceData InstanceDataArray[MAX_INSTANCE_COUNT];
 }
@@ -74,20 +78,7 @@ PSInSimple VSMain(float3 Pos: POSITION, float3 Normal: NORMAL, float2 UV: TEXCOO
 }
 //---------------------------------------------------------------------
 
-PSInSimple VSMainInstanced(	float3 Pos: POSITION,
-							float3 Normal: NORMAL,
-							float2 UV: TEXCOORD,
-							float4 World1: TEXCOORD4,
-							float4 World2: TEXCOORD5,
-							float4 World3: TEXCOORD6,
-							float4 World4: TEXCOORD7)
-{
-	float4x4 InstWorld = float4x4(World1, World2, World3, World4);
-	return StandardVS(Pos, Normal, UV, InstWorld, 0, uint3(0, 0, 0));
-}
-//---------------------------------------------------------------------
-
-PSInSimple VSMainInstancedConst(float3 Pos: POSITION, float3 Normal: NORMAL, float2 UV: TEXCOORD, uint InstanceID: SV_InstanceID)
+PSInSimple VSMainInstanced(float3 Pos: POSITION, float3 Normal: NORMAL, float2 UV: TEXCOORD, uint InstanceID: SV_InstanceID)
 {
 	CInstanceData InstData = InstanceDataArray[InstanceID];
 	return StandardVS(Pos, Normal, UV, InstData.WorldMatrix, InstData.LightCount, InstData.LightIndices);
@@ -123,9 +114,14 @@ PSInSplatted VSMainCDLOD(	float2	Pos:			POSITION,
 	}
 	*/
 
+	// We invert Y to load normal maps with +Y (OpenGL-style)
+	//???pack to one texture with height map and always sample linearly?
+	//float3 Normal = NormalMapVS.Sample(VSLinearSampler, HMapUV).xyz * float3(2.f, -2.f, 2.f) - float3(1.f, -1.f, 1.f);
+
 	PSInSplatted Out;
-	Out.PosWorld = float4(Vertex, 1.0);
+	Out.PosWorld = float4(Vertex, 1.0f);
 	Out.Pos = mul(Out.PosWorld, ViewProj);
+	//Out.Normal = normalize(Normal);
 	Out.VertexConsts = float4(MorphK, DetailMorphK, Out.Pos.w, distance(Vertex, EyePos));
 	Out.SplatDetUV = float4(Vertex.xz * VSCDLODParams.TerrainYInvSplat.zw, DetailUV);
 	return Out;
@@ -137,24 +133,25 @@ PSInSplatted VSMainCDLOD(	float2	Pos:			POSITION,
 float4 PSMain(PSInSimple In): SV_Target
 {
 	// Sample normal map and calculate per-pixel normal
+	// We invert Y to load normal maps with +Y (OpenGL-style)
 	// NB: In.View must be not normalized
-	float3 InNormal = normalize(In.Normal.xyz);
-	float4 NM = TexNormalMap.Sample(LinearSampler, In.UV);
-	float3 SampledNormal = normalize(NM.xyz * 2.f - 1.f); // (255.f / 127.f) - (128.f / 127.f));
-	SampledNormal.y = -SampledNormal.y; //!!!can save normal maps properly to avoid this!
-	float3 N = PerturbNormal(SampledNormal, InNormal, In.View, In.UV);
+	float4 NM = TexNormalMap.Sample(LinearSampler, In.UV);	
+	float3 SampledNormal = NM.xyz * float3(2.f, -2.f, 2.f) - float3(1.f, -1.f, 1.f); // May use PBRViewer's (255.f / 127.f) - (128.f / 127.f));
+	float3 N = PerturbNormal(SampledNormal, normalize(In.Normal.xyz), In.View, In.UV);
 
 	// Sample albedo
 	float4 Albedo = TexAlbedo.Sample(LinearSampler, In.UV);
-	//float3 AlbedoRGB = Albedo.rgb;
-	float3 AlbedoRGB = 0.f.xxx;
+	float3 AlbedoRGB = Albedo.rgb;
+	//float3 AlbedoRGB = 0.f.xxx;
 
 	// Sample reflectivity (common one-channel value 0.02-0.04 for all insulators)
-	//float3 Reflectivity = 0.04f.xxx; // Can use uniform material parameter
-	float3 Reflectivity = float3(1.0f, 0.71f, 0.29f);
+	float3 Reflectivity = TexReflectance.Sample(LinearSampler, In.UV).rgb;
+	//float3 Reflectivity = 0.04f.xxx; // Dielectric, in metalness workflow can use uniform float for different dielectrics like gems
+	//float3 Reflectivity = float3(1.0f, 0.71f, 0.29f); // Gold
+	//float3 Reflectivity = float3(0.95f, 0.64f, 0.54f); // Copper
 
 	// Sample roughness
-	float Roughness = 0.35f;
+	float Roughness = TexRoughness.Sample(LinearSampler, In.UV).r;
 	float SqRoughness = Roughness * Roughness;
 
 	float3 V = normalize(In.View);
@@ -201,6 +198,11 @@ float4 PSMain(PSInSimple In): SV_Target
 //!!!see old code version for more code!
 float4 PSMainSplatted(PSInSplatted In): SV_Target
 {
+	//get interpolated normal
+	//sample normal map
+	//!!!TMP!
+	//float3 N = normalize(In.Normal.xyz);
+
 	float2 UV = In.PosWorld.xz * PSCDLODParams.WorldToHM.xy + PSCDLODParams.WorldToHM.zw;
 	float3 TexDiffuse = Splatting(SplatMap.Sample(SplatSampler, UV), In.SplatDetUV.xy, LinearSampler);
 	return float4(TexDiffuse, 1.f);

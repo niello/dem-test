@@ -8,7 +8,7 @@
 #define MAX_BONES_PER_VERTEX 4
 #endif
 
-tbuffer SkinParams: register(t0)
+tbuffer SkinParams: register(t0) // VS
 {
 	matrix SkinPalette[MAX_BONES_PER_PALETTE]; //!!!can use float4x3 column_major!
 }

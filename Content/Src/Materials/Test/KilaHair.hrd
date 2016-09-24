@@ -1,8 +1,7 @@
 Effect = 'PBR' // effect isn't identified by its file (libraries and partial definitions)
 Params
 {
-	TexAlbedo = "Textures:Test/charaktere/kila_hair.dds"
-	//NormalMap = 'System/NoBump.dds'
-	MtlDiffuse = (1.0, 1.0, 1.0, 1.0)
-	LinearSampler = null
+	//TexAlbedo = "Textures:Test/charaktere/kila_hair.dds"
+	TexAlbedo = "Textures:System/Black.dds" //!!!incorrect, one-channel R8!
+	TexReflectance = "Textures:System/Silver_refl_srgb.dds"
 }

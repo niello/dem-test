@@ -156,8 +156,8 @@ void GetLightSourceParams(CLight LightSource, float3 WorldPosition, out float3 I
 //NB: doesn't mul NdotL; if SqRoughness = 0.f, it is recommended to fall back to lambertian model
 float DiffuseOrenNayar(float3 N, float3 L, float3 V, float NdotL, float NdotV, float SqRoughness)
 {
-	float A = 1.0f - 0.5f * (SqRoughness / (SqRoughness + 0.57f));
-	float B = 0.45f * (SqRoughness / (SqRoughness + 0.09f));
+	float2 RoughnessCoeffs = SqRoughness / (SqRoughness + float2(0.57f, 0.09f));
+	float2 CoeffsAB = float2(1.0f, 0.f) + float2(-0.5f, 0.45f) * RoughnessCoeffs;
 
 	float Gamma = dot(normalize(V - N * NdotV), normalize(L - N * NdotL));
 
@@ -166,7 +166,7 @@ float DiffuseOrenNayar(float3 N, float3 L, float3 V, float NdotL, float NdotV, f
 	float2 Angles = acos(float2(NdotV, NdotL));
 	float C = sin(max(Angles.x, Angles.y)) * tan(min(Angles.x, Angles.y));
 
-	return (A + B * max(Gamma, 0.f) * C);
+	return (CoeffsAB.x + CoeffsAB.y * max(Gamma, 0.f) * C);
 }
 //---------------------------------------------------------------------
 
@@ -193,11 +193,13 @@ float GeometricSmithSchlickGGX(float SqRoughness, float NdotV, float NdotL)
 //---------------------------------------------------------------------
 
 // On current hardware this may be the best choice
+// But some approximations are still available:
+// - pow(1.0f - VdotH, 5) ~ exp2(-8.65617f * VdotH);
+// - pow(1.0f - VdotH, 5) ~ exp2((-5.55473 * VdotH - 6.98316) * VdotH)
 float Pow5(float x)
 {
 	float x2 = x * x;
-	float x4 = x2 * x2;
-	return x4 * x;
+	return x2 * x2 * x;
 }
 //---------------------------------------------------------------------
 
@@ -205,8 +207,6 @@ float Pow5(float x)
 float3 FresnelSchlick(float3 Reflectivity, float VdotH)
 {
 	return Reflectivity + (1.0f - Reflectivity) * Pow5(1.0f - VdotH);
-	//OR: return Reflectivity + (1.0f - Reflectivity) * exp2(-8.65617f * VdotH);
-	//OR: pow(1 - dotEH, 5) = exp2(-5.55473 * (dotEH * dotEH)- 6.98316 * dotEH)) = exp2((-5.55473 * EdotH - 6.98316) * EdotH)
 }
 //---------------------------------------------------------------------
 
