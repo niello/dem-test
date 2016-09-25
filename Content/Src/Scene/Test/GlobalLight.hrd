@@ -5,7 +5,7 @@ Attrs
 		Class = "Frame::CNodeAttrLight"
 		LightType = 0			// Dir
 		Color = (1.0, 1.0, 1.0)
-		Intensity = 0.75
+		Intensity = 0.3
 		CastShadows = true
 	}
 ]

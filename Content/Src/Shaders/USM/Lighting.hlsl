@@ -37,8 +37,12 @@ cbuffer LightBuffer: register(b3)
 	CLight Lights[MAX_LIGHT_COUNT];
 }
 
-// Global or per-instance
-TextureCube TexEnvMap: register(t4);
+#define RADIANCE_ENVMAP_MIP_COUNT 7.f
+
+// Per-instance (also can be global, per-level)
+TextureCube TexIrradianceMap: register(t4);		// PS
+TextureCube TexRadianceEnvMap: register(t5);	// PS
+sampler TrilinearCubeSampler: register(s1);		// PS
 
 // Normal mapping
 

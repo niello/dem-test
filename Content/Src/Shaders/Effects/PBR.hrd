@@ -57,10 +57,22 @@ MaterialParams
 	TexNormalMap = "Textures:System/NoBump.dds"
 	TexReflectance = "Textures:System/Dielectric_refl.dds"
 	TexRoughness = "Textures:System/Grey.dds"
+	
+	//!!!DBG TMP!
+	TexIrradianceMap = "Textures:Terrain/Irradiance.dds"
+	TexRadianceEnvMap = "Textures:Terrain/RadianceEnv.dds"
+
 	LinearSampler // CEffect will create default CSampler instance at the load time
 	{
 		AddressU = "Wrap"
 		AddressV = "Wrap"
+		Filter = "MinMagMip_Linear"
+	}
+	TrilinearCubeSampler
+	{
+		AddressU = "Clamp"
+		AddressV = "Clamp"
+		AddressW = "Clamp"
 		Filter = "MinMagMip_Linear"
 	}
 }

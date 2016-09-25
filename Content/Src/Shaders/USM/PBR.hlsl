@@ -142,7 +142,6 @@ float4 PSMain(PSInSimple In): SV_Target
 	// Sample albedo
 	float4 Albedo = TexAlbedo.Sample(LinearSampler, In.UV);
 	float3 AlbedoRGB = Albedo.rgb;
-	//float3 AlbedoRGB = 0.f.xxx;
 
 	// Sample reflectivity (common one-channel value 0.02-0.04 for all insulators)
 	float3 Reflectivity = TexReflectance.Sample(LinearSampler, In.UV).rgb;
@@ -179,18 +178,18 @@ float4 PSMain(PSInSimple In): SV_Target
 		// Read this to learn why we don't divide diffuse color by PI:
 		// https://seblagarde.wordpress.com/2012/01/08/pi-or-not-to-pi-in-game-lighting-equation/
 		LightingResult += LightIntensity * NdotL * (DiffuseColor * (1.f - SpecularColor) + SpecularColor);
-		
 	}
 
-	// Calculate or sample from cubemap ambient irradiance
-	float3 AmbientIrradiance = 0.25f.xxx;
+	// Sample ambient diffuse irradiance from irradiance cubemap 
+	float3 AmbientIrradiance = TexIrradianceMap.Sample(TrilinearCubeSampler, N).rgb;
 
-	// Do image-based lighting from environment map, mipmapped to resemble different roughness
-	//float3 R = 2.f * N * NdotV - V; // reflect(-V, N)
-	//float MipIndex = SqRoughness * 8.0f; // 8 is mip level count - 1
-	float3 EnvColor = 0.2f.xxx; //TexEnvMap.SampleLevel(LinearSampler, R, MipIndex);
+	// Sample ambient specular radiance from convoluted environment map
+	float3 R = 2.f * N * NdotV - V; // reflect(-V, N)
+	float MipIndex = SqRoughness * (RADIANCE_ENVMAP_MIP_COUNT - 1.f);
+	float3 EnvColor = TexRadianceEnvMap.SampleLevel(TrilinearCubeSampler, R, MipIndex).rgb;
 	float3 EnvFresnel = FresnelSchlickWithRoughness(Reflectivity, SqRoughness, NdotV);
 
+	//???how to calc correct alpha?
 	return float4(LightingResult + AlbedoRGB * AmbientIrradiance + EnvColor * EnvFresnel, Albedo.a);
 }
 //---------------------------------------------------------------------
