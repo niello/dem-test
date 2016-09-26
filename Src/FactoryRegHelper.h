@@ -42,6 +42,7 @@
 
 // RENDERING =======================================
 
+#include <Frame/NodeAttrAmbientLight.h>
 #include <Frame/NodeAttrLight.h>
 #include <Frame/NodeAttrSkin.h>
 #include <Frame/RenderPhaseGeometry.h>
@@ -65,6 +66,7 @@ void ForceFactoryRegistration()
 	Debug::CLuaConsole::ForceFactoryRegistration();
 	Debug::CWatcherWindow::ForceFactoryRegistration();
 
+	Frame::CNodeAttrAmbientLight::ForceFactoryRegistration();
 	Frame::CNodeAttrLight::ForceFactoryRegistration();
 	Frame::CNodeAttrSkin::ForceFactoryRegistration();
 	Frame::CRenderPhaseGeometry::ForceFactoryRegistration();

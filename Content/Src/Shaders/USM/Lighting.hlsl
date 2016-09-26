@@ -178,9 +178,8 @@ float DiffuseOrenNayar(float3 N, float3 L, float3 V, float NdotL, float NdotV, f
 float GeometricSmithGGX(float SqRoughness, float NdotV, float NdotL)
 {
 	float SqRoughness2 = SqRoughness * SqRoughness;
-	float OneSubSqRoughness2 = 1.0f - SqRoughness2;
 	float2 Dots = float2(NdotV, NdotL);
-	float2 G = (2.0f * Dots) / (Dots + sqrt(SqRoughness2 + OneSubSqRoughness2 * Dots * Dots));
+	float2 G = (2.0f * Dots) / (Dots + sqrt(SqRoughness2 + (1.0f - SqRoughness2) * Dots * Dots));
 	return G.x * G.y;
 }
 //---------------------------------------------------------------------
@@ -189,9 +188,8 @@ float GeometricSmithGGX(float SqRoughness, float NdotV, float NdotL)
 float GeometricSmithSchlickGGX(float SqRoughness, float NdotV, float NdotL)
 {
 	float K = SqRoughness * 0.5f;
-	float OneSubK = 1.0f - K;
 	float2 Dots = float2(NdotV, NdotL);
-	float2 G = Dots / (Dots * OneSubK + K);
+	float2 G = Dots / (Dots * (1.0f - K) + K);
 	return G.x * G.y;
 }
 //---------------------------------------------------------------------

@@ -156,7 +156,7 @@ float4 PSMain(PSInSimple In): SV_Target
 	float3 V = normalize(In.View);
 	float NdotV = max(0.f, dot(N, V));
 
-	float3 LightingResult = float3(0.f, 0.f, 0.f);
+	float3 DirectLighting = float3(0.f, 0.f, 0.f);
 	for (uint i = 0; i < In.LightInfo[0]; ++i)
 	{
 		CLight CurrLight = Lights[In.LightInfo[i + 1]];
@@ -170,27 +170,39 @@ float4 PSMain(PSInSimple In): SV_Target
 		float NdotH = max(0.f, dot(N, H));
 		float VdotH = max(0.f, dot(V, H));
 
+		// It is essentially a Lambertian BRDF for diffuse term
+		// Read this to learn why we don't divide diffuse color by PI:
+		// https://seblagarde.wordpress.com/2012/01/08/pi-or-not-to-pi-in-game-lighting-equation/
 		float3 DiffuseColor = AlbedoRGB;
+
+		// Turn Lambert to Oren-Nayar for not perfectly smooth surfaces
 		if (SqRoughness > 0.f) DiffuseColor *= DiffuseOrenNayar(N, L, V, NdotL, NdotV, SqRoughness);
 
 		float3 SpecularColor = SpecularCookTorrance(Reflectivity, SqRoughness, NdotV, NdotL, NdotH, VdotH);
 
-		// Read this to learn why we don't divide diffuse color by PI:
-		// https://seblagarde.wordpress.com/2012/01/08/pi-or-not-to-pi-in-game-lighting-equation/
-		LightingResult += LightIntensity * NdotL * (DiffuseColor * (1.f - SpecularColor) + SpecularColor);
+		DirectLighting += LightIntensity * NdotL * (DiffuseColor * (1.f - SpecularColor) + SpecularColor);
 	}
 
 	// Sample ambient diffuse irradiance from irradiance cubemap 
-	float3 AmbientIrradiance = TexIrradianceMap.Sample(TrilinearCubeSampler, N).rgb;
+	float3 AmbientDiffuse = AlbedoRGB * TexIrradianceMap.Sample(TrilinearCubeSampler, N).rgb;
 
 	// Sample ambient specular radiance from convoluted environment map
-	float3 R = 2.f * N * NdotV - V; // reflect(-V, N)
+	float3 R = 2.f * N * NdotV - V;
 	float MipIndex = SqRoughness * (RADIANCE_ENVMAP_MIP_COUNT - 1.f);
 	float3 EnvColor = TexRadianceEnvMap.SampleLevel(TrilinearCubeSampler, R, MipIndex).rgb;
-	float3 EnvFresnel = FresnelSchlickWithRoughness(Reflectivity, SqRoughness, NdotV);
+	float3 AmbientSpecular = EnvColor * FresnelSchlickWithRoughness(Reflectivity, SqRoughness, NdotV);
+
+	// Another variant of direct specular (Blinn-Phong normal distribution & implicit geometry term):
+	// Indirect specular setting depends on what direct specular we use, to match it (in modified cubemapgen)
+	//SpecularPower = exp2(10 * (1.f - Roughness) + 1); // 10 and 1 are GlossScale and GlossOffset
+	//or SpecularPower = exp(SpecularPowerMaximum, (1.f - Roughness)), then indirect specular mip level is linear func of roughness
+	//FresnelSchlick(Reflectivity, VdotH) * ((SpecularPower + 2) / 8 ) * pow(NdotH, SpecularPower) * NdotL;
 
 	//???how to calc correct alpha?
-	return float4(LightingResult + AlbedoRGB * AmbientIrradiance + EnvColor * EnvFresnel, Albedo.a);
+	//Unity: Adding more reflectivity (as energy must be taken from somewhere) the diffuse level and the transparency will be reduced
+	//automatically. Adding transparency will reduce diffuse level.
+	// No translucent metals! Can use alpha-test, but not blend!
+	return float4(DirectLighting + AmbientDiffuse + AmbientSpecular, Albedo.a);
 }
 //---------------------------------------------------------------------
 

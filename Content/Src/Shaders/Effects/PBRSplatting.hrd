@@ -24,7 +24,9 @@ GlobalParams
 	ViewProj = null
 	EyePos = null
 	Lights = null
-	//TexEnvMap = null
+	TexIrradianceMap = null
+	TexRadianceEnvMap = null
+	TrilinearCubeSampler = null
 }
 
 MaterialParams

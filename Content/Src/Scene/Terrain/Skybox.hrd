@@ -5,5 +5,10 @@ Attrs
 		RenderableClass = "Render::CSkybox"
 
 		Material = 'Terrain/Skybox'
+	},
+	{
+		Class = "Frame::CNodeAttrAmbientLight"
+		IrradianceMap = "Textures:Terrain/Irradiance.dds"
+		RadianceEnvMap = "Textures:Terrain/RadianceEnv.dds"
 	}
 ]
