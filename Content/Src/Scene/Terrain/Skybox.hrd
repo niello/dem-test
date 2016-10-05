@@ -10,5 +10,6 @@ Attrs
 		Class = "Frame::CNodeAttrAmbientLight"
 		IrradianceMap = "Textures:Terrain/Irradiance.dds"
 		RadianceEnvMap = "Textures:Terrain/RadianceEnv.dds"
+		//Global = true as opposite of false with influence outer and inner volumes and OBB for parallax correction
 	}
 ]

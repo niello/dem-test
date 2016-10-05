@@ -72,7 +72,7 @@ Phases
 		GlobalLightBufferName = 'Lights'
 		IrradianceMapName = 'TexIrradianceMap'
 		RadianceEnvMapName = 'TexRadianceEnvMap'
-		TrilinearCubeSamplerName = 'TrilinearCubeSampler' //???use named resource instead? like render targets
+		TrilinearCubeSamplerName = 'TrilinearCubeSampler'
 
 		Sort = "Material"
 		Renderers
