@@ -8,7 +8,7 @@
 struct PSInInstanced
 {
 	float4	Pos:		SV_Position;
-	float3	PosWorld:	TEXCOORD1;
+	float3	PosWorld:	WORLD;
 	float4	NormalU:	NORMAL;
 	float4	ViewV:		VIEW;
 	uint	InstanceID:	INSTANCEID;
@@ -42,6 +42,8 @@ PSInInstanced VSMain(float4 Pos: POSITION, float3 Normal: NORMAL, float2 UV: TEX
 	return Out;
 }
 //---------------------------------------------------------------------
+
+// Pixel shaders
 
 float4 PSMain(PSInInstanced In): SV_Target
 {

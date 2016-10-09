@@ -81,7 +81,7 @@ RenderStates
 
 		VS
 		{
-			In = "SrcShaders:USM/Depth.hlsl"
+			In = "SrcShaders:USM/Depth_Single.hlsl"
 			Target = 0x0500
 			Entry = "VSMainOpaque"
 		}
@@ -93,9 +93,9 @@ RenderStates
 
 		VS
 		{
-			In = "SrcShaders:USM/Depth.hlsl"
+			In = "SrcShaders:USM/Depth_Instanced.hlsl"
 			Target = 0x0500
-			Entry = "VSMainInstancedConstOpaque"
+			Entry = "VSMainOpaque"
 			Defines = "MAX_INSTANCE_COUNT=32"
 		}
 	}
@@ -106,7 +106,7 @@ RenderStates
 
 		VS
 		{
-			In = "SrcShaders:USM/Depth.hlsl"
+			In = "SrcShaders:USM/Depth_Single.hlsl"
 			Target = 0x0500
 			Entry = "VSMainSkinnedOpaque"
 			Defines = "MAX_BONES_PER_PALETTE=1024"
@@ -157,9 +157,9 @@ RenderStates
 
 		VS
 		{
-			In = "SrcShaders:USM/Depth.hlsl"
+			In = "SrcShaders:USM/Depth_Terrain.hlsl"
 			Target = 0x0500
-			Entry = "VSMainCDLOD"
+			Entry = "VSMainOpaque"
 		}
 	}
 	

@@ -16,12 +16,6 @@ Techniques
 		InputSet = 'ModelInstanced'
 		MaxLights = 0
 	}
-	/*ModelUSMSkinned
-	{
-		Passes = [ 'ModelUSMSkinned' ]
-		InputSet = 'ModelSkinned'
-		MaxLights = 0
-	}*/
 	Model30
 	{
 		Passes = [ 'Model30' ]
@@ -34,24 +28,6 @@ Techniques
 		InputSet = 'ModelInstanced'
 		MaxLights = 0
 	}
-	/*Model30Skinned
-	{
-		Passes = [ 'Model30Skinned' ]
-		InputSet = 'ModelSkinned'
-		MaxLights = 0
-	}*/
-	/*TerrainUSM
-	{
-		Passes = [ 'TerrainUSM' ]
-		InputSet = 'Terrain'
-		MaxLights = 0
-	}
-	Terrain30
-	{
-		Passes = [ 'Terrain30' ]
-		InputSet = 'Terrain'
-		MaxLights = 0
-	}*/
 }
 
 GlobalParams
@@ -70,7 +46,6 @@ MaterialParams
 		Filter = "MinMagMip_Linear"
 	}
 	MtlDiffuse = (1.0, 1.0, 1.0, 1.0)
-	//AlphaRef = 0.5
 }
 
 RenderStates
@@ -94,7 +69,7 @@ RenderStates
 
 		VS
 		{
-			In = "SrcShaders:USM/Depth.hlsl"
+			In = "SrcShaders:USM/Depth_Single.hlsl"
 			Target = 0x0500
 			Entry = "VSMainAlphaTest"
 		}
@@ -113,9 +88,9 @@ RenderStates
 
 		VS
 		{
-			In = "SrcShaders:USM/Depth.hlsl"
+			In = "SrcShaders:USM/Depth_Instanced.hlsl"
 			Target = 0x0500
-			Entry = "VSMainInstancedConstAlphaTest"
+			Entry = "VSMainAlphaTest"
 			Defines = "MAX_INSTANCE_COUNT=32"
 		}
 
@@ -165,28 +140,4 @@ RenderStates
 			Entry = "PSMainAlphaTest"
 		}
 	}
-	
-	/*TerrainUSM
-	{
-		Base = 'Common'
-
-		VS
-		{
-			In = "SrcShaders:USM/Terrain.hlsl"
-			Target = 0x0500
-			Entry = "VSMain"
-		}
-	}
-	
-	Terrain30
-	{
-		Base = 'Common'
-
-		VS
-		{
-			In = "SrcShaders:SM_3_0/Terrain.hlsl"
-			Target = 0x0300
-			Entry = "VSMain"
-		}
-	}*/
 }

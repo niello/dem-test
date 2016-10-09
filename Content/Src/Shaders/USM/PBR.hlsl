@@ -8,7 +8,7 @@ struct CInstanceDataVS
 struct CInstanceDataPS
 {
 	int		LightCount;
-	int3	_PAD;
+	int3	_CInstanceDataPS_PAD;
 #if DEM_LIGHT_VECTOR_COUNT > 0
 	int4	LightIndices[DEM_LIGHT_VECTOR_COUNT];
 #endif

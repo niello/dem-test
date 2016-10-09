@@ -52,6 +52,8 @@ PSInSingle VSMainSkinned(	float4 Pos:		POSITION,
 }
 //---------------------------------------------------------------------
 
+// Pixel shaders
+
 float4 PSMain(PSInSingle In): SV_Target
 {
 	float2 UV = float2(In.NormalU.w, In.ViewV.w);
