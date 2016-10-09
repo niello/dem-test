@@ -6,7 +6,7 @@ Techniques
 {
 	ModelUSM
 	{
-		Passes = [ 'Model50' ]
+		Passes = [ 'ModelUSM' ]
 		InputSet = 'Model'
 		MaxLights = 0
 	}
@@ -55,20 +55,20 @@ RenderStates
 		DepthFunc = "E"				// Depth pre-pass allows us to render colour without alpha-testing this way
 	}
 	
-	Model50
+	ModelUSM
 	{
 		Base = 'Common'
 
 		VS
 		{
-			In = "SrcShaders:USM/PBR.hlsl"
+			In = "SrcShaders:USM/PBR_Single.hlsl"
 			Target = 0x0500
 			Entry = "VSMain"
 		}
 
 		PS
 		{
-			In = "SrcShaders:USM/PBR.hlsl"
+			In = "SrcShaders:USM/PBR_Single.hlsl"
 			Target = 0x0400
 			Entry = "PSMain"
 		}

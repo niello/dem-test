@@ -69,16 +69,16 @@ RenderStates
 
 		VS
 		{
-			In = "SrcShaders:USM/PBR.hlsl"
+			In = "SrcShaders:USM/PBR_Terrain.hlsl"
 			Target = 0x0500
-			Entry = "VSMainCDLOD"
+			Entry = "VSMain"
 		}
 
 		PS
 		{
-			In = "SrcShaders:USM/PBR.hlsl"
+			In = "SrcShaders:USM/PBR_Terrain.hlsl"
 			Target = 0x0400
-			Entry = "PSMainSplatted"
+			Entry = "PSMain"
 		}
 	}
 	

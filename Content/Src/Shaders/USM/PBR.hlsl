@@ -7,9 +7,11 @@ struct CInstanceDataVS
 
 struct CInstanceDataPS
 {
-	uint	LightCount;
-	uint3	LightIndices;
-	//static uint LightIndices[DEM_MAX_LIGHTS] = (uint[DEM_MAX_LIGHTS])array; // for tight packing
+	int		LightCount;
+	int3	_PAD;
+#if DEM_LIGHT_VECTOR_COUNT > 0
+	int4	LightIndices[DEM_LIGHT_VECTOR_COUNT];
+#endif
 };
 
 // Per-material data
@@ -22,40 +24,43 @@ sampler LinearSampler: register(s0);	// PS
 
 // Pixel shaders
 
-float4 PSMain(PSInSimple In): SV_Target
+float4 PSPBR(float2 UV, float3 PosWorld, float3 Normal, float3 View, int LightCount, int LightIndices[MAX_LIGHT_COUNT_PER_OBJECT])
 {
 	// Sample normal map and calculate per-pixel normal
 	// We invert Y to load normal maps with +Y (OpenGL-style)
-	// NB: In.View must be not normalized
-	float4 NM = TexNormalMap.Sample(LinearSampler, In.UV);	
+	// NB: View must be not normalized
+	float4 NM = TexNormalMap.Sample(LinearSampler, UV);	
 	float3 SampledNormal = NM.xyz * float3(2.f, -2.f, 2.f) - float3(1.f, -1.f, 1.f); // May use (255.f / 127.f) - (128.f / 127.f));
-	float3 N = PerturbNormal(SampledNormal, normalize(In.Normal.xyz), In.View, In.UV);
+	float3 N = PerturbNormal(SampledNormal, normalize(Normal.xyz), View, UV);
 
 	// Sample albedo
-	float4 Albedo = TexAlbedo.Sample(LinearSampler, In.UV);
+	float4 Albedo = TexAlbedo.Sample(LinearSampler, UV);
 	float3 AlbedoRGB = Albedo.rgb;
 
 	// Sample reflectivity (common one-channel value 0.02-0.04 for all insulators)
-	float3 Reflectivity = TexReflectance.Sample(LinearSampler, In.UV).rgb;
+	float3 Reflectivity = TexReflectance.Sample(LinearSampler, UV).rgb;
 	//float3 Reflectivity = 0.04f.xxx; // Dielectric, in metalness workflow can use uniform float for different dielectrics like gems
 	//float3 Reflectivity = float3(1.0f, 0.71f, 0.29f); // Gold
 	//float3 Reflectivity = float3(0.95f, 0.64f, 0.54f); // Copper
 
 	// Sample roughness
-	float Roughness = TexRoughness.Sample(LinearSampler, In.UV).r;
+	float Roughness = TexRoughness.Sample(LinearSampler, UV).r;
 	float SqRoughness = Roughness * Roughness;
 
-	float3 V = normalize(In.View);
+	float3 V = normalize(View);
 	float NdotV = max(0.f, dot(N, V));
 
 	float3 DirectLighting = float3(0.f, 0.f, 0.f);
-	for (uint i = 0; i < In.LightInfo[0]; ++i)
+	for (int i = 0; i < LightCount; ++i)
 	{
-		CLight CurrLight = Lights[In.LightInfo[i + 1]];
+		int LightIndex = LightIndices[i];
+		if (LightIndex < 0) break; //???write two versions, one with LightCount and one with -1 check and cap at DEM_LIGHT_COUNT?!
+
+		CLight CurrLight = Lights[LightIndex];
 
 		float3 LightIntensity;
 		float3 L;
-		GetLightSourceParams(CurrLight, In.PosWorld, LightIntensity, L);
+		GetLightSourceParams(CurrLight, PosWorld, LightIntensity, L);
 
 		float3 H = normalize(L + V);
 		float NdotL = max(0.f, dot(N, L));

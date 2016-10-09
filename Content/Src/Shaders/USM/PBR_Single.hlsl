@@ -51,3 +51,10 @@ PSInSingle VSMainSkinned(	float4 Pos:		POSITION,
 	return Out;
 }
 //---------------------------------------------------------------------
+
+float4 PSMain(PSInSingle In): SV_Target
+{
+	float2 UV = float2(In.NormalU.w, In.ViewV.w);
+	return PSPBR(UV, In.PosWorld, In.NormalU.xyz, In.ViewV.xyz, InstanceDataPS.LightCount, (int[MAX_LIGHT_COUNT_PER_OBJECT])InstanceDataPS.LightIndices);
+}
+//---------------------------------------------------------------------

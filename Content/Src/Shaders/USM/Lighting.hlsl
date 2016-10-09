@@ -21,6 +21,20 @@
 #define MAX_LIGHT_COUNT 256
 #endif
 
+#if !defined(MAX_LIGHT_COUNT_PER_OBJECT) || (MAX_LIGHT_COUNT_PER_OBJECT <= 0)
+#define MAX_LIGHT_COUNT_PER_OBJECT 8
+#endif
+
+#if defined(DEM_LIGHT_COUNT) && (DEM_LIGHT_COUNT > MAX_LIGHT_COUNT_PER_OBJECT)
+#define DEM_LIGHT_COUNT MAX_LIGHT_COUNT_PER_OBJECT
+#endif
+
+#if defined(DEM_LIGHT_COUNT) && (DEM_LIGHT_COUNT > 0)
+#define DEM_LIGHT_VECTOR_COUNT ((DEM_LIGHT_COUNT + 3) / 4)
+#else
+#define DEM_LIGHT_VECTOR_COUNT ((MAX_LIGHT_COUNT_PER_OBJECT + 3) / 4)
+#endif
+
 struct CLight
 {
 	float3	Color;			// Intensity of r, g and b radiance
