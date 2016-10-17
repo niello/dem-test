@@ -1,3 +1,4 @@
+#include "Globals.hlsl"
 #include "Depth.hlsl"
 
 #ifndef MAX_INSTANCE_COUNT

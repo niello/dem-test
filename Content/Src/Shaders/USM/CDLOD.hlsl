@@ -19,7 +19,7 @@ cbuffer PSCDLODParams: register(b2)
 	} PSCDLODParams;
 }
 
-cbuffer GridParams: register(b3)
+cbuffer GridParams: register(b4)
 {
 	float2 GridConsts;				// x - grid halfsize, y - inv. grid halfsize
 }

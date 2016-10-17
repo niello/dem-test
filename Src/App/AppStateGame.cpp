@@ -489,6 +489,9 @@ bool CAppStateGame::IssueActorCommand(bool Run, bool ClearQueue)
 
 bool CAppStateGame::OnDoAction(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
+	//!!!DBG!
+	Sys::DebugBreak();
+
 	return IssueActorCommand(false, true);
 }
 //---------------------------------------------------------------------

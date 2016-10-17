@@ -5,7 +5,7 @@
 struct PSInSingle
 {
 	float4	Pos:		SV_Position;
-	float3	PosWorld:	TEXCOORD1;
+	float3	PosWorld:	WORLDPOS;
 	float4	NormalU:	NORMAL;
 	float4	ViewV:		VIEW;
 };
@@ -57,6 +57,7 @@ PSInSingle VSMainSkinned(	float4 Pos:		POSITION,
 float4 PSMain(PSInSingle In): SV_Target
 {
 	float2 UV = float2(In.NormalU.w, In.ViewV.w);
-	return PSPBR(UV, In.PosWorld, In.NormalU.xyz, In.ViewV.xyz, InstanceDataPS.LightCount, (int[MAX_LIGHT_COUNT_PER_OBJECT])InstanceDataPS.LightIndices);
+	float4 Albedo = TexAlbedo.Sample(LinearSampler, UV);
+	return PSPBR(Albedo, UV, In.PosWorld, In.NormalU.xyz, In.ViewV.xyz, InstanceDataPS.LightCount, (int[MAX_LIGHT_COUNT_PER_OBJECT])InstanceDataPS.LightIndices);
 }
 //---------------------------------------------------------------------

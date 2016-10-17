@@ -1,7 +1,13 @@
 #include "Globals.hlsl"
-#include "PBR.hlsl"
 #include "CDLOD.hlsl"
 #include "Splatting.hlsl"
+
+#if DEM_LIGHT_COUNT > 0
+#define DEM_PBR_LIGHT_INDEX_COUNT DEM_LIGHT_COUNT
+#else
+#define DEM_PBR_LIGHT_INDEX_COUNT 1
+#endif
+#include "PBR.hlsl"
 
 #ifndef MAX_INSTANCE_COUNT
 #define MAX_INSTANCE_COUNT 64
@@ -11,8 +17,9 @@
 struct PSInSplattedConst
 {
 	float4	Pos:									SV_Position;
-	float4	PosWorld:								WORLDPOS;
+	float3	PosWorld:								WORLDPOS;
 	float3	Normal:									NORMAL;
+	float3	View:									VIEW;
 	float4	VertexConsts:							TEXCOORD0;
 	float4	SplatDetUV:								TEXCOORD1;
 	uint	InstanceID:								INSTANCEID;
@@ -22,8 +29,9 @@ struct PSInSplattedConst
 struct PSInSplattedStream
 {
 	float4	Pos:									SV_Position;
-	float4	PosWorld:								WORLDPOS;
+	float3	PosWorld:								WORLDPOS;
 	float3	Normal:									NORMAL;
+	float3	View:									VIEW;
 	float4	VertexConsts:							TEXCOORD0;
 	float4	SplatDetUV:								TEXCOORD1;
 #if DEM_LIGHT_VECTOR_COUNT > 0
@@ -88,13 +96,14 @@ PSInSplattedConst VSMainConst(float2 Pos: POSITION, uint InstanceID: SV_Instance
 	//float3 Normal = NormalMapVS.Sample(VSLinearSampler, HMapUV).xyz * float3(2.f, -2.f, 2.f) - float3(1.f, -1.f, 1.f);
 
 	PSInSplattedConst Out;
-	Out.PosWorld = float4(Vertex, 1.0f);
-	Out.Pos = mul(Out.PosWorld, ViewProj);
+	Out.PosWorld = Vertex;
+	Out.Pos = mul(float4(Vertex, 1.0f), ViewProj);
 
 	//Out.Normal = normalize(Normal);
 	//!!!DBG TMP! to suppress warning
 	Out.Normal = float3(0.f, 1.f, 0.f);
 
+	Out.View = EyePos - Vertex;
 	Out.VertexConsts = float4(MorphK, DetailMorphK, Out.Pos.w, distance(Vertex, EyePos));
 	Out.SplatDetUV = float4(Vertex.xz * VSCDLODParams.TerrainYInvSplat.zw, DetailUV);
 	Out.InstanceID = InstanceID;
@@ -141,13 +150,14 @@ PSInSplattedStream VSMainStream(float2	Pos:			POSITION,
 	//float3 Normal = NormalMapVS.Sample(VSLinearSampler, HMapUV).xyz * float3(2.f, -2.f, 2.f) - float3(1.f, -1.f, 1.f);
 
 	PSInSplattedStream Out;
-	Out.PosWorld = float4(Vertex, 1.0f);
-	Out.Pos = mul(Out.PosWorld, ViewProj);
+	Out.PosWorld = Vertex;
+	Out.Pos = mul(float4(Vertex, 1.0f), ViewProj);
 
 	//Out.Normal = normalize(Normal);
 	//!!!DBG TMP! to suppress warning
 	Out.Normal = float3(0.f, 1.f, 0.f);
 
+	Out.View = EyePos - Vertex;
 	Out.VertexConsts = float4(MorphK, DetailMorphK, Out.Pos.w, distance(Vertex, EyePos));
 	Out.SplatDetUV = float4(Vertex.xz * VSCDLODParams.TerrainYInvSplat.zw, DetailUV);
 #if DEM_LIGHT_VECTOR_COUNT > 0
@@ -188,10 +198,14 @@ float4 PSMainStream(PSInSplattedStream In): SV_Target
 	
 	float2 UV = In.PosWorld.xz * PSCDLODParams.WorldToHM.xy + PSCDLODParams.WorldToHM.zw;
 	float4 SplatWeights = SplatMap.Sample(SplatSampler, UV);
-	
-	//!!!pass albedo into PBR as argument!
 
 	float3 AlbedoRGB = Splatting(SplatWeights, In.SplatDetUV.xy, LinearSampler);
+
+//!!!ambient must be applied even without direct lights!
+#if DEM_LIGHT_COUNT > 0
+	return PSPBR(float4(AlbedoRGB, 1.f), UV, In.PosWorld, In.Normal, In.View, DEM_LIGHT_COUNT, (int[DEM_LIGHT_COUNT])In.LightIndices);
+#else
 	return float4(AlbedoRGB, 1.f);
+#endif
 }
 //---------------------------------------------------------------------

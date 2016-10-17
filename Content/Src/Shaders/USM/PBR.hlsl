@@ -1,5 +1,13 @@
 #include "Lighting.hlsl"
 
+#ifndef DEM_PBR_LIGHT_INDEX_COUNT
+#define DEM_PBR_LIGHT_INDEX_COUNT MAX_LIGHT_COUNT_PER_OBJECT
+#endif
+
+#if DEM_PBR_LIGHT_INDEX_COUNT <= 0
+#define DEM_PBR_LIGHT_INDEX_COUNT 1
+#endif
+
 struct CInstanceDataVS
 {
 	matrix	WorldMatrix;
@@ -24,7 +32,7 @@ sampler LinearSampler: register(s0);	// PS
 
 // Pixel shaders
 
-float4 PSPBR(float2 UV, float3 PosWorld, float3 Normal, float3 View, int LightCount, int LightIndices[MAX_LIGHT_COUNT_PER_OBJECT])
+float4 PSPBR(float4 Albedo, float2 UV, float3 PosWorld, float3 Normal, float3 View, int LightCount, int LightIndices[DEM_PBR_LIGHT_INDEX_COUNT])
 {
 	// Sample normal map and calculate per-pixel normal
 	// We invert Y to load normal maps with +Y (OpenGL-style)
@@ -33,8 +41,6 @@ float4 PSPBR(float2 UV, float3 PosWorld, float3 Normal, float3 View, int LightCo
 	float3 SampledNormal = NM.xyz * float3(2.f, -2.f, 2.f) - float3(1.f, -1.f, 1.f); // May use (255.f / 127.f) - (128.f / 127.f));
 	float3 N = PerturbNormal(SampledNormal, normalize(Normal.xyz), View, UV);
 
-	// Sample albedo
-	float4 Albedo = TexAlbedo.Sample(LinearSampler, UV);
 	float3 AlbedoRGB = Albedo.rgb;
 
 	// Sample reflectivity (common one-channel value 0.02-0.04 for all insulators)

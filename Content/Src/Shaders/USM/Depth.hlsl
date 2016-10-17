@@ -1,4 +1,3 @@
-#include "Globals.hlsl"
 
 struct VSSceneIn
 {

@@ -8,7 +8,7 @@
 struct PSInInstanced
 {
 	float4	Pos:		SV_Position;
-	float3	PosWorld:	WORLD;
+	float3	PosWorld:	WORLDPOS;
 	float4	NormalU:	NORMAL;
 	float4	ViewV:		VIEW;
 	uint	InstanceID:	INSTANCEID;
@@ -49,6 +49,7 @@ float4 PSMain(PSInInstanced In): SV_Target
 {
 	CInstanceDataPS InstData = InstanceDataPS[In.InstanceID];
 	float2 UV = float2(In.NormalU.w, In.ViewV.w);
-	return PSPBR(UV, In.PosWorld, In.NormalU.xyz, In.ViewV.xyz, InstData.LightCount, (int[MAX_LIGHT_COUNT_PER_OBJECT])InstData.LightIndices);
+	float4 Albedo = TexAlbedo.Sample(LinearSampler, UV);
+	return PSPBR(Albedo, UV, In.PosWorld, In.NormalU.xyz, In.ViewV.xyz, InstData.LightCount, (int[MAX_LIGHT_COUNT_PER_OBJECT])InstData.LightIndices);
 }
 //---------------------------------------------------------------------
