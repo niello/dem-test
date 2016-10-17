@@ -3,12 +3,12 @@
 
 //!!!FIXME! since my test texture has alpha = 1 this shader supports only 4 textures
 
-Texture2D SplatMap;
-Texture2D SplatTex0;
-Texture2D SplatTex1;
-Texture2D SplatTex2;
-Texture2D SplatTex3;
-Texture2D SplatTex4;
+Texture2D SplatMap: register(t6);
+Texture2D SplatTex0: register(t7);
+Texture2D SplatTex1: register(t8);
+Texture2D SplatTex2: register(t9);
+Texture2D SplatTex3: register(t10);
+Texture2D SplatTex4: register(t11);
 sampler SplatSampler;
 
 // Version with normals can be found in old code

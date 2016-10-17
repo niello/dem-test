@@ -1,0 +1,23 @@
+// ContentForge description of resource
+
+Terrain
+{
+	Tool = 'CFTerrain'
+	In = "Test/Test_HF.bt"
+	PatchSize = 8
+	LODCount = 6
+}
+
+SplatMap
+{
+	Tool = 'CFCopy'
+	In = "Test/Test_SM.tga"
+	Out = "Textures:Terrain/Test_SM.tga"
+}
+
+NormalMap
+{
+	Tool = 'CFCopy'
+	In = "Test/Test_TN.dds"
+	Out = "Textures:Terrain/Test_NM.dds"
+}

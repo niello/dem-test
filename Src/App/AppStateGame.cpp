@@ -127,7 +127,8 @@ void CAppStateGame::OnStateEnter(CStrID PrevState, Data::PParams Params)
 			Ctlr->SetCOI(vector3(220.0f, 3.2f, 200.0f)); // All objects and sky
 			//Ctlr->SetAngles(PI * 0.2f, PI * 0.3f); // All objects
 			Ctlr->SetAngles(PI * 0.12f, PI * 0.15f); // All objects and sky
-			Ctlr->SetDistance(10.f);
+			//Ctlr->SetDistance(10.f);
+			Ctlr->SetDistance(350.f);
 			Frame::PNodeAttrCamera MainCamera = n_new(Frame::CNodeAttrCamera);
 			pCameraNode->AddAttribute(*MainCamera);
 			MainCamera->SetWidth((float)MainRT->GetDesc().Width);

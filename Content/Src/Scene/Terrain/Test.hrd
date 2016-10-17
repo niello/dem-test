@@ -1,0 +1,13 @@
+Attrs
+[
+	{
+		Class = "Frame::CNodeAttrRenderable"
+		RenderableClass = "Render::CTerrain"
+
+		CDLODFile = "Test"
+		Material = 'Terrain/SteepDryCliffs'
+
+		SplatSizeX = 5.0
+		SplatSizeZ = 5.0
+	}
+]

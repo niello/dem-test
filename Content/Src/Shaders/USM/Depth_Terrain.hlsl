@@ -30,7 +30,7 @@ void VSMainOpaque(	float2	Pos:			POSITION,
 	float3 Vertex;
 	Vertex.xz = Pos * PatchXZ.xy + PatchXZ.zw;
 	float2 HMapUV = Vertex.xz * VSCDLODParams.WorldToHM.xy + VSCDLODParams.WorldToHM.zw;
-	Vertex.y = SampleHeightMap(HMapUV) * VSCDLODParams.TerrainYInvSplat.x + VSCDLODParams.TerrainYInvSplat.y;
+	Vertex.y = CDLOD_SampleHeightMap(HMapUV) * VSCDLODParams.TerrainYInvSplat.x + VSCDLODParams.TerrainYInvSplat.y;
 
 	float MorphK  = 1.0f - clamp(MorphConsts.x - distance(Vertex, EyePos) * MorphConsts.y, 0.0f, 1.0f);
 	float2 FracPart = frac(Pos * GridConsts.xx) * GridConsts.yy;
@@ -38,7 +38,7 @@ void VSMainOpaque(	float2	Pos:			POSITION,
 
 	Vertex.xz = PosMorphed * PatchXZ.xy + PatchXZ.zw;
 	HMapUV = Vertex.xz * VSCDLODParams.WorldToHM.xy + VSCDLODParams.WorldToHM.zw;
-	Vertex.y = SampleHeightMap(HMapUV) * VSCDLODParams.TerrainYInvSplat.x + VSCDLODParams.TerrainYInvSplat.y;
+	Vertex.y = CDLOD_SampleHeightMap(HMapUV) * VSCDLODParams.TerrainYInvSplat.x + VSCDLODParams.TerrainYInvSplat.y;
 
 	oPos = mul(float4(Vertex, 1), ViewProj);
 }

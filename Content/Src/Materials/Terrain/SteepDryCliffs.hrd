@@ -1,0 +1,11 @@
+Effect = 'PBRSplatting'
+Params
+{
+	SplatMap = "Textures:Terrain/Test_SM.tga"
+	SplatTex0 = "Textures:Terrain/Rock.dds"		// Steep cliff
+	SplatTex1 = "Textures:Terrain/Ground.dds"	// Cliff face (Rock?)
+	SplatTex2 = "Textures:Terrain/Grass.dds"	// Dry grass
+	SplatTex3 = "Textures:Terrain/Grass.dds"
+	//SplatTex4
+	NormalMap = "Textures:Terrain/Test_NM.dds"
+}

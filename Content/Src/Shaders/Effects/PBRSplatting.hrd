@@ -34,12 +34,18 @@ GlobalParams
 MaterialParams
 {
 	SplatMap = null
-	//NormalMap = null
 	SplatTex0 = null
 	SplatTex1 = null
 	SplatTex2 = null
 	SplatTex3 = null
 	SplatTex4 = null
+
+	NormalMap = "Textures:System/NoBump.dds"
+
+	TexNormalMap = "Textures:System/NoBump.dds"
+	TexReflectance = "Textures:System/Dielectric_refl.dds"
+	TexRoughness = "Textures:System/LightGrey.dds"
+
 	SplatSampler
 	{
 		AddressU = "Clamp"
@@ -71,20 +77,16 @@ RenderStates
 
 		VS
 		{
-			In = "SrcShaders:USM/PBR_Terrain.hlsl"
+			In = "SrcShaders:USM/PBR_TerrainStream.hlsl"
 			Target = 0x0500
-			Entry = "VSMainStream"
-			//For constant instancing:
-			//Entry = "VSMainConst"
+			Entry = "VSMain"
 		}
 
 		PS
 		{
-			In = "SrcShaders:USM/PBR_Terrain.hlsl"
+			In = "SrcShaders:USM/PBR_TerrainStream.hlsl"
 			Target = 0x0400
-			Entry = "PSMainStream"
-			//For constant instancing:
-			//Entry = "PSMainConst"
+			Entry = "PSMain"
 		}
 	}
 	
