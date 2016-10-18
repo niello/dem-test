@@ -8,9 +8,8 @@ Techniques
 	{
 		Passes = [ 'TerrainUSM' ]
 		InputSet = 'CDLOD'
-		MaxLights = 4
-		//For constant instancing:
-		//MaxLights = 0
+		MaxLights = 0 // For constant instancing
+		//MaxLights = 4 // For stream instancing
 	}
 	Terrain30
 	{
@@ -77,14 +76,16 @@ RenderStates
 
 		VS
 		{
-			In = "SrcShaders:USM/PBR_TerrainStream.hlsl"
+			In = "SrcShaders:USM/PBR_TerrainConst.hlsl"
+			//In = "SrcShaders:USM/PBR_TerrainStream.hlsl"
 			Target = 0x0500
 			Entry = "VSMain"
 		}
 
 		PS
 		{
-			In = "SrcShaders:USM/PBR_TerrainStream.hlsl"
+			In = "SrcShaders:USM/PBR_TerrainConst.hlsl"
+			//In = "SrcShaders:USM/PBR_TerrainStream.hlsl"
 			Target = 0x0400
 			Entry = "PSMain"
 		}

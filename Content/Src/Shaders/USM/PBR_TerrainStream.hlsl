@@ -1,6 +1,6 @@
 #include "Globals.hlsl"
-#include "NormalMapping.hlsl"
 #include "CDLOD.hlsl"
+#include "NormalMapping.hlsl"
 #include "Splatting.hlsl"
 
 #if DEM_LIGHT_COUNT > 0
@@ -16,10 +16,9 @@ struct PSInSplattedStream
 	float4	Pos:									SV_Position;
 	float4	PosWorldU:								WORLDPOS;
 	float4	ViewV:									VIEW;
-	//float4	VertexConsts:							TEXCOORD0;	//???need? not used in the current PS!
-	float4	SplatDetUV:								TEXCOORD1;
+	float4	SplatDetUV:								TEXCOORD0;
 #if DEM_LIGHT_VECTOR_COUNT > 0
-	int4	LightIndices[DEM_LIGHT_VECTOR_COUNT]:	TEXCOORD2;
+	int4	LightIndices[DEM_LIGHT_VECTOR_COUNT]:	TEXCOORD1;
 #endif
 };
 
@@ -33,44 +32,16 @@ PSInSplattedStream VSMain(	float2	Pos:			POSITION,
 #endif
 						)
 {
-//!!!fix degenerate patch, which turns to a quarterpatch! Test terrain, front view (look at -Z), one of the nearest full patches
-
-	// Get world position of the vertex
-	float3 Vertex;
-	Vertex.xz = Pos * PatchXZ.xy + PatchXZ.zw;
-	float2 HMapUV = Vertex.xz * VSCDLODParams.WorldToHM.xy + VSCDLODParams.WorldToHM.zw;
-	Vertex.y = CDLOD_SampleHeightMap(HMapUV) * VSCDLODParams.TerrainYInvSplat.x + VSCDLODParams.TerrainYInvSplat.y;
-
-	float3 View = EyePos - Vertex;
-	float DistanceToCamera = length(View);
-	
-	// Calculate morphed position on the XZ plane for smooth LOD transition
-	float MorphK  = 1.0f - clamp(MorphConsts.x - DistanceToCamera * MorphConsts.y, 0.0f, 1.0f);
-	float2 FracPart = frac(Pos * GridConsts.xx) * GridConsts.yy;
-	const float2 PosMorphed = Pos - FracPart * MorphK;
-
-	// Get morphed world position of the vertex
-	Vertex.xz = PosMorphed * PatchXZ.xy + PatchXZ.zw;
-	HMapUV = Vertex.xz * VSCDLODParams.WorldToHM.xy + VSCDLODParams.WorldToHM.zw;
-	Vertex.y = CDLOD_SampleHeightMap(HMapUV) * VSCDLODParams.TerrainYInvSplat.x + VSCDLODParams.TerrainYInvSplat.y;
-
-	float DetailMorphK = 0.0;
-	float2 DetailUV = float2(0.0, 0.0);
-	/* Detail map:
-	DetailUV = PosMorphed * WorldToDM.xy + WorldToDM.zw;
-								//LODLevel			// detailLODLevelsAffected
-	DetailMorphK = 1 - saturate(g_quadScale.z + 2.0 - DetailConsts.w) * MorphK;
-	
-	// Add detail heightmap
-	Vertex.z(y?) += DetailMorphK * (CDLOD_SampleHeightMap(DetailUV.xy) - 0.5) * DetailConsts.z;
-	*/
+	float4 VertexU;
+	float4 ViewV;
+	float4 SplatDetUV;
+	CDLOD_ProcessVertex(Pos, PatchXZ, MorphConsts, EyePos, VertexU, ViewV, SplatDetUV);
 
 	PSInSplattedStream Out;
-	Out.Pos = mul(float4(Vertex, 1.0f), ViewProj);
-	Out.PosWorldU = float4(Vertex, HMapUV.x);
-	Out.ViewV = float4(View, HMapUV.y);
-	//Out.VertexConsts = float4(MorphK, DetailMorphK, Out.Pos.w, DistanceToCamera);
-	Out.SplatDetUV = float4(Vertex.xz * VSCDLODParams.TerrainYInvSplat.zw, DetailUV);
+	Out.Pos = mul(float4(VertexU.xyz, 1.0f), ViewProj);
+	Out.PosWorldU = VertexU;
+	Out.ViewV = ViewV;
+	Out.SplatDetUV = SplatDetUV;
 #if DEM_LIGHT_VECTOR_COUNT > 0
 	Out.LightIndices = LightIndices;
 #endif
@@ -99,9 +70,6 @@ float4 PSMain(PSInSplattedStream In): SV_Target
 
 	//???splatting or always dielectric?
 	float3 Reflectivity = TexReflectance.Sample(LinearSampler, UV).rgb;
-	//float3 Reflectivity = 0.04f.xxx; // Dielectric, in metalness workflow can use uniform float for different dielectrics like gems
-	//float3 Reflectivity = float3(1.0f, 0.71f, 0.29f); // Gold
-	//float3 Reflectivity = float3(0.95f, 0.64f, 0.54f); // Copper
 
 	//???splatting needed?
 	float Roughness = TexRoughness.Sample(LinearSampler, UV).r;

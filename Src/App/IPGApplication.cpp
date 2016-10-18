@@ -232,9 +232,11 @@ bool CIPGApplication::Open()
 	ResourceMgr->RegisterDefaultLoader("cdlod", &Render::CCDLODData::RTTI, CDLODDataLoader, false);
 
 	Resources::PTextureLoaderDDS TextureLoaderDDS = n_new(Resources::CTextureLoaderDDS);
+	TextureLoaderDDS->GPU = GPU;
 	ResourceMgr->RegisterDefaultLoader("dds", &Render::CTexture::RTTI, TextureLoaderDDS.GetUnsafe());
 
 	Resources::PTextureLoaderTGA TextureLoaderTGA = n_new(Resources::CTextureLoaderTGA);
+	TextureLoaderTGA->GPU = GPU;
 	ResourceMgr->RegisterDefaultLoader("tga", &Render::CTexture::RTTI, TextureLoaderTGA.GetUnsafe());
 
 	Resources::PSkinInfoLoaderSKN SkinInfoLoaderSKN = n_new(Resources::CSkinInfoLoaderSKN);
