@@ -88,8 +88,8 @@ Entities
 						 0.0, 1.0, 0.0, 0.0,
 						 0.0, 0.0, 1.0, 0.0,
 						 0.0, 0.0, 0.0, 1.0)
-			//SceneFile = "Terrain/ECCY"
-			SceneFile = "Terrain/Test"
+			SceneFile = "Terrain/ECCY"
+			//SceneFile = "Terrain/Test"
 			Physics = "ECCY_Terrain"
 		}
 		Props [ "Prop::CPropSceneNode", "Prop::CPropPhysics" ] //!!!no need in phys if collision only and it is a scene node attr!
