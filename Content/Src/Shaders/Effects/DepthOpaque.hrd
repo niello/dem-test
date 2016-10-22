@@ -157,9 +157,10 @@ RenderStates
 
 		VS
 		{
-			In = "SrcShaders:USM/Depth_Terrain.hlsl"
+			In = "SrcShaders:USM/Depth_TerrainConst.hlsl"
 			Target = 0x0500
 			Entry = "VSMainOpaque"
+			Defines = "MAX_INSTANCE_COUNT=128"
 		}
 	}
 	

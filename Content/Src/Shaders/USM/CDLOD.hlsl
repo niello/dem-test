@@ -64,3 +64,28 @@ void CDLOD_ProcessVertex(float2 Pos, float4 PatchXZ, float2 MorphConsts, float3 
 	SplatDetUV = float4(Vertex.xz * VSCDLODParams.TerrainYInvSplat.zw, DetailUV);
 }
 //---------------------------------------------------------------------
+
+float3 CDLOD_ProcessVertexOnly(float2 Pos, float4 PatchXZ, float2 MorphConsts, float3 Eye)
+{
+	// Get world position of the vertex
+	float3 Vertex;
+	Vertex.xz = Pos * PatchXZ.xy + PatchXZ.zw;
+	float2 HMapUV = Vertex.xz * VSCDLODParams.WorldToHM.xy + VSCDLODParams.WorldToHM.zw;
+	Vertex.y = CDLOD_SampleHeightMap(HMapUV) * VSCDLODParams.TerrainYInvSplat.x + VSCDLODParams.TerrainYInvSplat.y;
+
+	float3 View = Eye - Vertex;
+	float DistanceToCamera = length(View);
+
+	// Calculate morphed position on the XZ plane for smooth LOD transition
+	float MorphK  = 1.0f - saturate(MorphConsts.x - DistanceToCamera * MorphConsts.y);
+	float2 FracPart = frac(Pos * GridConsts.xx) * GridConsts.yy;
+	const float2 PosMorphed = Pos - FracPart * MorphK;
+
+	// Get morphed world position of the vertex
+	Vertex.xz = PosMorphed * PatchXZ.xy + PatchXZ.zw;
+	HMapUV = Vertex.xz * VSCDLODParams.WorldToHM.xy + VSCDLODParams.WorldToHM.zw;
+	Vertex.y = CDLOD_SampleHeightMap(HMapUV) * VSCDLODParams.TerrainYInvSplat.x + VSCDLODParams.TerrainYInvSplat.y;
+
+	return Vertex;
+}
+//---------------------------------------------------------------------
