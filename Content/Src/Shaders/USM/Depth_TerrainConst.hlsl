@@ -1,5 +1,4 @@
 #include "Globals.hlsl"
-#include "Depth.hlsl"
 #include "CDLOD.hlsl"
 
 #ifndef MAX_INSTANCE_COUNT
