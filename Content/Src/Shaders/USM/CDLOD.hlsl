@@ -11,9 +11,10 @@ cbuffer VSCDLODParams: register(b4)
 	} VSCDLODParams;
 }
 
-cbuffer GridParams: register(b5)
+cbuffer PatchBatchParams: register(b5)
 {
-	float2 GridConsts;				// x - grid halfsize, y - inv. grid halfsize
+	float2	GridConsts;				// x - grid halfsize, y - inv. grid halfsize
+	uint	FirstInstanceIndex;
 }
 
 Texture2D HeightMapVS: register(t0);

@@ -41,7 +41,8 @@ cbuffer InstanceParamsPS: register(b2)	// PS
 
 PSInSplattedConst VSMain(float2 Pos: POSITION, uint InstanceID: SV_InstanceID)
 {
-	CPatchDataVS PatchData = InstanceDataVS[InstanceID];
+	uint RealInstanceID = FirstInstanceIndex + InstanceID;
+	CPatchDataVS PatchData = InstanceDataVS[RealInstanceID];
 
 	float4 VertexU;
 	float4 ViewV;
@@ -53,7 +54,7 @@ PSInSplattedConst VSMain(float2 Pos: POSITION, uint InstanceID: SV_InstanceID)
 	Out.PosWorldU = VertexU;
 	Out.ViewV = ViewV;
 	Out.SplatDetUV = SplatDetUV;
-	Out.InstanceID = InstanceID;
+	Out.InstanceID = RealInstanceID;
 
 	return Out;
 }

@@ -80,6 +80,7 @@ RenderStates
 			//In = "SrcShaders:USM/PBR_TerrainStream.hlsl"
 			Target = 0x0500
 			Entry = "VSMain"
+			Defines = "MAX_INSTANCE_COUNT=128"
 		}
 
 		PS
@@ -88,6 +89,7 @@ RenderStates
 			//In = "SrcShaders:USM/PBR_TerrainStream.hlsl"
 			Target = 0x0400
 			Entry = "PSMain"
+			Defines = "MAX_INSTANCE_COUNT=128"
 		}
 	}
 	
