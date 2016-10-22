@@ -16,11 +16,11 @@ namespace UI
 
 enum ETipAlignment
 {
-	TipAlignCenter	= 0x00,
-	TipAlignTop		= 0x01,
-	TipAlignBottom	= 0x02,
-	TipAlignLeft	= 0x04,
-	TipAlignRight	= 0x08
+	TipAlign_Center	= 0x00,
+	TipAlign_Top	= 0x01,
+	TipAlign_Bottom	= 0x02,
+	TipAlign_Left	= 0x04,
+	TipAlign_Right	= 0x08
 };
 
 class CTipWindow: public CUIWindow

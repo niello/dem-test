@@ -10,6 +10,11 @@
 
 // Ingame UI screen, containing dialogue window, action list popup etc
 
+namespace Game
+{
+	class CGameLevelView;
+}
+
 namespace UI
 {
 class CActionListPopup;
@@ -52,12 +57,9 @@ protected:
 	Ptr<CTipWindow>	CreateTipWindow(int TipID);
 	Ptr<CTipWindow> GetOrCreatePhraseTip(CStrID EntityID);
 	Ptr<CTipWindow> GetPhraseTip(CStrID EntityID);
-	static bool		ShowTip(CStrID EntityID, CTipWindow* pTipWnd, const CString& Text, ETipAlignment Alignment);
+	static bool		ShowTip(CStrID EntityID, Game::CGameLevelView* pView, CTipWindow* pTipWnd, const CString& Text, ETipAlignment Alignment);
 
 public:
-
-	CIngameScreen();
-	virtual ~CIngameScreen();
 
 	virtual void	Init(CEGUI::Window* pWindow);
 

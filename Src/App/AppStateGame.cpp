@@ -135,6 +135,9 @@ void CAppStateGame::OnStateEnter(CStrID PrevState, Data::PParams Params)
 			MainCamera->SetHeight((float)MainRT->GetDesc().Height);
 			FrameView.SetCamera(MainCamera);
 			pCameraNode->UpdateTransform(NULL, 0, true); // Set valid camera transform before updating/rending the first frame
+
+			//!!!DBG TMP!
+			pView->AddToSelection(CStrID("GG"));
 		}
 	}
 
@@ -449,17 +452,20 @@ bool CAppStateGame::OnToggleGamePause(Events::CEventDispatcher* pDispatcher, con
 
 bool CAppStateGame::IssueActorCommand(bool Run, bool ClearQueue)
 {
-	NOT_IMPLEMENTED;
-	/*
-	Game::CEntity* pTargetEntity = GameSrv->GetEntityUnderMouse();
+	Game::CGameLevelView* pView = GameSrv->GetLevelView(hMainLevelView);
+	if (!pView) FAIL;
+
+	CStrID TargetUID = pView->GetEntityUnderMouseUID();
+
+	Game::CEntity* pTargetEntity = EntityMgr->GetEntity(TargetUID);
 	Prop::CPropUIControl* pCtl = pTargetEntity ? pTargetEntity->GetProperty<Prop::CPropUIControl>() : NULL;
 
-	CStrID ID = CStrID::Empty; //FactionMgr->GetFaction(CStrID("Party"))->GetGroupLeader(GameSrv->GetActiveLevel()->GetSelection());
-	Game::CEntity* pActorEntity = EntityMgr->GetEntity(ID);
+	CStrID ActorID = FactionMgr->GetFaction(CStrID("Party"))->GetGroupLeader(pView->GetSelection());
+	Game::CEntity* pActorEntity = EntityMgr->GetEntity(ActorID);
 	Prop::CPropActorBrain* pActor = pActorEntity ? pActorEntity->GetProperty<Prop::CPropActorBrain>() : NULL;
 
 	//!!!if group selected, clear queues of all members!
-	if (ClearQueue) pActor->ClearTaskQueue();
+	if (ClearQueue && pActor) pActor->ClearTaskQueue();
 
 	if (pCtl)
 	{
@@ -472,7 +478,7 @@ bool CAppStateGame::IssueActorCommand(bool Run, bool ClearQueue)
 		if (!pActorEntity) FAIL;
 
 		AI::PActionGotoPosition Action = n_new(AI::CActionGotoPosition);
-		Action->Init(GameSrv->GetMousePos3D());
+		Action->Init(pView->GetMousePos3D());
 		//!!!MvmtType = Run ? AI::AIMvmt_Type_Run : AI::AIMvmt_Type_Walk;
 
 		AI::CTask Task;
@@ -482,7 +488,6 @@ bool CAppStateGame::IssueActorCommand(bool Run, bool ClearQueue)
 		Task.ClearQueueOnFailure = true;
 		pActor->EnqueueTask(Task);
 	}
-	*/
 
 	OK;
 }
@@ -490,9 +495,6 @@ bool CAppStateGame::IssueActorCommand(bool Run, bool ClearQueue)
 
 bool CAppStateGame::OnDoAction(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
-	//!!!DBG!
-	Sys::DebugBreak();
-
 	return IssueActorCommand(false, true);
 }
 //---------------------------------------------------------------------

@@ -17,7 +17,7 @@ void CTipWindow::BindToEntity(CStrID _EntityID, ETipAlignment _Alignment, vector
 	//!!!UNSUBSCRIBE IN Term()!
 	if (IsVisible() && EntityID.IsValid())
 	{
-		UpdateBinding();
+		//UpdateBinding();
 		if (!IS_SUBSCRIBED(OnUIUpdate))
 			SUBSCRIBE_PEVENT(OnUIUpdate, CTipWindow, OnUIUpdate);
 	}
@@ -30,7 +30,7 @@ void CTipWindow::SetVisible(bool Visible)
 	{
 		if (EntityID.IsValid())
 		{
-			UpdateBinding();
+			//UpdateBinding();
 			SUBSCRIBE_PEVENT(OnUIUpdate, CTipWindow, OnUIUpdate);
 		}
 	}
@@ -59,21 +59,21 @@ void CTipWindow::UpdateBinding()
 	}
 
 	Data::CRect ScreenRect;
-	pLevel->GetEntityScreenRect(ScreenRect, *pEntity, &WorldOffset);
+	//pLevel->GetEntityScreenRect(ScreenRect, *pEntity, &WorldOffset);
 		
 	vector2 WndSize = GetSizeRel(),
 			WndPos = ScreenOffset;
 
-	if (Alignment & TipAlignTop)
+	if (Alignment & TipAlign_Top)
 		WndPos.y += (float)ScreenRect.Y - WndSize.y;
-	else if (Alignment & TipAlignBottom)
+	else if (Alignment & TipAlign_Bottom)
 		WndPos.y += (float)ScreenRect.Bottom();
 	else
 		WndPos.y += ((float)ScreenRect.Y + (float)ScreenRect.Bottom() - WndSize.y) * 0.5f;
 
-	if (Alignment & TipAlignLeft)
+	if (Alignment & TipAlign_Left)
 		WndPos.x += (float)ScreenRect.X - WndSize.x;
-	else if (Alignment & TipAlignRight)
+	else if (Alignment & TipAlign_Right)
 		WndPos.x += (float)ScreenRect.Right();
 	else
 		WndPos.x += ((float)ScreenRect.X + (float)ScreenRect.Right() - WndSize.x) * 0.5f;
@@ -84,7 +84,7 @@ void CTipWindow::UpdateBinding()
 
 bool CTipWindow::OnUIUpdate(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
-	UpdateBinding();
+	//UpdateBinding();
 	OK;
 }
 //---------------------------------------------------------------------

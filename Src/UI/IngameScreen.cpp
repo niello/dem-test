@@ -7,8 +7,11 @@
 #include "ContainerWindow.h"
 #include "MoveItemsWindow.h"
 #include <Quests/Quest.h> //!!!only for status!
+#include <Game/GameLevelView.h>
+#include <Game/EntityManager.h>
 #include <UI/CEGUI/FmtLbTextItem.h>
 #include <Events/EventServer.h>
+#include <Data/Regions.h>
 
 #include <CEGUI/WindowManager.h>
 #include <CEGUI/Font.h>
@@ -18,16 +21,6 @@
 namespace UI
 {
 __ImplementClassNoFactory(UI::CIngameScreen, UI::CUIWindow);
-
-CIngameScreen::CIngameScreen()
-{
-}
-//---------------------------------------------------------------------
-
-CIngameScreen::~CIngameScreen()
-{
-}
-//---------------------------------------------------------------------
 
 void CIngameScreen::Init(CEGUI::Window* pWindow)
 {
@@ -143,7 +136,12 @@ bool CIngameScreen::OnDbgExitBtnClick(const CEGUI::EventArgs& e)
 bool CIngameScreen::ShowIAOTip(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
 	Data::PParams P = ((const Events::CEvent&)Event).Params;
-	return ShowTip(P->Get<CStrID>(CStrID("EntityID")), IAOTip, P->Get<CString>(CStrID("Text")), TipAlignTop);
+	return ShowTip(
+		P->Get<CStrID>(CStrID("EntityID")),
+		(Game::CGameLevelView*)P->Get<PVOID>(CStrID("LevelViewPtr")),
+		IAOTip,
+		P->Get<CString>(CStrID("Text")),
+		TipAlign_Top);
 }
 //---------------------------------------------------------------------
 
@@ -167,7 +165,7 @@ bool CIngameScreen::ShowPhrase(Events::CEventDispatcher* pDispatcher, const Even
 	PhraseTip->GetWnd()->setProperty("FrameEnabled", "false");
 	PhraseTip->GetWnd()->setProperty("BackgroundEnabled", "false");
 	
-	return ShowTip(EntityID, PhraseTip, P->Get<CString>(CStrID("Text")), TipAlignTop);
+	return ShowTip(EntityID, NULL, PhraseTip, P->Get<CString>(CStrID("Text")), TipAlign_Top);
 }
 //---------------------------------------------------------------------
 
@@ -183,14 +181,50 @@ bool CIngameScreen::HidePhrase(Events::CEventDispatcher* pDispatcher, const Even
 }
 //---------------------------------------------------------------------
 
-bool CIngameScreen::ShowTip(CStrID EntityID, CTipWindow* pTipWnd, const CString& Text, ETipAlignment Alignment)
+bool CIngameScreen::ShowTip(CStrID EntityID, Game::CGameLevelView* pView, CTipWindow* pTipWnd, const CString& Text, ETipAlignment Alignment)
 {
+	n_assert_dbg(pView);
+
+	if (!EntityID.IsValid() || !pView || !pTipWnd)
+	{
+		pTipWnd->Hide();
+		FAIL;
+	}
+
 	const CEGUI::Font* f = pTipWnd->GetWnd()->getFont();
 	pTipWnd->GetWnd()->setSize(CEGUI::USize(CEGUI::UDim(0.f, f->getTextExtent((CEGUI::utf8*)Text.CStr()) + 20.f),
 											CEGUI::UDim(0.f, f->getFontHeight() + 14.f)));
 	pTipWnd->GetWnd()->setText((CEGUI::utf8*)Text.CStr());
+
+	// Request active level instead of entitie's level, because UI works for active level
+	Game::CEntity* pEntity = EntityMgr->GetEntity(EntityID, true);
+	n_assert_dbg(pEntity);
+
+	Data::CRectF ScreenRect;
+	pView->GetEntityScreenRectRel(ScreenRect, *pEntity, &vector3::Zero);
+		
+	vector2 WndSize = pTipWnd->GetSizeRel(),
+			WndPos = vector2::zero;
+
+	if (Alignment & TipAlign_Top)
+		WndPos.y += ScreenRect.Y - WndSize.y;
+	else if (Alignment & TipAlign_Bottom)
+		WndPos.y += ScreenRect.Bottom();
+	else
+		WndPos.y += (ScreenRect.Y + ScreenRect.Bottom() - WndSize.y) * 0.5f;
+
+	if (Alignment & TipAlign_Left)
+		WndPos.x += ScreenRect.X - WndSize.x;
+	else if (Alignment & TipAlign_Right)
+		WndPos.x += ScreenRect.Right();
+	else
+		WndPos.x += (ScreenRect.X + ScreenRect.Right() - WndSize.x) * 0.5f;
+	
+	pTipWnd->SetPositionRel(WndPos);
+
 	pTipWnd->BindToEntity(EntityID, Alignment);
 	if (!pTipWnd->IsVisible()) pTipWnd->Show();
+
 	OK;
 }
 //---------------------------------------------------------------------
