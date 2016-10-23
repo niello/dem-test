@@ -78,6 +78,13 @@ void CIngameScreen::Init(CEGUI::Window* pWindow)
 }
 //---------------------------------------------------------------------
 
+void CIngameScreen::SetView(Game::CGameLevelView* pNewView)
+{
+	pView = pNewView;
+	IngameMenuPanel->pView = pNewView;
+}
+//---------------------------------------------------------------------
+
 Ptr<CTipWindow> CIngameScreen::CreateTipWindow(int TipID)
 {
 	n_assert2(TipID >= 0 && TipID < 1000, "TipID is out of range [0; 999].");
@@ -138,7 +145,6 @@ bool CIngameScreen::ShowIAOTip(Events::CEventDispatcher* pDispatcher, const Even
 	Data::PParams P = ((const Events::CEvent&)Event).Params;
 	return ShowTip(
 		P->Get<CStrID>(CStrID("EntityID")),
-		(Game::CGameLevelView*)P->Get<PVOID>(CStrID("LevelViewPtr")),
 		IAOTip,
 		P->Get<CString>(CStrID("Text")),
 		TipAlign_Top);
@@ -165,7 +171,7 @@ bool CIngameScreen::ShowPhrase(Events::CEventDispatcher* pDispatcher, const Even
 	PhraseTip->GetWnd()->setProperty("FrameEnabled", "false");
 	PhraseTip->GetWnd()->setProperty("BackgroundEnabled", "false");
 	
-	return ShowTip(EntityID, NULL, PhraseTip, P->Get<CString>(CStrID("Text")), TipAlign_Top);
+	return ShowTip(EntityID, PhraseTip, P->Get<CString>(CStrID("Text")), TipAlign_Top);
 }
 //---------------------------------------------------------------------
 
@@ -181,7 +187,7 @@ bool CIngameScreen::HidePhrase(Events::CEventDispatcher* pDispatcher, const Even
 }
 //---------------------------------------------------------------------
 
-bool CIngameScreen::ShowTip(CStrID EntityID, Game::CGameLevelView* pView, CTipWindow* pTipWnd, const CString& Text, ETipAlignment Alignment)
+bool CIngameScreen::ShowTip(CStrID EntityID, CTipWindow* pTipWnd, const CString& Text, ETipAlignment Alignment)
 {
 	n_assert_dbg(pView);
 

@@ -171,8 +171,8 @@ bool CInventory::OnShow(Events::CEventDispatcher* pDispatcher, const Events::CEv
 //???!!!subscribe OnShow, unsubscribe OnHide?
 bool CInventory::OnInvContentsChanged(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
-	if (IsVisible() && pEquip &&
-		((const Events::CEvent&)Event).Params->Get<CString>(CStrID("Entity")) == pEquip->GetEntity()->GetUID().CStr())
+	Data::PParams P = ((const Events::CEvent&)Event).Params;
+	if (IsVisible() && pEquip && P->Get<CStrID>(CStrID("Entity")) == pEquip->GetEntity()->GetUID())
 		Update();
 	OK;
 }

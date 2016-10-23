@@ -85,6 +85,7 @@ void CAppStateGame::OnStateEnter(CStrID PrevState, Data::PParams Params)
 		{
 			Ptr<UI::CIngameScreen> IngameScreen = n_new(UI::CIngameScreen);
 			IngameScreen->Load("IngameScreen.layout");
+			IngameScreen->SetView(pView);
 
 			IPGApp->MainUIContext->SetRootWindow(IngameScreen);
 			IPGApp->MainUIContext->ShowGUI();
@@ -507,17 +508,19 @@ bool CAppStateGame::OnQueueAction(Events::CEventDispatcher* pDispatcher, const E
 
 bool CAppStateGame::OnContextMenu(Events::CEventDispatcher* pDispatcher, const Events::CEventBase& Event)
 {
-	NOT_IMPLEMENTED;
-	/*
-	CStrID ID = CStrID::Empty; //FactionMgr->GetFaction(CStrID("Party"))->GetGroupLeader(GameSrv->GetActiveLevel()->GetSelection());
-	Game::CEntity* pActorEntity = EntityMgr->GetEntity(ID);
+	Game::CGameLevelView* pView = GameSrv->GetLevelView(hMainLevelView);
+	if (!pView) FAIL;
+
+	CStrID ActorID = FactionMgr->GetFaction(CStrID("Party"))->GetGroupLeader(pView->GetSelection());
+	Game::CEntity* pActorEntity = EntityMgr->GetEntity(ActorID);
 	if (!pActorEntity) FAIL;
-	Game::CEntity* pTargetEntity = GameSrv->GetEntityUnderMouse();
+
+	CStrID TargetUID = pView->GetEntityUnderMouseUID();
+	Game::CEntity* pTargetEntity = EntityMgr->GetEntity(TargetUID);
 	if (!pTargetEntity) FAIL;
 	Prop::CPropUIControl* pCtl = pTargetEntity->GetProperty<Prop::CPropUIControl>();
 	if (!pCtl) FAIL;
 	pCtl->ShowPopup(pActorEntity);
-	*/
 
 	OK;
 }

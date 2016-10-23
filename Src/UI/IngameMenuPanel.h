@@ -7,6 +7,11 @@
 // Ingame panel that provides access to character-related screens like inventory etc and
 // game-related functions like main menu screen or game pause or smth.
 
+namespace Game
+{
+	class CGameLevelView;
+}
+
 namespace CEGUI
 {
 	class PushButton;
@@ -20,13 +25,15 @@ class CIngameMenuPanel: public CUIWindow
 {
 protected:
 
-	CEGUI::PushButton* pInventoryBtn;
+	CEGUI::PushButton*		pInventoryBtn;
 
 	bool OnInventoryBtnClick(const CEGUI::EventArgs& e);
 
 public:
 
-	CIngameMenuPanel();
+	Game::CGameLevelView*	pView;
+
+	CIngameMenuPanel(): pView(NULL) {}
 
 	virtual void Init(CEGUI::Window* pWindow);
 };

@@ -30,6 +30,8 @@ class CIngameScreen: public CUIWindow
 
 protected:
 
+	Game::CGameLevelView*	pView;
+
 	Ptr<CActionListPopup>	ActionPopup;
 	Ptr<CDialogueWindow>	DlgWindow;
 	Ptr<CIngameMenuPanel>	IngameMenuPanel;
@@ -57,11 +59,14 @@ protected:
 	Ptr<CTipWindow>	CreateTipWindow(int TipID);
 	Ptr<CTipWindow> GetOrCreatePhraseTip(CStrID EntityID);
 	Ptr<CTipWindow> GetPhraseTip(CStrID EntityID);
-	static bool		ShowTip(CStrID EntityID, Game::CGameLevelView* pView, CTipWindow* pTipWnd, const CString& Text, ETipAlignment Alignment);
+	bool			ShowTip(CStrID EntityID, CTipWindow* pTipWnd, const CString& Text, ETipAlignment Alignment);
 
 public:
 
+	CIngameScreen(): pView(NULL) {}
+
 	virtual void	Init(CEGUI::Window* pWindow);
+	void			SetView(Game::CGameLevelView* pNewView);
 
 	//!!!may be very bad design!
 	bool			IsContainerWndVisible() const { return ContainerWindow->IsVisible(); }
