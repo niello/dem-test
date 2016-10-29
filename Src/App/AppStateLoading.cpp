@@ -4,6 +4,7 @@
 #include <Game/GameServer.h>
 #include <UI/LoadingScreen.h>
 #include <UI/UIContext.h>
+#include <UI/UIServer.h>
 #include <Render/GPUDriver.h>
 #include <Frame/RenderPath.h>
 #include <Resources/ResourceManager.h>
@@ -78,6 +79,7 @@ void CAppStateLoading::OnStateLeave(CStrID NextState)
 	}
 
 	View.SetRenderPath(NULL);
+	View.GPU = NULL;
 
 	GameSrv->PauseGame(false);
 }

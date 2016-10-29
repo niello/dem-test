@@ -4,6 +4,7 @@
 #include <System/OSWindow.h>
 #include <Debug/DebugServer.h>
 #include <UI/UIContext.h>
+#include <UI/UIServer.h>
 #include <UI/MainMenu.h>
 #include <Input/InputTranslator.h>
 #include <Frame/RenderPath.h>
@@ -37,18 +38,23 @@ void CAppStateMenu::OnStateEnter(CStrID PrevState, Data::PParams Params)
 
 	if (IPGApp->GPU->SwapChainExists(IPGApp->MainSwapChainIndex))
 	{
-		Ptr<UI::CMainMenu> MainMenu = n_new(UI::CMainMenu);
-		MainMenu->Load("MainMenu.layout");
-
-		IPGApp->MainUIContext->SetRootWindow(MainMenu);
-		IPGApp->MainUIContext->ShowGUI();
-		IPGApp->MainUIContext->SetDefaultMouseCursor("TaharezLook/MouseArrow");
-		IPGApp->MainUIContext->SubscribeOnInput(IPGApp->MainWindow.GetUnsafe(), 100);
-
 		MenuView.GPU = IPGApp->GPU;
 		MenuView.SetRenderPath(RRP->GetObject<Frame::CRenderPath>());
-		MenuView.RTs[0] = IPGApp->GPU->GetSwapChainRenderTarget(IPGApp->MainSwapChainIndex);
-		MenuView.UIContext = IPGApp->MainUIContext;
+		if (MenuView.RTs.GetCount())
+			MenuView.RTs[0] = IPGApp->GPU->GetSwapChainRenderTarget(IPGApp->MainSwapChainIndex);
+
+		if (UI::CUIServer::HasInstance())
+		{
+			Ptr<UI::CMainMenu> MainMenu = n_new(UI::CMainMenu);
+			MainMenu->Load("MainMenu.layout");
+
+			IPGApp->MainUIContext->SetRootWindow(MainMenu);
+			IPGApp->MainUIContext->ShowGUI();
+			IPGApp->MainUIContext->SetDefaultMouseCursor("TaharezLook/MouseArrow");
+			IPGApp->MainUIContext->SubscribeOnInput(IPGApp->MainWindow.GetUnsafe(), 100);
+
+			MenuView.UIContext = IPGApp->MainUIContext;
+		}
 	}
 
 	DISP_SUBSCRIBE_PEVENT(IPGApp->pInputTranslator, ShowDebugConsole, CAppStateMenu, OnShowDebugConsole);
@@ -70,6 +76,7 @@ void CAppStateMenu::OnStateLeave(CStrID NextState)
 	}
 
 	MenuView.SetRenderPath(NULL);
+	MenuView.GPU = NULL;
 }
 //---------------------------------------------------------------------
 

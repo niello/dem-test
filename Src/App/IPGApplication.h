@@ -22,7 +22,6 @@
 #include <Physics/PhysicsServer.h>
 #include <Game/GameServer.h>
 #include <AI/AIServer.h>
-#include <UI/UIServer.h>
 #include <Render/DisplayMode.h>
 #include <Render/VideoDriverFactory.h>
 #include <Video/VideoServer.h>
@@ -74,7 +73,6 @@ private:
 	Ptr<Physics::CPhysicsServer>		PhysicsServer;
 	Ptr<Video::CVideoServer>			VideoServer;
 	Ptr<AI::CAIServer>					AIServer;
-	Ptr<UI::CUIServer>					UIServer;
 
 	Sys::POSWindowClass					EngineWindowClass;
 	Ptr<Render::CVideoDriverFactory>	VideoDrvFct;

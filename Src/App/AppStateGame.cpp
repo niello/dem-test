@@ -9,6 +9,7 @@
 #include <Debug/DebugServer.h>
 #include <UI/IngameScreen.h>
 #include <UI/UIContext.h>
+#include <UI/UIServer.h>
 #include <Render/GPUDriver.h>
 #include <Render/RenderTarget.h>
 #include <Frame/RenderPath.h>

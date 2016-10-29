@@ -7,6 +7,7 @@
 #include <Scripting/PropScriptable.h>
 #include <Animation/PropAnimation.h>
 #include <UI/PropUIControl.h>
+#include <UI/UIServer.h>
 #include <Input/InputTranslator.h>
 #include <Input/OSWindowMouse.h>
 #include <Input/OSWindowKeyboard.h>
@@ -198,15 +199,17 @@ bool CIPGApplication::Open()
 	Resources::PShaderLibraryLoaderSLB ShaderLibraryLoaderSLB = n_new(Resources::CShaderLibraryLoaderSLB);
 	ResourceMgr->RegisterDefaultLoader("slb", &Render::CShaderLibrary::RTTI, ShaderLibraryLoaderSLB, true);
 
-	Resources::PResource RShaderLib = ResourceMgr->RegisterResource("Shaders:Shaders.slb");
-	if (!RShaderLib->IsLoaded())
+	Render::PShaderLibrary ShaderLib;
 	{
-		ResourceMgr->LoadResourceSync(*RShaderLib, *ShaderLibraryLoaderSLB.GetUnsafe());
-		n_assert(RShaderLib->IsLoaded());
+		Resources::PResource RShaderLib = ResourceMgr->RegisterResource("Shaders:Shaders.slb");
+		if (!RShaderLib->IsLoaded())
+		{
+			ResourceMgr->LoadResourceSync(*RShaderLib, *ShaderLibraryLoaderSLB.GetUnsafe());
+			n_assert(RShaderLib->IsLoaded());
+		}
+		ShaderLib = RShaderLib->GetObject<Render::CShaderLibrary>();
+		ShaderLib->SetLoader(ShaderLoader);
 	}
-
-	Render::PShaderLibrary ShaderLib = RShaderLib->GetObject<Render::CShaderLibrary>();
-	ShaderLib->SetLoader(ShaderLoader);
 
 	Resources::PRenderPathLoaderRP RPLoaderRP = n_new(Resources::CRenderPathLoaderRP);
 	ResourceMgr->RegisterDefaultLoader("rp", &Frame::CRenderPath::RTTI, RPLoaderRP);
@@ -271,7 +274,7 @@ bool CIPGApplication::Open()
 		UIDesc->Get<Data::PParams>(UISettings.ResourceGroups, CStrID("ResourceGroups"));
 
 		//???redesign not to create default context with new CEGUI?
-		UIServer = n_new(UI::CUIServer)(UISettings);
+		n_new(UI::CUIServer)(UISettings);
 
 		Data::PParams LoadOnStartup;
 		if (UIDesc->Get<Data::PParams>(LoadOnStartup, CStrID("LoadOnStartup")))
@@ -311,7 +314,6 @@ bool CIPGApplication::Open()
 	SI::RegisterTimeServer();
 	
 	Sys::Log("Engine SI registration - OK\n");
-	
 
 	// Input
 
@@ -452,7 +454,7 @@ bool CIPGApplication::AdvanceFrame()
 
 ///////////////////////
 //!!!DBG TMP!
-	if (!Wnd2->IsOpen())
+	if (Wnd2.IsValidPtr() && !Wnd2->IsOpen())
 	{
 		Wnd2->SetWindowClass(*(Sys::COSWindowClassWin32*)EngineWindowClass.GetUnsafe()); //!!!bad design! use handle?
 		Wnd2->SetTitle("Window 2");
@@ -497,7 +499,7 @@ void CIPGApplication::Close()
 
 	FSM.Clear();
 
-	GameSrv->ExitGame();
+	if (Game::CGameServer::HasInstance()) GameSrv->ExitGame();
 
 	WorldManager = NULL;
 	DialogueManager = NULL;
@@ -506,16 +508,22 @@ void CIPGApplication::Close()
 	FactionManager = NULL;
 
 	AIServer = NULL;
-	
-	GameSrv->Close();
-	n_delete(GameSrv);
 
-	PhysicsServer->Close();
-	PhysicsServer = NULL;
+	if (Game::CGameServer::HasInstance())
+	{
+		GameSrv->Close();
+		n_delete(GameSrv);
+	}
+
+	if (Physics::CPhysicsServer::HasInstance())
+	{
+		PhysicsServer->Close();
+		PhysicsServer = NULL;
+	}
 
 	DbgSrv->AllowUI(false);
 	MainUIContext = NULL;
-	UIServer = NULL;
+	if (UI::CUIServer::HasInstance()) n_delete(UISrv);
 
 	if (VideoServer.IsValidPtr() && VideoServer->IsOpen()) VideoServer->Close();
 	VideoServer = NULL;
@@ -530,23 +538,32 @@ void CIPGApplication::Close()
 	SAFE_DELETE(pKeyboardDevice);
 	SAFE_DELETE(pMouseDevice);
 
-	Wnd2->Close();
-	Wnd2 = NULL;
+	if (Wnd2.IsValidPtr())
+	{
+		Wnd2->Close();
+		Wnd2 = NULL;
+	}
 
-	MainWindow->Close();
-	MainWindow = NULL;
+	if (MainWindow.IsValidPtr())
+	{
+		MainWindow->Close();
+		MainWindow = NULL;
+	}
 
-	EngineWindowClass->Destroy();
-	EngineWindowClass = NULL;
+	if (EngineWindowClass.IsValidPtr())
+	{
+		EngineWindowClass->Destroy();
+		EngineWindowClass = NULL;
+	}
 
 	DebugServer = NULL;
 
-	n_delete(TimeSrv);
-	n_delete(ScriptSrv);
-	n_delete(EventSrv);
-	n_delete(ResourceMgr);
-	n_delete(IOSrv);
-	n_delete(CoreSrv);
+	if (Time::CTimeServer::HasInstance()) n_delete(TimeSrv);
+	if (Scripting::CScriptServer::HasInstance()) n_delete(ScriptSrv);
+	if (Events::CEventServer::HasInstance()) n_delete(EventSrv);
+	if (Resources::CResourceManager::HasInstance()) n_delete(ResourceMgr);
+	if (IO::CIOServer::HasInstance()) n_delete(IOSrv);
+	if (Core::CCoreServer::HasInstance()) n_delete(CoreSrv);
 }
 //---------------------------------------------------------------------
 
