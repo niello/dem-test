@@ -26,7 +26,9 @@ __ImplementClassNoFactory(App::CAppStateLoading, App::CStateHandler);
 
 void CAppStateLoading::DeleteUnreferencedResources()
 {
-n_assert(false);
+//!!!IMPLEMENT!
+	Sys::DbgOut("IMPLEMENT CAppStateLoading::DeleteUnreferencedResources()!\n");
+//n_assert(false);
 	//ResourceMgr->UnloadUnreferencedResources(); //???restrict types?
 }
 //---------------------------------------------------------------------
@@ -184,12 +186,14 @@ CStrID CAppStateLoading::OnFrame()
 			if (WorldMgr->MakeTransition(TravellerIDs, LevelID, MarkerID, IsFarTravel))
 			{
 				if (IsFarTravel) DeleteUnreferencedResources();
-				GameSrv->GetLevel(LevelID)->Validate(pGPU);
+
+				Game::CGameLevel* pLevel = GameSrv->GetLevel(LevelID);
+				pLevel->Validate(pGPU);
+
 				if (IsPartyTravel)
 				{
-					NOT_IMPLEMENTED;
+					//!!!do in view!
 					/*
-					Game::CGameLevel* pLevel = GameSrv->GetLevel(LevelID);
 					pLevel->ClearSelection();
 					RPG::CFaction* pParty = FactionMgr->GetFaction(CStrID("Party"));
 					if (pParty)
