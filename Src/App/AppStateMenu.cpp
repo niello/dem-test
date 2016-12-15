@@ -11,7 +11,7 @@
 #include <Render/GPUDriver.h>
 #include <Resources/ResourceManager.h>
 #include <Resources/Resource.h>
-#include <Time/TimeServer.h>
+#include <Core/CoreServer.h>
 #include <Events/EventServer.h>
 #include <Video/VideoServer.h>
 #include <IO/PathUtils.h>
@@ -23,7 +23,7 @@ __ImplementClassNoFactory(App::CAppStateMenu, App::CStateHandler);
 
 void CAppStateMenu::OnStateEnter(CStrID PrevState, Data::PParams Params)
 {
-	TimeSrv->Trigger();
+	CoreSrv->Trigger();
 
 	const char* pRenderPathURI = "RenderPathes:D3D11Forward.rp";
 	Resources::PResource RRP = ResourceMgr->RegisterResource(pRenderPathURI);
@@ -84,9 +84,9 @@ CStrID CAppStateMenu::OnFrame()
 {
 	if (!IPGApp->MainWindow->IsOpen()) return CStrID::Empty;
 
-	float FrameTime = (float)TimeSrv->GetFrameTime();
+	float FrameTime = (float)CoreSrv->GetFrameTime();
 
-	TimeSrv->Trigger();
+	CoreSrv->Trigger();
 	EventSrv->ProcessPendingEvents();
 	DbgSrv->Trigger();
 	if (UI::CUIServer::HasInstance()) UISrv->Trigger(FrameTime);
@@ -112,8 +112,6 @@ CStrID CAppStateMenu::OnFrame()
 			pGPU->Present(SwapChainIdx);
 		}
 	}
-
-	CoreSrv->Trigger();
 
 	return GetID();
 }

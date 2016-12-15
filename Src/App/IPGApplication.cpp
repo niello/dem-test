@@ -63,7 +63,7 @@
 #include <Render/D3D9/D3D9ShaderLoaders.h>
 #include <System/OSWindowClass.h>
 
-#include <time.h> //???!!!wrap needed func in Time::?
+#include <time.h> //???!!!wrap needed func in Core::?
 
 namespace App
 {
@@ -95,7 +95,6 @@ bool CIPGApplication::Open()
 			IOSrv->SetAssign(PathList->Get(i).GetName().CStr(), IOSrv->ResolveAssigns(PathList->Get<CString>(i)));
 
 	n_new(Events::CEventServer);
-	n_new(Time::CTimeServer);
 
 	DebugServer = n_new(Debug::CDebugServer);
 	DebugServer->RegisterPlugin(CStrID("Console"), "Debug::CLuaConsole", "DebugConsole.layout");
@@ -310,8 +309,8 @@ bool CIPGApplication::Open()
 	Sys::Log("InitEngine() - OK\n");
 
 	SI::RegisterGlobals();
+	SI::RegisterTime();
 	SI::RegisterEventServer();
-	SI::RegisterTimeServer();
 	
 	Sys::Log("Engine SI registration - OK\n");
 
@@ -558,7 +557,6 @@ void CIPGApplication::Close()
 
 	DebugServer = NULL;
 
-	if (Time::CTimeServer::HasInstance()) n_delete(TimeSrv);
 	if (Scripting::CScriptServer::HasInstance()) n_delete(ScriptSrv);
 	if (Events::CEventServer::HasInstance()) n_delete(EventSrv);
 	if (Resources::CResourceManager::HasInstance()) n_delete(ResourceMgr);

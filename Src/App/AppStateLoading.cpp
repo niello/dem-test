@@ -12,7 +12,7 @@
 #include <Data/ParamsUtils.h>
 #include <Data/DataArray.h>
 #include <Debug/DebugServer.h>
-#include <Time/TimeServer.h>
+#include <Core/CoreServer.h>
 #include <Events/EventServer.h>
 //#include <Audio/AudioServer.h>
 #include <Video/VideoServer.h>
@@ -37,7 +37,7 @@ void CAppStateLoading::OnStateEnter(CStrID PrevState, Data::PParams Params)
 {
 	StateParams = Params;
 
-	TimeSrv->Trigger();
+	CoreSrv->Trigger();
 	GameSrv->PauseGame(true);
 
 	const char* pRenderPathURI = "RenderPathes:D3D11Forward.rp";
@@ -89,10 +89,10 @@ void CAppStateLoading::OnStateLeave(CStrID NextState)
 
 CStrID CAppStateLoading::OnFrame()
 {
-	TimeSrv->Trigger();
+	CoreSrv->Trigger();
 	EventSrv->ProcessPendingEvents();
 	DbgSrv->Trigger();
-	UISrv->Trigger((float)TimeSrv->GetFrameTime());
+	UISrv->Trigger((float)CoreSrv->GetFrameTime());
 
 	VideoSrv->Trigger();
 //	AudioSrv->Trigger();
@@ -112,8 +112,6 @@ CStrID CAppStateLoading::OnFrame()
 			pGPU->EndFrame();
 		}
 	}
-
-	CoreSrv->Trigger();
 
 	///// Emulates loading! /////////////////////////////////
 	//???spawn async based on request? some requests are sync?

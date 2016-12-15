@@ -17,7 +17,7 @@
 #include <Resources/ResourceManager.h>
 #include <Resources/Resource.h>
 #include <Events/EventServer.h>
-#include <Time/TimeServer.h>
+#include <Core/CoreServer.h>
 #include <IO/IOServer.h>
 #include <Game/GameServer.h>
 #include <Game/GameLevel.h>
@@ -53,7 +53,7 @@ CAppStateGame::CAppStateGame(CStrID StateID):
 
 void CAppStateGame::OnStateEnter(CStrID PrevState, Data::PParams Params)
 {
-	TimeSrv->Trigger();
+	CoreSrv->Trigger();
 
 	RenderDbgPhysics = false;
 	RenderDbgGfx = false;
@@ -257,10 +257,25 @@ CStrID CAppStateGame::OnFrame()
 {
 	PROFILER_START(profCompleteFrame);
 
-	float FrameTime = (float)TimeSrv->GetFrameTime();
+	float FrameTime = (float)CoreSrv->GetFrameTime();
 
-	TimeSrv->Trigger();
+	CoreSrv->Trigger();
+
+	//!!!can move or clone to render server!
+	static UPTR FPSFrameCount = 0;
+	static float FPSTimeAccum = 0.f;
+	++FPSFrameCount;
+	FPSTimeAccum += FrameTime;
+	if (FPSTimeAccum > 0.5f)
+	{
+		CoreSrv->SetGlobal<float>(CString("FPS"), FPSFrameCount / FPSTimeAccum);
+		FPSFrameCount = 0;
+		FPSTimeAccum = 0.f;
+	}
+
 	EventSrv->ProcessPendingEvents();
+	CoreSrv->SetGlobal<int>(CString("Events_FiredTotal"), (int)EventSrv->GetFiredEventsCount());
+
 	DbgSrv->Trigger();
 	UISrv->Trigger(FrameTime);
 	IPGApp->pInputTranslator->Trigger(FrameTime);
@@ -326,22 +341,6 @@ CStrID CAppStateGame::OnFrame()
 	}
 
 	PROFILER_STOP(profRender);
-
-	CoreSrv->Trigger();
-
-	//!!!can move or clone to render server!
-	static UPTR FPSFrameCount = 0;
-	static float FPSTimeAccum = 0.f;
-	++FPSFrameCount;
-	FPSTimeAccum += (float)TimeSrv->GetFrameTime();
-	if (FPSTimeAccum > 0.5f)
-	{
-		CoreSrv->SetGlobal<float>(CString("FPS"), FPSFrameCount / FPSTimeAccum);
-		FPSFrameCount = 0;
-		FPSTimeAccum = 0.f;
-	}
-
-	CoreSrv->SetGlobal<int>(CString("Events_FiredTotal"), (int)EventSrv->GetFiredEventsCount());
 
 	PROFILER_STOP(profCompleteFrame);
 
