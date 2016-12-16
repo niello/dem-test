@@ -1,6 +1,7 @@
 #include "TipWindow.h"
 
 #include <Game/GameServer.h>
+#include <Game/Entity.h>
 #include <Events/EventServer.h>
 #include <Data/Regions.h>
 
@@ -51,7 +52,7 @@ void CTipWindow::UpdateBinding()
 
 	// Request active level instead of entitie's level, because UI works for active level
 	Game::CGameLevel* pLevel = NULL;//GameSrv->GetActiveLevel();
-	Game::CEntity* pEntity = EntityMgr->GetEntity(EntityID, true);
+	Game::CEntity* pEntity = GameSrv->GetEntityMgr()->GetEntity(EntityID, true);
 	if (!pLevel || !pEntity || pEntity->GetLevel() != pLevel)
 	{
 		Hide();

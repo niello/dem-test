@@ -78,7 +78,7 @@ void CAppStateGame::OnStateEnter(CStrID PrevState, Data::PParams Params)
 	if (IPGApp->GPU->SwapChainExists(IPGApp->MainSwapChainIndex))
 	{
 		CStrID PartyLeaderID = FactionMgr->GetFaction(CStrID("Party"))->GetLeader();
-		Game::CGameLevel* pActiveLevel = EntityMgr->GetEntity(PartyLeaderID)->GetLevel();
+		Game::CGameLevel* pActiveLevel = GameSrv->GetEntityMgr()->GetEntity(PartyLeaderID)->GetLevel();
 		hMainLevelView = GameSrv->CreateLevelView(pActiveLevel->GetID());
 		Game::CGameLevelView* pView = GameSrv->GetLevelView(hMainLevelView);
 
@@ -458,11 +458,11 @@ bool CAppStateGame::IssueActorCommand(bool Run, bool ClearQueue)
 
 	CStrID TargetUID = pView->GetEntityUnderMouseUID();
 
-	Game::CEntity* pTargetEntity = EntityMgr->GetEntity(TargetUID);
+	Game::CEntity* pTargetEntity = GameSrv->GetEntityMgr()->GetEntity(TargetUID);
 	Prop::CPropUIControl* pCtl = pTargetEntity ? pTargetEntity->GetProperty<Prop::CPropUIControl>() : NULL;
 
 	CStrID ActorID = FactionMgr->GetFaction(CStrID("Party"))->GetGroupLeader(pView->GetSelection());
-	Game::CEntity* pActorEntity = EntityMgr->GetEntity(ActorID);
+	Game::CEntity* pActorEntity = GameSrv->GetEntityMgr()->GetEntity(ActorID);
 	Prop::CPropActorBrain* pActor = pActorEntity ? pActorEntity->GetProperty<Prop::CPropActorBrain>() : NULL;
 
 	//!!!if group selected, clear queues of all members!
@@ -512,11 +512,11 @@ bool CAppStateGame::OnContextMenu(Events::CEventDispatcher* pDispatcher, const E
 	if (!pView) FAIL;
 
 	CStrID ActorID = FactionMgr->GetFaction(CStrID("Party"))->GetGroupLeader(pView->GetSelection());
-	Game::CEntity* pActorEntity = EntityMgr->GetEntity(ActorID);
+	Game::CEntity* pActorEntity = GameSrv->GetEntityMgr()->GetEntity(ActorID);
 	if (!pActorEntity) FAIL;
 
 	CStrID TargetUID = pView->GetEntityUnderMouseUID();
-	Game::CEntity* pTargetEntity = EntityMgr->GetEntity(TargetUID);
+	Game::CEntity* pTargetEntity = GameSrv->GetEntityMgr()->GetEntity(TargetUID);
 	if (!pTargetEntity) FAIL;
 	Prop::CPropUIControl* pCtl = pTargetEntity->GetProperty<Prop::CPropUIControl>();
 	if (!pCtl) FAIL;
@@ -634,7 +634,7 @@ bool CAppStateGame::OnTeleportSelected(Events::CEventDispatcher* pDispatcher, co
 	//if (!GameSrv->GetActiveLevel()->GetSelectedCount()) OK;
 
 	//CStrID ID =	GameSrv->GetActiveLevel()->GetSelection()[0];
-	//Game::CEntity* pEnt = EntityMgr->GetEntity(ID);
+	//Game::CEntity* pEnt = GameSrv->GetEntityMgr()->GetEntity(ID);
 	//if (!pEnt) OK;
 
 	//matrix44 Tfm = pEnt->GetAttr<matrix44>(CStrID("Transform"));

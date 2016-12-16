@@ -1,7 +1,8 @@
 #include "MoveItemsWindow.h"
 
 #include <Events/EventServer.h>
-#include <Game/EntityManager.h>
+#include <Game/GameServer.h>
+#include <Game/Entity.h>
 #include <Items/Prop/PropInventory.h>
 #include <Items/Item.h>
 #include <UI/UIServer.h>
@@ -57,10 +58,10 @@ bool CMoveItemsWindow::OnShow(Events::CEventDispatcher* pDispatcher, const Event
 
 	Data::PParams P = ((const Events::CEvent&)Event).Params;
 
-	Game::PEntity pContEnt = EntityMgr->GetEntity(P->Get<CStrID>(CStrID("ContainerID")));
+	Game::PEntity pContEnt = GameSrv->GetEntityMgr()->GetEntity(P->Get<CStrID>(CStrID("ContainerID")));
 	n_assert2(pContEnt.IsValidPtr(), "Show container window: container not found.");
 
-	Game::PEntity pActor = EntityMgr->GetEntity(P->Get<CStrID>(CStrID("InventoryID")));
+	Game::PEntity pActor = GameSrv->GetEntityMgr()->GetEntity(P->Get<CStrID>(CStrID("InventoryID")));
 	n_assert2(pActor, "Show container window: actor not found.");
 	
 	ItemID = P->Get<CStrID>(CStrID("ItemID"));

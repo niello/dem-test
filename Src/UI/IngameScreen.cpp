@@ -8,7 +8,8 @@
 #include "MoveItemsWindow.h"
 #include <Quests/Quest.h> //!!!only for status!
 #include <Game/GameLevelView.h>
-#include <Game/EntityManager.h>
+#include <Game/GameServer.h>
+#include <Game/Entity.h>
 #include <UI/CEGUI/FmtLbTextItem.h>
 #include <Events/EventServer.h>
 #include <Data/Regions.h>
@@ -203,7 +204,7 @@ bool CIngameScreen::ShowTip(CStrID EntityID, CTipWindow* pTipWnd, const CString&
 	pTipWnd->GetWnd()->setText((CEGUI::utf8*)Text.CStr());
 
 	// Request active level instead of entitie's level, because UI works for active level
-	Game::CEntity* pEntity = EntityMgr->GetEntity(EntityID, true);
+	Game::CEntity* pEntity = GameSrv->GetEntityMgr()->GetEntity(EntityID, true);
 	n_assert_dbg(pEntity);
 
 	Data::CRectF ScreenRect;

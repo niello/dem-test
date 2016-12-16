@@ -380,20 +380,20 @@ bool CIPGApplication::Open()
 
 	Sys::Log("Set user profile '%s' - OK\n", UserProfileName.CStr());
 
-	EntityMgr->RegisterProperty<Prop::CPropSceneNode>(256);
-	EntityMgr->RegisterProperty<Prop::CPropSmartObject>(64);
-	EntityMgr->RegisterProperty<Prop::CPropUIControl>(64);
-	EntityMgr->RegisterProperty<Prop::CPropAnimation>(128);
-	EntityMgr->RegisterProperty<Prop::CPropPhysics>(128);
-	EntityMgr->RegisterProperty<Prop::CPropScriptable>(64);
-	EntityMgr->RegisterProperty<Prop::CPropAIHints>(64);
-	EntityMgr->RegisterProperty<Prop::CPropActorBrain>(32);
-	EntityMgr->RegisterProperty<Prop::CPropTalking>(32);
-	//EntityMgr->RegisterProperty<Prop::CPropDestructible>(32);
-	//EntityMgr->RegisterProperty<Prop::CPropWeapon>(32);
-	EntityMgr->RegisterProperty<Prop::CPropInventory>(32);
-	EntityMgr->RegisterProperty<Prop::CPropItem>(32);
-	EntityMgr->RegisterProperty<Prop::CPropCharacterController>(16);
+	GameSrv->GetEntityMgr()->RegisterProperty<Prop::CPropSceneNode>(256);
+	GameSrv->GetEntityMgr()->RegisterProperty<Prop::CPropSmartObject>(64);
+	GameSrv->GetEntityMgr()->RegisterProperty<Prop::CPropUIControl>(64);
+	GameSrv->GetEntityMgr()->RegisterProperty<Prop::CPropAnimation>(128);
+	GameSrv->GetEntityMgr()->RegisterProperty<Prop::CPropPhysics>(128);
+	GameSrv->GetEntityMgr()->RegisterProperty<Prop::CPropScriptable>(64);
+	GameSrv->GetEntityMgr()->RegisterProperty<Prop::CPropAIHints>(64);
+	GameSrv->GetEntityMgr()->RegisterProperty<Prop::CPropActorBrain>(32);
+	GameSrv->GetEntityMgr()->RegisterProperty<Prop::CPropTalking>(32);
+	//GameSrv->GetEntityMgr()->RegisterProperty<Prop::CPropDestructible>(32);
+	//GameSrv->GetEntityMgr()->RegisterProperty<Prop::CPropWeapon>(32);
+	GameSrv->GetEntityMgr()->RegisterProperty<Prop::CPropInventory>(32);
+	GameSrv->GetEntityMgr()->RegisterProperty<Prop::CPropItem>(32);
+	GameSrv->GetEntityMgr()->RegisterProperty<Prop::CPropCharacterController>(16);
 
 	Sys::Log("Setup entity loaders and register props - OK\n");
 

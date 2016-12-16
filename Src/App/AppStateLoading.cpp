@@ -2,6 +2,7 @@
 
 #include <App/AppStates.h>
 #include <Game/GameServer.h>
+#include <Game/GameLevel.h>
 #include <UI/LoadingScreen.h>
 #include <UI/UIContext.h>
 #include <UI/UIServer.h>

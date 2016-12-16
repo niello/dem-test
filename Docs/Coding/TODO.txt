@@ -81,6 +81,8 @@ CF user control plugin for CIDE2 - edit CFD files (replace current CF GUI applic
 
 II. Game engine code
 ---------------------
+Level loading
+- allow loading static scene, physics and AI nodes not attached to entities
 Actor animation system
  - activity/state animations (idle, walk, run etc)
  - SO action animations

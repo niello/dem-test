@@ -1,7 +1,8 @@
 #include "ContainerWindow.h"
 
 #include <Events/EventServer.h>
-#include <Game/EntityManager.h>
+#include <Game/GameServer.h>
+#include <Game/Entity.h>
 #include <Items/Prop/PropInventory.h>
 #include <Items/Item.h>
 #include <Items/ItemStack.h>
@@ -51,12 +52,12 @@ bool CContainerWindow::OnShow(Events::CEventDispatcher* pDispatcher, const Event
 
 	const Data::CParam& Prm = P->Get(CStrID("SO"));
 	CStrID EntID = Prm.IsA<CStrID>() ? Prm.GetValue<CStrID>() : CStrID(Prm.GetValue<CString>().CStr());
-	Game::PEntity pContEnt = EntityMgr->GetEntity(EntID);
+	Game::PEntity pContEnt = GameSrv->GetEntityMgr()->GetEntity(EntID);
 	n_assert2(pContEnt.IsValidPtr(), "Show container window: container not found.");
 
 	const Data::CParam& Prm2 = P->Get(CStrID("Actor"));
 	EntID = Prm2.IsA<CStrID>() ? Prm2.GetValue<CStrID>() : CStrID(Prm2.GetValue<CString>().CStr());
-	Game::PEntity pActor = EntityMgr->GetEntity(EntID);
+	Game::PEntity pActor = GameSrv->GetEntityMgr()->GetEntity(EntID);
 	n_assert2(pActor, "Show container window: actor not found.");
 
 	pContainerInv = pContEnt->GetProperty<Prop::CPropInventory>();

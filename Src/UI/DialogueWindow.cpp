@@ -1,7 +1,8 @@
 #include "DialogueWindow.h"
 
 #include <Dlg/DialogueManager.h>
-#include <Game/EntityManager.h> // For entity attr "Name"
+#include <Game/GameServer.h>
+#include <Game/Entity.h>
 #include <Events/EventServer.h>
 #include <UI/UIServer.h>
 #include <UI/CEGUI/FmtLbTextItem.h>
@@ -185,7 +186,7 @@ bool CDialogueWindow::OnDlgNodeEnter(Events::CEventDispatcher* pDispatcher, cons
 
 	if (SpeakerEntity == CStrID("$DlgOwner")) SpeakerEntity = pCtx->DlgOwner;
 	else if (SpeakerEntity == CStrID("$PlrSpeaker")) SpeakerEntity = pCtx->PlrSpeaker;
-	Game::PEntity Speaker = EntityMgr->GetEntity(SpeakerEntity, true);
+	Game::PEntity Speaker = GameSrv->GetEntityMgr()->GetEntity(SpeakerEntity, true);
 	if (Speaker.IsNullPtr())
 		Sys::Error("CDialogueManager::SayPhrase -> speaker entity '%s' not found", SpeakerEntity.CStr());
 

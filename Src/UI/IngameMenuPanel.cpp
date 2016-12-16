@@ -1,8 +1,8 @@
 #include "IngameMenuPanel.h"
 
 #include <Items/Prop/PropInventory.h>
+#include <Game/GameServer.h>
 #include <Game/Entity.h>
-#include <Game/EntityManager.h>
 #include <Game/GameLevelView.h>
 #include <Events/EventServer.h>
 #include <CEGUI/Event.h>
@@ -32,7 +32,7 @@ bool CIngameMenuPanel::OnInventoryBtnClick(const CEGUI::EventArgs& e)
 	for (UPTR i = 0; i < Sel.GetCount(); ++i)
 	{
 		CStrID EntityID = Sel[i];
-		pEnt = EntityMgr->GetEntity(EntityID);
+		pEnt = GameSrv->GetEntityMgr()->GetEntity(EntityID);
 		if (pEnt && pEnt->HasProperty<Prop::CPropInventory>())
 		{
 			Data::PParams P = n_new(Data::CParams(1));

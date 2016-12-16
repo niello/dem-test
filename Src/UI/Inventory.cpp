@@ -3,7 +3,8 @@
 #include <Items/ItemStack.h>
 #include <UI/UIServer.h>
 #include <Events/EventServer.h>
-#include <Game/EntityManager.h>
+#include <Game/GameServer.h>
+#include <Game/Entity.h>
 #include <Items/Prop/PropEquipment.h>
 #include <Data/StringUtils.h>
 
@@ -146,7 +147,7 @@ bool CInventory::OnShow(Events::CEventDispatcher* pDispatcher, const Events::CEv
 {
 	const Events::CEvent& e = (const Events::CEvent&)Event;
 
-	Game::PEntity pOwnerEnt = EntityMgr->GetEntity(e.Params->Get<CStrID>(CStrID("EntityID")));
+	Game::PEntity pOwnerEnt = GameSrv->GetEntityMgr()->GetEntity(e.Params->Get<CStrID>(CStrID("EntityID")));
 	
 	if (pOwnerEnt.IsNullPtr())
 	{
