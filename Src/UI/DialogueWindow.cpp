@@ -186,9 +186,9 @@ bool CDialogueWindow::OnDlgNodeEnter(Events::CEventDispatcher* pDispatcher, cons
 
 	if (SpeakerEntity == CStrID("$DlgOwner")) SpeakerEntity = pCtx->DlgOwner;
 	else if (SpeakerEntity == CStrID("$PlrSpeaker")) SpeakerEntity = pCtx->PlrSpeaker;
-	Game::PEntity Speaker = GameSrv->GetEntityMgr()->GetEntity(SpeakerEntity, true);
+	Game::PEntity Speaker = GameSrv->GetEntityMgr()->GetEntity(SpeakerEntity);
 	if (Speaker.IsNullPtr())
-		Sys::Error("CDialogueManager::SayPhrase -> speaker entity '%s' not found", SpeakerEntity.CStr());
+		Sys::Error("CDialogueWindow::OnDlgNodeEnter -> speaker entity '%s' not found", SpeakerEntity.CStr());
 
 	CString Text;
 	if (!Speaker->GetAttr<CString>(Text, CStrID("Name")))

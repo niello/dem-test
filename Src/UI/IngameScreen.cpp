@@ -204,7 +204,7 @@ bool CIngameScreen::ShowTip(CStrID EntityID, CTipWindow* pTipWnd, const CString&
 	pTipWnd->GetWnd()->setText((CEGUI::utf8*)Text.CStr());
 
 	// Request active level instead of entitie's level, because UI works for active level
-	Game::CEntity* pEntity = GameSrv->GetEntityMgr()->GetEntity(EntityID, true);
+	Game::CEntity* pEntity = GameSrv->GetEntityMgr()->GetEntity(EntityID);
 	n_assert_dbg(pEntity);
 
 	Data::CRectF ScreenRect;

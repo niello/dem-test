@@ -19,10 +19,9 @@ Release EXE metrics:
 =========================================================
 <NEVER FORGET>
 =========================================================
-1. JPEG textures are loaded for too long. Especially 2000x4000 door diffuse textures -_-
+1. JPEG textures are loading very slowly. Especially 2000x4000 door diffuse textures -_-
 2. If character goes to the world origin, check ray-world intersection, when it is broken, mouse 3D pos can be Zero.
 3. Always initialize third-party objects. Remember character controller debugging with btQuaternion full of trash.
-4. Printing 'T' in a console teleports character, because debug 'T' mapping and UI textbox react on different events.
 
 =========================================================
 <Tasks to complete demo>
@@ -34,16 +33,13 @@ Release EXE metrics:
 Close UI connected to entities when that entities are deleted (deactivated) or their props are invalidated
  - Reference entities in UI only by UID
  -???global events on entity deactivation and renaming?
-Sometimes camera rotation mode isn't being disabled when MMB is released
 { [ { } ] } problem in data schemes
-Changing Gfx adapter crashes in one of directions
+Changing Gfx adapter between Intel and Nvidia back and forth crashes app
 Click on Broom sometimes leads to no action
- - navmesh in that place is really weird, with AcceptNearestValidDest it is not always work, because in area
+ - navmesh in that place is really weird, with AcceptNearestValidDest it does not always work, because in area
    covered by one poly (as we expect) some other polys can overlay, and seems that polys aren't convex
 Arei can't start talking if GG moves from initial position
  - if GG moves from Arei, sometimes Arei detects that he can never reach GG (interception time < 0)
-Double click on UI window passes through UI and adds task, which is wrong
-Fix reference counting in D3D code
 ???CRefCounted leak detection?
 When drag window border, send special message OnManualResizeEnd not to resize swap chains 100500 times
 Catch when DXGI relinquishes fullscreen and update swap chain status
@@ -53,21 +49,19 @@ I.a. Low-level code
 -------------------
 Scene activator attr
 Scene dynamic loader attr
-Can implement CSceneNode::Clone/DeepCopy to instantiate models loaded once from scn
 DebugDraw must only collect renderable elements, and then pass them into renderers
 	So that debug shapes and texts will be render objects, that store necessary data, and specific rendering
 	techs are implemented in renderers
 	Or renderers should split on object renderers, text renderers etc with only vitual Render() in the root class
 Split L1 on parts, reduce dependencies
 Cleanup Math
-Remove math headers from CString, use utils for it
 Fix performance of ray-heightfield test
 Ragdoll (???handle through the animation task?)
 Cutscene system
 String::Reserve
 Standartize collections interface
 Solve P->Get(CStrID, CStrID) by renaming to GetSafe or TryGet or smth, key prm is FIRST
-Debug UI console if string from the history is edited, it is not updated in the history
+Debug UI console: if string from the history is edited, it is not updated in the history
 
 I.b. Tools
 ----------
@@ -129,7 +123,6 @@ Reaction to agression
 Day & night
 Shadows
 Particle systems
-Skybox
 Weather effects
 Shader params animation
 
