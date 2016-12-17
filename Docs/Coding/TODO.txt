@@ -67,6 +67,7 @@ Cutscene system
 String::Reserve
 Standartize collections interface
 Solve P->Get(CStrID, CStrID) by renaming to GetSafe or TryGet or smth, key prm is FIRST
+Debug UI console if string from the history is edited, it is not updated in the history
 
 I.b. Tools
 ----------

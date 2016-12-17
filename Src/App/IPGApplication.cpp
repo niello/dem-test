@@ -63,18 +63,16 @@
 #include <Render/D3D9/D3D9ShaderLoaders.h>
 #include <System/OSWindowClass.h>
 
-#include <time.h> //???!!!wrap needed func in Core::?
-
 namespace App
 {
 __ImplementSingleton(App::CIPGApplication);
 
 bool CIPGApplication::Open()
 {
-	srand((UINT)time(NULL));
+	Math::InitRandomNumberGenerator();
 
 	n_new(Core::CCoreServer);
-
+	n_new(Events::CEventServer);
 	n_new(IO::CIOServer);
 
 	if (!ProjDir.IsValid()) ProjDir = IOSrv->GetAssign("Home");
@@ -93,8 +91,6 @@ bool CIPGApplication::Open()
 	if (PathList.IsValidPtr())
 		for (UPTR i = 0; i < PathList->GetCount(); ++i)
 			IOSrv->SetAssign(PathList->Get(i).GetName().CStr(), IOSrv->ResolveAssigns(PathList->Get<CString>(i)));
-
-	n_new(Events::CEventServer);
 
 	DebugServer = n_new(Debug::CDebugServer);
 	DebugServer->RegisterPlugin(CStrID("Console"), "Debug::CLuaConsole", "DebugConsole.layout");
